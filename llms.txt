@@ -2,7 +2,7 @@
 
 > Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients, and emits it in the native format of each AI coder (Claude Code, Kiro, Kimi, Codex, Cursor, Warp, AGENTS.md) into every workspace, with a lockfile for drift detection and a registry of workspaces.
 
-This file is the plain-text companion of the Craftar page (index.html), written for language models and other automated readers. Same content, no layout; diagrams are described in prose.
+This file is the plain-text companion of the Craftar page (index.html), written for language models and other automated readers. Same content, no layout; diagrams are described in prose — verbatim from the accessible description of each figure — and the two whose topology carries the argument are also given as Mermaid graphs.
 
 ## Terminology
 
@@ -26,7 +26,16 @@ A harness is a roster of agents (a reviewer per architecture, a docs author, an 
 
 Requires: one source; emission per target; a record per file.
 
-State today (diagram): a single harness exists only as a folder on the developer's machine and is copied and translated by hand into each team workspace, each in a different AI coder format. Copies diverge — a stale agent here, a missing agent there, an old version elsewhere — and no edge of that graph is recorded anywhere.
+```mermaid
+graph LR
+  H["harness on the developer's machine · 12 rules · 7 agents · 9 commands · skills · hooks · 4 MCP servers"]
+  H -->|copy and translate by hand| A["team A · Claude Code · .claude/ · two months old"]
+  H -->|copy and translate by hand| B["team B · Kimi · AGENTS.md · one stale agent"]
+  H -->|copy and translate by hand| C["team C · Kiro · .kiro/ · one agent missing"]
+  H -->|copy and translate by hand| D["team D · Cursor · .cursor/ · version 3 of 5"]
+```
+
+State today (diagram): a single harness — about 12 rules, 7 agents, 9 commands, skills, hooks and 4 MCP servers — exists only as a folder on the developer's machine. It is copied and translated by hand into four team workspaces: team A uses Claude Code, team B uses Kimi via `AGENTS.md`, team C uses Kiro, team D uses Cursor. Because the copies are manual, they diverge: team A's copy is two months old, team B has one stale agent, team C is missing one agent, team D carries version 3 of 5. No edge in this graph is recorded anywhere, so nothing can report which copy is current.
 
 ### P2 — One developer, many workspaces, separate remotes
 
@@ -34,7 +43,7 @@ One machine, one workspace per team. Each workspace groups that team's repositor
 
 Requires: a channel that is no team repository's remote; a lock per workspace; a registry.
 
-State today (diagram): four workspaces on four different Git hosts, each with a hand-copied harness of unknown version and no lockfile; the machine has no registry and no shared source.
+State today (diagram): one developer machine holds four workspaces, `workspace-1` to `workspace-4`, one per team. Each workspace contains that team's repositories cloned from that team's own Git remote (four different hosts), so no repository is shared across workspaces. Each workspace also contains a hand-copied `.claude/` harness of unknown version — v3?, v2?, v5?, v4+? — copied at different times or edited in place, with no lockfile. The harness moves from one workspace to the next by hand, one copy at a time, which is how the versions drift apart. The machine has no registry of workspaces, no shared source for the harness, and no way to verify versions.
 
 ## Failure modes (observed in earlier generators and hand-synchronised workspaces)
 
@@ -62,9 +71,23 @@ Pipeline of `craftar sync`:
 4. Emit tool-specific formats (inclusion modes, subagents, hooks) through rulesync plus Craftar's own emitters and post-processors.
 5. Diff against `craftar.lock`; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.
 
-P1 resolved (diagram): one Forge → `craftar sync` → each team workspace, emitted to that team's targets; every edge generated and recorded in the lock.
+P1 resolved (diagram): the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (`base`, `backend-*`, `frontend-*`, `aws-local`, `pm-*`) and one profile per team. Running `craftar sync` in a workspace fetches the Forge at a pinned ref, resolves layers, emits files for each of the workspace's targets and writes `craftar.lock`. Team A emits to `.claude/` with 7 agents; team B swaps the frontend recipe and emits `AGENTS.md` for Kimi; team C pins the Forge at tag `v2.3`, emits `.kiro/` and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.
 
-P2 resolved (diagram): same machine, same workspaces, same separate remotes. The Forge is a fifth repository referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Each workspace carries a generated harness with the same base ingredients and a lock naming the Forge commit that produced it. `craftar ls` reads the registry and reports per workspace: up to date, behind (e.g. pinned at an older tag), or drift.
+```mermaid
+graph LR
+  F["Forge · one Git repository · ingredients, recipes, profiles"] --> CR["craftar · reads the Forge at the ref pinned in each craftar.yaml, emits per target"]
+  CR --> W1["workspace-1 · .claude/ · craftar.lock 7c1e9a2 · up to date"]
+  CR --> W2["workspace-2 · AGENTS.md · craftar.lock 7c1e9a2 · up to date"]
+  CR --> W3["workspace-3 · .kiro/ · craftar.lock 5b0d3f1 · behind, pinned at tag v2.3"]
+  CR --> W4["workspace-4 · .claude/ and .cursor/ · craftar.lock 7c1e9a2 · drift"]
+  R1["team 1 Git remote"] -->|git clone| W1
+  R2["team 2 Git remote"] -->|git clone| W2
+  R3["team 3 Git remote"] -->|git clone| W3
+  R4["team 4 Git remote"] -->|git clone| W4
+  REG["~/.craftar/registry.json · read by craftar ls"] -.-> W1 & W2 & W3 & W4
+```
+
+P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the pinned one). The registry at `~/.craftar/registry.json` lists all four, and `craftar ls` reports per workspace: up to date, behind, or drift.
 
 ## Capabilities (F1–F12; "working" = runs today under an oracle test; "mvp" = first release)
 
