@@ -443,7 +443,7 @@
       <p class="lede">A <strong>harness</strong> is everything that shapes how coding agents behave in a repository: rules, agents, commands, skills, hooks and MCP servers. Craftar addresses two problems with it: keeping <strong>one harness</strong> consistent across many teams that use different AI coders (<a href="#p1" style="color:var(--steel);text-decoration:none">P1</a>), and keeping <strong>one developer's</strong> many workspaces — each on a different team's Git remote — on the same version of it (<a href="#p2" style="color:var(--steel);text-decoration:none">P2</a>). It does so by treating the harness as source in a Git repository, the <strong>Forge</strong>, composed per team and emitted in each tool's native format with a lockfile.</p>
       <div class="cta">
         <a class="btn primary" href="#model">Read the model</a>
-        <span class="install"><span class="dollar">$</span><b>npx craftar sync</b></span>
+        <span class="install"><span class="dollar">$</span><b>git clone https://github.com/llima/craftar-cli && npm install && npm run dev -- sync</b></span>
       </div>
       <div class="hero-meta">
         <span>claude-code</span><span>kiro</span><span>kimi</span><span>codex</span><span>cursor</span><span>warp</span><span>agents-md</span>
@@ -453,24 +453,18 @@
     <div class="term" aria-label="Terminal showing craftar sync output">
       <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~/work/team-a/platform-workspace</div>
 <pre><span class="p">$</span> craftar sync
-<span class="c">forge</span>    git@git.example/org/forge <span class="dim">@ 7c1e9a2</span>  <span class="c">(main)</span>
+<span class="c">forge</span>    ../platform-forge  <span class="dim">(local)</span>
 <span class="c">profile</span>  team-a
 <span class="c">recipes</span>  base, backend-clean-arch, frontend-angular, aws-local, pm-azure-devops
 <span class="c">targets</span>  claude-code, kiro
 
-<span class="k">claude-code</span>
-  <span class="add">+ .claude/rules/frontend-angular.md</span>          <span class="dim">rules/frontend-angular</span>
-  <span class="chg">~ .claude/agents/frontend-reviewer.md</span>        <span class="dim">agents/frontend-reviewer</span>
-  <span class="add">+ .claude/commands/create-component.md</span>     <span class="dim">commands/create-component</span>
-  <span class="dim">= 41 unchanged</span>
-<span class="k">kiro</span>
-  <span class="add">+ .kiro/steering/frontend-angular.md</span>        <span class="dim">inclusion: fileMatch **/*.ts</span>
-  <span class="chg">~ .kiro/agents/frontend-reviewer.json</span>       <span class="dim">resources: steering/frontend-angular.md</span>
-  <span class="del">- .kiro/steering/frontend-react.md</span>          <span class="dim">orphan — recipe removed</span>
-  <span class="dim">! hook format-on-edit has no Kiro equivalent; skipped</span>
-
-<span class="c">kept</span>     .claude/rules/local-notes.md              <span class="dim">not managed by craftar</span>
-<span class="c">lock</span>     craftar.lock updated · 3 added, 2 changed, 1 removed
+  wrote <span class="add">4</span>, removed <span class="del">1</span> orphan(s), skipped <span class="chg">1</span>
+  <span class="add">+</span> .claude/rules/frontend-angular.md
+  <span class="add">+</span> .claude/agents/frontend-reviewer.md
+  <span class="add">+</span> .claude/commands/create-component.md
+  <span class="add">+</span> .kiro/steering/frontend-angular.md
+  <span class="del">-</span> .kiro/steering/frontend-react.md  <span class="dim">(orphan: no longer produced by the Forge)</span>
+  <span class="chg">!</span> .kiro/agents/frontend-reviewer.json  <span class="dim">hand-edited since last sync — run `craftar diff` and either `--overwrite-drift` or promote the change to the Forge</span>
 <span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
     </div>
   </section>
@@ -766,10 +760,10 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
           <div class="cmds">
             <code><span class="p">$</span> craftar sync <span class="c">[--dry-run] [--check] [--overwrite-drift]</span></code>
             <code><span class="p">$</span> craftar diff <span class="c"># what sync would change, writes nothing</span></code>
-            <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan</span></code>
+            <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan · orphan-drift</span></code>
             <code><span class="p">$</span> craftar sync --forge-ref v2.3 --targets kiro · craftar update <span class="c"># planned</span></code>
           </div>
-          <p class="mech">One command resolves and emits for every active target and prints added / changed / removed / skipped per target. Following a Forge branch or pinning a tag is planned.</p>
+          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. Following a Forge branch or pinning a tag is planned.</p>
         </div>
       </article>
 
@@ -861,7 +855,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F10</div><h3>Registry and dashboard</h3></div>
         <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui <span class="c"># planned — today's ls lists the recipes resolved for one workspace</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui <span class="c"># planned — today's ls lists the recipes and ingredients resolved for one workspace</span></code></div>
           <p class="mech">Table or local web page: workspace, profile, stack, targets, Forge SHA, status; actions <code>sync</code> / <code>diff</code> / <code>explain</code>; Forge view of recipes, ingredients and who uses what.</p>
         </div>
       </article>
@@ -891,17 +885,17 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="invariants">
     <div class="eyebrow">Invariants</div>
     <h2>Constraints derived from the failure modes.</h2>
-    <p class="lede" style="margin-top:22px">These hold in every command and every emitter. They are what distinguishes Craftar from a template renderer.</p>
+    <p class="lede" style="margin-top:22px">These are the constraints Craftar is built against, in every command and every emitter — what distinguishes it from a template renderer. The two marked <span class="pill">planned</span> are design commitments, not yet enforced by the code.</p>
 
     <div class="rules">
       <div class="rule"><div class="never">never</div><h3>Touch a file not in the lockfile</h3><p>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved and never removed; one at a path the Forge would write is reported by <code>status</code> as a collision and never touched. Regeneration is per file.</p><p class="ref">← FM-1</p></div>
       <div class="rule"><div class="never">never</div><h3>Hash raw bytes</h3><p>Content hashes are computed after normalization: LF line endings, UTF-8, BOM stripped; JSON compared structurally. Existing files keep their EOL on write.</p><p class="ref">← FM-2</p></div>
       <div class="rule"><div class="never">never</div><h3>Leave an orphan on disk</h3><p>An output whose ingredient left the resolved set is removed on the next sync and named in the summary, in every target. <code>--check</code> fails on orphans.</p><p class="ref">← FM-3</p></div>
       <div class="rule"><div class="never">never</div><h3>Require a manual mirror</h3><p>Everything a second target needs — steering, agent JSON, command copies — is emitted from the same ingredient. If two files must say the same thing, both are generated.</p><p class="ref">← FM-4</p></div>
-      <div class="rule"><div class="never">never</div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are one ingredient with two outputs, so they cannot disagree.</p><p class="ref">← FM-5</p></div>
+      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today an ingredient still emits to one target at a time.</p><p class="ref">← FM-5</p></div>
       <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited.</p><p class="ref">← FM-6</p></div>
       <div class="rule"><div class="never">never</div><h3>Translate</h3><p>Language is an attribute of the ingredient. The Forge may hold rules in one language and docs in another; Craftar emits text as written.</p><p class="ref">← FM-7</p></div>
-      <div class="rule"><div class="never">never</div><h3>Store a secret</h3><p>Ingredients declare <code>authEnv</code>; settings are emitted as <code>settings.example.json</code>; <code>doctor</code> verifies the variables exist on the machine.</p><p class="ref">← FM-8</p></div>
+      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Store a secret</h3><p>Ingredients are meant to declare <code>authEnv</code>; settings would be emitted as <code>settings.example.json</code>; <code>doctor</code> would verify the variables exist on the machine. Planned: not built yet, though <code>craftar import</code> already refuses ingredients holding secret-like values.</p><p class="ref">← FM-8</p></div>
     </div>
   </section>
 
@@ -909,7 +903,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="targets">
     <div class="eyebrow steel">Targets</div>
     <h2>Capability matrix.</h2>
-    <p class="lede" style="margin-top:22px">Each target has a <code>capabilities.yaml</code>. During sync, an ingredient the target cannot express produces an explicit warning and, where defined, a fallback (a subagent emitted as a command, for instance). Nothing is dropped silently.</p>
+    <p class="lede" style="margin-top:22px">A per-target <code>capabilities.yaml</code> is planned; today an emitter that cannot express an ingredient warns and skips it directly. During sync, an ingredient the target cannot express produces an explicit warning and, where defined, a fallback (a subagent emitted as a command, for instance). Nothing is dropped silently.</p>
 
     <div class="matrix-wrap">
       <table>

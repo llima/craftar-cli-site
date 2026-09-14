@@ -12,7 +12,7 @@ This file is the plain-text companion of the Craftar page (index.html), written 
 - Recipe: named set of ingredients with parameters. Recipes `extend` others; stack recipes declare a `slot` so two stacks for the same role (e.g. two front-end frameworks) cannot coexist.
 - Profile: one team — its recipes, repositories, template feeds, project-management tool, internal platform, and which AI coders that team uses.
 - Workspace: a local folder (one repo or a folder of repos) with a `craftar.yaml` declaring profile, recipe add/remove and targets, plus a git-ignored `craftar.local.yaml` for per-developer overrides.
-- Target: an AI coder to emit for — `claude-code`, `kiro`, `kimi`, `codex`, `cursor`, `warp`, `agents-md`. Each has a `capabilities.yaml`.
+- Target: an AI coder to emit for — `claude-code`, `kiro`, `kimi`, `codex`, `cursor`, `warp`, `agents-md`. A per-target `capabilities.yaml` is planned (each has a `capabilities.yaml`); today an emitter that cannot express an ingredient warns and skips it directly.
 - Lockfile (`craftar.lock`): Forge SHA, resolved recipes, and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.
 - Registry (`~/.craftar/registry.json`): every workspace on the machine with path, profile, last sync and status.
 
@@ -91,7 +91,7 @@ P2 resolved (diagram): same developer machine and same four workspaces as the pr
 
 ## Capabilities (F1–F12; "working" = runs today and is covered by tests; "mvp" = first release; "planned" = designed, not built)
 
-- F1 Forge → workspace sync [working, mvp] (P1, P2): `craftar sync [--dry-run] [--check] [--overwrite-drift]`, `diff`, `status` (per file: new, update, unchanged, adopt, drift, collision, orphan). Planned: `--forge-ref`, `--targets`, `update`, following a Forge branch or pinning a tag.
+- F1 Forge → workspace sync [working, mvp] (P1, P2): `craftar sync [--dry-run] [--check] [--overwrite-drift]`, `diff`, `status` (per file: new, update, unchanged, adopt, drift, collision, orphan, orphan-drift); sync prints what it wrote, removed and skipped, file by file. Planned: `--forge-ref`, `--targets`, `update`, following a Forge branch or pinning a tag.
 - F2 Multi-target emission [working, mvp] (P1): `craftar import --from claude-code`; Craftar's own emitters for Claude Code, Kiro (byte-identical to a hand-built workspace, including agent JSON and command mirrors) and AGENTS.md; post-processors for gaps (e.g. Kiro agent `resources`). Planned: `craftar targets`, rulesync for further tool-specific formats.
 - F3 Layers and stack slots [resolution working] (P1): layer resolution, exclusive slots, params, `explain`; `craftar.local.yaml` (git-ignored) overrides the workspace for one developer, its arrays replacing the workspace's. Planned: `add recipe`, `remove recipe`, `recipes`, `ingredients`.
 - F4 Workspace bootstrap (P2): `craftar init [--profile --targets --yes]`.
@@ -104,18 +104,20 @@ P2 resolved (diagram): same developer machine and same four workspaces as the pr
 - F11 Craftar as an MCP server (P1, P2): `craftar mcp`; Claude Code plugin, Agent Plugin, Warp workflows as thin shells.
 - F12 Diagnostics (P2): `craftar doctor`.
 
-## Invariants (each derived from a failure mode)
+## Invariants (each derived from a failure mode; these are the constraints Craftar is built against — the two marked (planned) are design commitments, not yet enforced by the code)
 
 - Never touch a file not in the lockfile — unknown files are preserved; one at a path the Forge would write is reported as a collision (FM-1).
 - Never hash raw bytes — normalize LF, UTF-8, strip BOM; compare JSON structurally (FM-2).
 - Never leave an orphan on disk (FM-3).
 - Never require a manual mirror — everything a second target needs is generated (FM-4).
-- Never split a rule from its reviewer — one ingredient, two outputs (FM-5).
+- Never split a rule from its reviewer — one ingredient, two outputs (FM-5) (planned; today an ingredient still emits to one target at a time).
 - Never inline a volatile value — declared once in the profile, injected as params (FM-6).
 - Never translate — language is an attribute of the ingredient (FM-7).
-- Never store a secret — `authEnv` references, `settings.example.json`, `doctor` checks (FM-8).
+- Never store a secret — `authEnv` references, `settings.example.json`, `doctor` checks (FM-8) (planned; `craftar import` already refuses ingredients holding secret-like values).
 
 ## Targets and capability coverage
+
+A per-target `capabilities.yaml` is planned (each has a `capabilities.yaml`); today an emitter that cannot express an ingredient warns and skips it directly.
 
 Claude Code: full. Kiro: rules with always/fileMatch/manual inclusion, commands, custom agents, hooks partial, skills, MCP. Kimi: AGENTS.md and skills; commands and subagents via fallback; no hooks. Codex: AGENTS.md, `[hooks]` block, skills, MCP; commands via fallback; no subagents. Cursor: `.cursor/rules/*.mdc` with globs/always, Agent Plugin skills, MCP; commands via fallback. Warp: workflows and MCP. AGENTS.md: plain rules, skills, `mcp.json`. Anything a target cannot express is reported and skipped or given a declared fallback; nothing is dropped silently. Kimi and Codex rows are pending verification.
 
