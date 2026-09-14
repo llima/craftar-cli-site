@@ -313,6 +313,51 @@
   .status-grid p, .status-grid li { font-size: 14.5px; color: var(--muted); }
   .status-grid ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
   .status-grid li::before { content: "— "; color: var(--faint); }
+
+  /* fluxo do sync: import sobe (ember), sync desce (steel) */
+  .diagram .comet { fill: none; stroke-width: 2.8; stroke-linecap: round; }
+  .diagram .comet, .diagram .glow, .diagram .cap {
+    animation-duration: 9.0s; animation-timing-function: linear;
+    animation-iteration-count: infinite; }
+  .diagram .comet.em, .diagram .glow.em { stroke: #F3B183; }
+  .diagram .comet.st, .diagram .glow.st { stroke: #CFE6F7; }
+  .diagram .glow { fill: none; stroke-width: 2.2; opacity: 0; }
+  .diagram .cap { opacity: 0; }
+  .diagram .c1 { stroke-dasharray: 16 223.2; animation-name: k-c1; }
+  @keyframes k-c1 { 0%, 5.56% { stroke-dashoffset: -183.2; } 25.89%, 100% { stroke-dashoffset: 16; } }
+  .diagram .c2 { stroke-dasharray: 16 141.6; animation-name: k-c2; }
+  @keyframes k-c2 { 0%, 14.56% { stroke-dashoffset: -101.6; } 25.89%, 100% { stroke-dashoffset: 16; } }
+  .diagram .c3 { stroke-dasharray: 16 74.0; animation-name: k-c3; }
+  @keyframes k-c3 { 0%, 27.22% { stroke-dashoffset: -34.0; } 31.0%, 100% { stroke-dashoffset: 16; } }
+  .diagram .c4 { stroke-dasharray: 16 74.0; animation-name: k-c4; }
+  @keyframes k-c4 { 0%, 47.78% { stroke-dashoffset: 16; } 51.56%, 100% { stroke-dashoffset: -34.0; } }
+  .diagram .c5 { stroke-dasharray: 16 223.2; animation-name: k-c5; }
+  @keyframes k-c5 { 0%, 52.78% { stroke-dashoffset: 16; } 73.11%, 100% { stroke-dashoffset: -183.2; } }
+  .diagram .c6 { stroke-dasharray: 16 141.6; animation-name: k-c6; }
+  @keyframes k-c6 { 0%, 52.78% { stroke-dashoffset: 16; } 64.11%, 100% { stroke-dashoffset: -101.6; } }
+  .diagram .c7 { stroke-dasharray: 16 135.3; animation-name: k-c7; }
+  @keyframes k-c7 { 0%, 52.78% { stroke-dashoffset: 16; } 63.33%, 100% { stroke-dashoffset: -95.3; } }
+  .diagram .c8 { stroke-dasharray: 16 214.3; animation-name: k-c8; }
+  @keyframes k-c8 { 0%, 52.78% { stroke-dashoffset: 16; } 72.11%, 100% { stroke-dashoffset: -174.3; } }
+  .diagram .gf { animation-name: k-gf; }
+  @keyframes k-gf { 0%, 31.0% { opacity: 0; } 33.0% { opacity: .75; } 39.44%, 100% { opacity: 0; } }
+  .diagram .g6 { animation-name: k-g6; }
+  @keyframes k-g6 { 0%, 63.33% { opacity: 0; } 65.33% { opacity: .75; } 71.67%, 100% { opacity: 0; } }
+  .diagram .g5 { animation-name: k-g5; }
+  @keyframes k-g5 { 0%, 64.11% { opacity: 0; } 66.11% { opacity: .75; } 72.44%, 100% { opacity: 0; } }
+  .diagram .g8 { animation-name: k-g8; }
+  @keyframes k-g8 { 0%, 72.11% { opacity: 0; } 74.11% { opacity: .75; } 80.44%, 100% { opacity: 0; } }
+  .diagram .g7 { animation-name: k-g7; }
+  @keyframes k-g7 { 0%, 73.11% { opacity: 0; } 75.11% { opacity: .75; } 81.44%, 100% { opacity: 0; } }
+  .diagram .g7b { animation-name: k-g7b; }
+  @keyframes k-g7b { 0%, 73.11% { opacity: 0; } 75.11% { opacity: .75; } 81.44%, 100% { opacity: 0; } }
+  .diagram .cap1 { animation-name: k-cap1; }
+  @keyframes k-cap1 { 0%, 2.78% { opacity: 0; } 6.11%, 37.78% { opacity: 1; } 41.11%, 100% { opacity: 0; } }
+  .diagram .cap2 { animation-name: k-cap2; }
+  @keyframes k-cap2 { 0%, 45.56% { opacity: 0; } 48.89%, 80.56% { opacity: 1; } 83.89%, 100% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .diagram .comet, .diagram .glow, .diagram .cap { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -513,7 +558,7 @@
     <h2>Source, resolution, emission.</h2>
     <p class="lede" style="margin-top:22px">Craftar borrows the shape of a build system. Ingredients are source; recipes and profiles compose them; <code>craftar sync</code> resolves the composition for one workspace and emits target-specific outputs, recording every output in a lockfile. The generated files are committed to the workspace, so a team that only uses Kiro never needs Craftar installed.</p>
 
-    <svg class="diagram" viewBox="9.5 0 881 400" role="img" aria-labelledby="d2t" aria-describedby="d2d">
+    <svg id="flow" class="diagram" viewBox="9.5 0 881 400" role="img" aria-labelledby="d2t" aria-describedby="d2d">
       <title id="d2t">With Craftar: one Forge resolved per workspace and emitted to each team's AI coders</title>
       <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace fetches the Forge at a pinned ref, resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ and .kiro/ with 7 agents; team B swaps the frontend recipe and emits AGENTS.md for Kimi; team C pins the Forge at tag v2.3 and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.</desc>
       <!-- forge -->
@@ -540,7 +585,7 @@
       <path class="edge gen" d="M440 200 C 480 200, 480 45, 520 45"/>
       <path class="edge gen" d="M440 200 C 480 200, 480 145, 520 145"/>
       <path class="edge gen" d="M440 200 C 480 200, 480 245, 520 245"/>
-      <path class="edge gen" d="M440 200 C 480 200, 480 345, 520 345"/>
+      <path class="edge gen" d="M440 200 C 480 200, 480 345, 520 345"/><g aria-hidden="true"><path class="comet c1 em" d="M440 200 C 480 200, 480 45, 520 45"/><path class="comet c2 em" d="M440 200 C 480 200, 480 145, 520 145"/><path class="comet c3 em" d="M250 200 H 284"/><path class="comet c4 em" d="M250 200 H 284"/><path class="comet c5 st" d="M440 200 C 480 200, 480 45, 520 45"/><path class="comet c6 st" d="M440 200 C 480 200, 480 145, 520 145"/><path class="comet c7 st" d="M440 200 C 480 200, 480 245, 520 245"/><path class="comet c8 st" d="M440 200 C 480 200, 480 345, 520 345"/></g>
       <!-- workspaces -->
       <g>
         <rect class="box tgt" x="520" y="14" width="370" height="66" rx="4"/>
@@ -567,7 +612,7 @@
         <rect class="chip" x="740" y="324" width="102" height="18" rx="3"/><text class="st" x="748" y="337">.cursor/rules</text>
         <text class="s" x="878" y="368" text-anchor="end">7 agents · cursor · drift 1</text>
       </g>
-    </svg>
+    <g aria-hidden="true"><rect class="glow em gf" x="10" y="90" width="240" height="220" rx="4"/><rect class="glow st g7" x="700" y="24" width="70" height="18" rx="3"/><rect class="glow st g7b" x="776" y="24" width="56" height="18" rx="3"/><rect class="glow st g5" x="760" y="124" width="82" height="18" rx="3"/><rect class="glow st g6" x="760" y="224" width="82" height="18" rx="3"/><rect class="glow st g8" x="740" y="324" width="102" height="18" rx="3"/><text class="s cap cap1" x="12" y="44" fill="var(--ember)">craftar import · team-a, team-b → Forge</text><text class="s cap cap2" x="12" y="44" fill="var(--steel)">craftar sync · Forge → every workspace</text></g></svg>
     <p class="diagram-cap">P1 resolved — solid edges are generated and recorded in each workspace's lockfile; <code>status</code> reads the lock to report behind / drift per workspace.</p>
 
 
