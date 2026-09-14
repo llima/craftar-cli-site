@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Craftar — a build system for AI-coding harnesses</title>
+<meta name="description" content="Craftar is an open-source CLI that keeps your AI-coding harness — rules, agents, commands, skills, hooks, MCPs — in one Forge and generates it, natively, for every workspace and every AI coder your clients use.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Craftar","description":"Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients and recipes, and emits it in the native format of each AI coder (Claude Code, Kiro, Kimi, Codex, Cursor, Warp, AGENTS.md) into every workspace, with a lockfile for drift detection and a registry of workspaces.","programmingLanguage":"TypeScript","runtimePlatform":"Node.js","applicationCategory":"DeveloperApplication","keywords":["AI coding agents","harness","Claude Code","Kiro","Cursor","Codex","AGENTS.md","MCP","rulesync","developer tooling","monorepo","workspace sync"],"isBasedOn":"https://github.com/dyoshikawa/rulesync"}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --ink: #0A0E13;
+    --plate: #11171F;
+    --plate-2: #161E28;
+    --seam: #1C2733;
+    --seam-2: #263443;
+    --text: #E7ECF1;
+    --muted: #8A98A8;
+    --faint: #5C6B7B;
+    --ember: #E9915A;
+    --ember-soft: rgba(233,145,90,.14);
+    --steel: #7FB4D6;
+    --steel-soft: rgba(127,180,214,.14);
+    --ok: #7BC48A;
+    --warn: #E0B35A;
+    --display: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    --w: 1120px;
+    --r: 4px;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: dark; scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--ink); color: var(--text);
+    font-family: var(--body); font-size: 17px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-block: 0; padding-inline: 24px;
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--steel); outline-offset: 3px; }
+  code, pre, kbd, .mono { font-family: var(--mono); }
+  .wrap { max-width: var(--w); margin-inline: auto; }
+  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -.03em; }
+  h1 { font-size: clamp(34px, 4.6vw, 58px); line-height: 1.04; font-weight: 800; letter-spacing: -.045em; }
+  h2 { font-size: clamp(24px, 2.8vw, 36px); line-height: 1.12; font-weight: 700; letter-spacing: -.035em; }
+  h3 { font-size: 18px; line-height: 1.3; font-weight: 700; }
+  p { margin: 0; }
+  .lede { font-size: 20px; line-height: 1.5; color: var(--muted); }
+  .prose { color: var(--muted); }
+  .prose p + p { margin-top: 1em; }
+  .prose strong, .lede strong { color: var(--text); font-weight: 600; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ember); display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px;
+  }
+  .eyebrow::before { content: ""; width: 18px; height: 1px; background: var(--ember); }
+  .eyebrow.steel { color: var(--steel); } .eyebrow.steel::before { background: var(--steel); }
+  section { padding-block: 96px; border-top: 1px solid var(--seam); }
+  @media (max-width: 720px) { section { padding-block: 64px; } body { font-size: 16px; } }
+
+  /* ---------- nav ---------- */
+  nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; }
+  .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--display); font-weight: 800; font-size: 19px; letter-spacing: -.04em; }
+  .logo svg { width: 26px; height: 26px; }
+  nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 28px; font-size: 15px; color: var(--muted); }
+  nav ul a { text-decoration: none; } nav ul a:hover { color: var(--text); }
+  @media (max-width: 860px) { nav ul { display: none; } }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: var(--r);
+    font-size: 15px; font-weight: 500; text-decoration: none; border: 1px solid var(--seam-2); color: var(--text);
+    background: var(--plate); transition: border-color .15s, background .15s;
+  }
+  .btn:hover { border-color: var(--faint); background: var(--plate-2); }
+  .btn.primary { background: var(--ember); border-color: var(--ember); color: #1A0F08; font-weight: 600; }
+  .btn.primary:hover { background: #F0A36F; border-color: #F0A36F; }
+  .btn svg { width: 16px; height: 16px; }
+
+  /* ---------- hero ---------- */
+  .hero { padding-block: 72px 96px; border-top: 0; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; }
+  @media (max-width: 960px) { .hero { grid-template-columns: 1fr; padding-block: 40px 72px; gap: 40px; } }
+  .hero h1 .em { color: var(--ember); }
+  .hero .lede { margin-top: 26px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; align-items: center; }
+  .install { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--seam-2); border-radius: var(--r); background: var(--plate); font-family: var(--mono); font-size: 14px; color: var(--muted); }
+  .install b { color: var(--text); font-weight: 500; }
+  .install .dollar { color: var(--ember); }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 28px; font-family: var(--mono); font-size: 12.5px; color: var(--faint); letter-spacing: .02em; }
+  .hero-meta span::before { content: "·"; margin-right: 10px; color: var(--seam-2); }
+  .hero-meta span:first-child::before { content: none; }
+
+  /* terminal */
+  .term { background: #070A0E; border: 1px solid var(--seam-2); border-radius: 6px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(233,145,90,.06); }
+  .term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--seam); background: var(--plate); font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  .term-bar .dots { display: flex; gap: 6px; margin-right: 6px; }
+  .term-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--seam-2); display: block; }
+  .term pre { margin: 0; padding: 18px 20px 20px; font-size: 12.5px; line-height: 1.65; overflow-x: auto; color: #C9D3DD; white-space: pre; }
+  .term .p { color: var(--ember); } .term .c { color: var(--faint); } .term .k { color: var(--steel); }
+  .term .add { color: var(--ok); } .term .chg { color: var(--warn); } .term .del { color: #D98A8A; }
+  .term .dim { color: var(--faint); }
+  .cursor { display: inline-block; width: 8px; height: 14px; background: var(--ember); vertical-align: -2px; animation: blink 1.1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---------- problem ---------- */
+  .split { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: start; }
+  @media (max-width: 900px) { .split { grid-template-columns: 1fr; gap: 36px; } }
+  .sticky { position: sticky; top: 32px; }
+  @media (max-width: 900px) { .sticky { position: static; } }
+  .quotes { display: grid; gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }
+  .quote { background: var(--plate); padding: 22px 24px; display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .quote blockquote { margin: 0; font-size: 16.5px; line-height: 1.5; color: var(--text); }
+  .quote blockquote::before { content: "“"; color: var(--ember); } .quote blockquote::after { content: "”"; color: var(--ember); }
+  .quote .src { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  .quote .fix { font-size: 14.5px; color: var(--muted); padding-top: 10px; border-top: 1px dashed var(--seam-2); }
+  .quote .fix b { color: var(--steel); font-weight: 500; font-family: var(--mono); font-size: 13px; letter-spacing: .04em; text-transform: uppercase; margin-right: 8px; }
+
+  .before { margin-top: 44px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 720px) { .before { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  .ws { border: 1px solid var(--seam); border-radius: var(--r); background: var(--plate); padding: 14px; font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.55; }
+  .ws b { display: block; color: var(--text); font-weight: 500; margin-bottom: 6px; }
+  .ws .t { color: var(--steel); }
+  .ws .v { color: var(--warn); }
+  .before-cap { margin-top: 12px; font-size: 14px; color: var(--faint); }
+
+  /* ---------- how it works ---------- */
+  .flow { margin-top: 56px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); gap: 20px; align-items: stretch; }
+  @media (max-width: 960px) { .flow { grid-template-columns: 1fr; } .flow .arrow { transform: rotate(90deg); justify-self: center; } }
+  .col-h { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; display: flex; justify-content: space-between; }
+  .col-h .tag { color: var(--ember); } .col-h .tag.steel { color: var(--steel); }
+  .stack { display: grid; gap: 6px; }
+  .layer { border: 1px solid var(--seam-2); border-left: 3px solid var(--ember); border-radius: var(--r); background: var(--plate); padding: 12px 14px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .layer b { font-weight: 600; font-size: 15px; }
+  .layer span { font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: right; }
+  .layer:nth-child(1) { border-left-color: rgba(233,145,90,.35); }
+  .layer:nth-child(2) { border-left-color: rgba(233,145,90,.55); }
+  .layer:nth-child(3) { border-left-color: rgba(233,145,90,.75); }
+  .layer:nth-child(4) { border-left-color: var(--ember); }
+  .layer:nth-child(5) { border-left-color: var(--ember); border-style: dashed; border-left-style: solid; }
+  .stack-cap { margin-top: 12px; font-size: 13.5px; color: var(--faint); }
+  .arrow { align-self: center; color: var(--faint); display: grid; place-items: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; }
+  .arrow svg { width: 40px; height: 16px; }
+  .engine { border: 1px solid var(--seam-2); border-radius: 6px; background: linear-gradient(180deg, var(--plate-2), var(--plate)); padding: 18px; height: 100%; display: flex; flex-direction: column; gap: 14px; }
+  .engine .cmd { font-family: var(--mono); font-size: 15px; color: var(--text); }
+  .engine .cmd .p { color: var(--ember); }
+  .engine ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 14px; color: var(--muted); counter-reset: step; }
+  .engine ol li { position: relative; padding-left: 32px; }
+  .engine ol li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 2px; width: 22px; font-family: var(--mono); font-size: 11.5px; color: var(--ember); border: 1px solid var(--seam-2); border-radius: 3px; text-align: center; line-height: 18px; height: 20px; }
+  .targets { display: grid; gap: 6px; }
+  .target { border: 1px solid var(--seam-2); border-left: 3px solid var(--steel); border-radius: var(--r); background: var(--plate); padding: 10px 14px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .target b { font-weight: 600; font-size: 15px; }
+  .target code { font-size: 12px; color: var(--muted); }
+
+  .concepts { margin-top: 72px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }
+  @media (max-width: 960px) { .concepts { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 520px) { .concepts { grid-template-columns: 1fr; } }
+  .concept { background: var(--plate); padding: 22px; display: grid; gap: 8px; align-content: start; }
+  .concept h3 { font-size: 17px; }
+  .concept code { font-size: 12px; color: var(--steel); }
+  .concept p { font-size: 14.5px; color: var(--muted); }
+
+  /* ---------- features ---------- */
+  .features { margin-top: 56px; display: grid; gap: 1px; background: var(--seam); border-top: 1px solid var(--seam); border-bottom: 1px solid var(--seam); }
+  .feature { background: var(--ink); padding: 36px 0; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) minmax(0, 3fr); gap: 32px; align-items: start; }
+  @media (max-width: 960px) { .feature { grid-template-columns: 1fr; gap: 16px; padding: 28px 0; } }
+  .feature .id { font-family: var(--mono); font-size: 12px; color: var(--faint); letter-spacing: .08em; margin-bottom: 8px; display: flex; gap: 10px; align-items: center; }
+  .pill { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 7px; border-radius: 3px; border: 1px solid var(--seam-2); color: var(--muted); }
+  .pill.now { color: var(--ok); border-color: rgba(123,196,138,.4); }
+  .pill.mvp { color: var(--ember); border-color: rgba(233,145,90,.4); }
+  .feature h3 { font-size: 19px; }
+  .feature .why { color: var(--muted); font-size: 15.5px; }
+  .feature .why b { color: var(--text); font-weight: 600; }
+  .feature .how { font-size: 15px; color: var(--muted); display: grid; gap: 12px; }
+  .cmds { display: grid; gap: 4px; }
+  .cmds code { display: block; font-size: 13px; color: var(--text); background: var(--plate); border: 1px solid var(--seam); border-radius: 3px; padding: 6px 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .cmds code .p { color: var(--ember); } .cmds code .c { color: var(--faint); }
+
+  /* ---------- guarantees ---------- */
+  .rules { margin-top: 48px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }
+  @media (max-width: 800px) { .rules { grid-template-columns: 1fr; } }
+  .rule { background: var(--plate); padding: 24px; display: grid; gap: 10px; align-content: start; }
+  .rule .never { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #D98A8A; }
+  .rule h3 { font-size: 18px; }
+  .rule p { font-size: 14.5px; color: var(--muted); }
+  .rule .because { font-size: 13.5px; color: var(--faint); border-top: 1px dashed var(--seam-2); padding-top: 10px; }
+  .rule .because::before { content: "learned the hard way — "; color: var(--faint); }
+
+  /* ---------- matrix ---------- */
+  .matrix-wrap { margin-top: 48px; overflow-x: auto; border: 1px solid var(--seam); border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--seam); vertical-align: top; }
+  th { font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); font-weight: 500; background: var(--plate); }
+  tbody tr:last-child td { border-bottom: 0; }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  td code { font-size: 12.5px; color: var(--muted); }
+  .y { color: var(--ok); } .n { color: var(--faint); } .part { color: var(--warn); }
+  .legend { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 14px; font-family: var(--mono); font-size: 12px; color: var(--faint); }
+
+  /* ---------- roadmap ---------- */
+  .phases { margin-top: 48px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 1000px) { .phases { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 560px) { .phases { grid-template-columns: 1fr; } }
+  .phase { border: 1px solid var(--seam); border-radius: var(--r); background: var(--plate); padding: 18px; display: grid; gap: 10px; align-content: start; position: relative; }
+  .phase .n0 { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); display: flex; justify-content: space-between; align-items: center; }
+  .phase h3 { font-size: 18px; }
+  .phase ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 14px; color: var(--muted); }
+  .phase ul li::before { content: "— "; color: var(--faint); }
+  .phase.now { border-color: rgba(233,145,90,.5); background: linear-gradient(180deg, var(--ember-soft), var(--plate) 60%); }
+  .phase.done { border-color: rgba(123,196,138,.35); }
+  .phase .bar { height: 3px; background: var(--seam-2); border-radius: 2px; overflow: hidden; }
+  .phase .bar i { display: block; height: 100%; background: var(--ember); }
+
+  /* ---------- footer cta ---------- */
+  .final { text-align: left; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: end; }
+  @media (max-width: 800px) { .final { grid-template-columns: 1fr; } }
+  footer { border-top: 1px solid var(--seam); padding-block: 28px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; font-size: 13.5px; color: var(--faint); }
+  footer a { text-decoration: none; color: var(--muted); } footer a:hover { color: var(--text); }
+
+  .pnum { display: flex; gap: 16px; align-items: baseline; margin-top: 56px; }
+  .pnum h3 { font-size: clamp(20px, 2.2vw, 26px); letter-spacing: -.03em; }
+  .ptag { flex: none; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--ember); border: 1px solid rgba(233,145,90,.45); border-radius: 3px; padding: 3px 8px; }
+  .pgrid { margin-top: 40px; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }
+  @media (max-width: 860px) { .pgrid { grid-template-columns: 1fr; } }
+  .pcard { background: var(--plate); padding: 26px 28px 24px; display: grid; gap: 14px; align-content: start; }
+  .pcard .pnum { margin-top: 0; align-items: flex-start; }
+  .pcard .pnum h3 { font-size: 19px; line-height: 1.3; }
+  .pcard p { font-size: 15px; line-height: 1.6; color: var(--muted); }
+  .pcard p strong { color: var(--text); font-weight: 600; }
+  .pcard .req { font-size: 14px; color: var(--muted); border-top: 1px dashed var(--seam-2); padding-top: 12px; }
+  .pcard .req b { color: var(--steel); font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; margin-right: 10px; }
+  .stage { margin-top: 28px; border: 1px solid var(--seam); border-radius: 6px; background: var(--ink); }
+  .stage-bar { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--seam); flex-wrap: wrap; }
+  .seg { font-family: var(--mono); font-size: 12.5px; letter-spacing: .04em; padding: 6px 12px; border-radius: 3px; border: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer; }
+  .seg:hover { color: var(--text); }
+  .seg[aria-selected="true"] { background: var(--plate-2); border-color: var(--seam-2); color: var(--ember); }
+  .stage-hint { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
+  .stage-hint a { color: var(--steel); text-decoration: none; }
+  .fig { padding: 20px 20px 16px; }
+  .fig .diagram { margin-top: 0; }
+  .fig-inner.narrow { max-width: 640px; margin-inline: auto; }
+  /* ---------- colophon / stamp ---------- */
+  .colophon { border-top: 1px solid var(--seam); padding-block: 56px; display: grid; grid-template-columns: auto minmax(0,1fr); gap: 40px; align-items: center; }
+  @media (max-width: 720px) { .colophon { grid-template-columns: 1fr; } }
+  .colophon p { color: var(--muted); font-size: 15px; }
+  .colophon a { color: var(--steel); text-decoration: none; }
+  .stamp { position: relative; display: grid; place-items: center; width: 134px; height: 134px; border-radius: 50%; border: 2.5px solid var(--ember); color: var(--ember); font-family: var(--mono); text-transform: uppercase; transform: rotate(-8deg); text-decoration: none; user-select: none; opacity: .9; }
+  .stamp::before { content: ""; position: absolute; inset: 4px; border-radius: 50%; border: 1px dashed var(--ember); opacity: .7; }
+  .stamp .ring { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .stamp .ring text { font-family: var(--mono); font-size: 10.5px; letter-spacing: .16em; fill: var(--ember); font-weight: 500; }
+  .stamp .center { display: grid; justify-items: center; gap: 5px; }
+  .stamp .big { font-size: 35px; font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+  .stamp .mid { font-size: 11px; letter-spacing: .28em; line-height: 1; }
+  .stamp .sep { width: 44px; height: 1px; background: var(--ember); opacity: .8; }
+  .stamp .small { font-size: 8px; letter-spacing: .1em; text-transform: none; opacity: .85; }
+  .stamp:hover { opacity: 1; }
+  .colophon .stamp, .colophon .stamp:hover { color: var(--ember); }
+  /* ---------- diagrams ---------- */
+  .diagram { width: 100%; height: auto; display: block; margin-top: 40px; }
+  .diagram text { font-family: var(--mono); fill: var(--muted); font-size: 12px; }
+  .diagram .t { fill: var(--text); font-weight: 600; font-size: 13px; }
+  .diagram .s { fill: var(--faint); font-size: 11px; }
+  .diagram .em { fill: var(--ember); } .diagram .st { fill: var(--steel); } .diagram .bad { fill: #D98A8A; }
+  .diagram .box { fill: var(--plate); stroke: var(--seam-2); }
+  .diagram .box.src { stroke: var(--ember); }
+  .diagram .box.tgt { stroke: var(--steel); }
+  .diagram .chip { fill: var(--plate-2); stroke: var(--seam-2); }
+  .diagram .agent { fill: var(--ember-soft); stroke: rgba(233,145,90,.5); }
+  .diagram .agent.faded { fill: var(--plate-2); stroke: var(--seam-2); }
+  .diagram .edge { stroke: var(--faint); fill: none; stroke-width: 1.2; }
+  .diagram .edge.manual { stroke-dasharray: 4 4; stroke: #B07A7A; }
+  .diagram .edge.gen { stroke: var(--steel); }
+  .diagram .edge.src { stroke: var(--ember); }
+  .diagram-cap { margin-top: 12px; font-size: 13.5px; color: var(--faint); font-family: var(--mono); }
+  .fail-wrap { margin-top: 48px; overflow-x: auto; border: 1px solid var(--seam); border-radius: 6px; }
+  .fail-wrap table { min-width: 640px; }
+  .fail-wrap td:first-child { font-family: var(--mono); font-weight: 500; color: var(--faint); font-size: 12px; white-space: nowrap; }
+  .fail-wrap td:nth-child(2) { font-weight: 600; }
+  .fail-wrap td { color: var(--muted); font-size: 14px; }
+  .fail-wrap td:nth-child(2) { color: var(--text); }
+  .fail-wrap td code { color: var(--steel); }
+  .ref { font-family: var(--mono); font-size: 11.5px; color: var(--faint); letter-spacing: .04em; }
+  .feature .why b { color: var(--faint); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; display: block; margin-bottom: 4px; }
+  .feature .how > p:first-child::before, .feature .how .mech::before { content: "mechanism"; display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
+  .status-grid { margin-top: 40px; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }
+  @media (max-width: 800px) { .status-grid { grid-template-columns: 1fr; } }
+  .status-grid > div { background: var(--plate); padding: 22px; display: grid; gap: 8px; align-content: start; }
+  .status-grid h3 { font-size: 15px; color: var(--muted); font-weight: 600; }
+  .status-grid p, .status-grid li { font-size: 14.5px; color: var(--muted); }
+  .status-grid ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+  .status-grid li::before { content: "— "; color: var(--faint); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav aria-label="Primary">
+    <a class="logo" href="#top" aria-label="Craftar home">
+      <svg viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <rect x="2" y="14" width="10" height="10" rx="1.5" fill="#E9915A"/>
+        <rect x="14" y="14" width="10" height="10" rx="1.5" fill="#7FB4D6"/>
+        <rect x="8" y="2" width="10" height="10" rx="1.5" fill="#E7ECF1"/>
+      </svg>
+      Craftar
+    </a>
+    <ul>
+      <li><a href="#problem">Problems</a></li>
+      <li><a href="#failures">Failure modes</a></li>
+      <li><a href="#model">Model</a></li>
+      <li><a href="#features">Capabilities</a></li>
+      <li><a href="#invariants">Invariants</a></li>
+      <li><a href="#targets">Targets</a></li>
+      <li><a href="#status">Status</a></li>
+    </ul>
+    <a class="btn" href="#" rel="noopener">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      github
+    </a>
+  </nav>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero" id="top">
+    <div>
+      <div class="eyebrow">Open-source CLI · TypeScript / Node · design notes</div>
+      <h1>A build system for AI-coding harnesses.</h1>
+      <p class="lede">A <strong>harness</strong> is everything that shapes how coding agents behave in a repository: rules, agents, commands, skills, hooks and MCP servers. Craftar addresses two problems with it: keeping <strong>one harness</strong> consistent across many teams that use different AI coders (<a href="#p1" style="color:var(--steel);text-decoration:none">P1</a>), and keeping <strong>one developer's</strong> many workspaces — each on a different team's Git remote — on the same version of it (<a href="#p2" style="color:var(--steel);text-decoration:none">P2</a>). It does so by treating the harness as source in a Git repository, the <strong>Forge</strong>, composed per team and emitted in each tool's native format with a lockfile.</p>
+      <div class="cta">
+        <a class="btn primary" href="#model">Read the model</a>
+        <span class="install"><span class="dollar">$</span><b>npx craftar sync</b></span>
+      </div>
+      <div class="hero-meta">
+        <span>claude-code</span><span>kiro</span><span>kimi</span><span>codex</span><span>cursor</span><span>warp</span><span>agents-md</span>
+      </div>
+    </div>
+
+    <div class="term" aria-label="Terminal showing craftar sync output">
+      <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~/work/team-a/platform-workspace</div>
+<pre><span class="p">$</span> craftar sync
+<span class="c">forge</span>    git@git.example/org/forge <span class="dim">@ 7c1e9a2</span>  <span class="c">(main)</span>
+<span class="c">profile</span>  team-a
+<span class="c">recipes</span>  base, backend-clean-arch, frontend-angular, aws-local, pm-azure-devops
+<span class="c">targets</span>  claude-code, kiro
+
+<span class="k">claude-code</span>
+  <span class="add">+ .claude/rules/frontend-angular.md</span>          <span class="dim">rules/frontend-angular</span>
+  <span class="chg">~ .claude/agents/frontend-reviewer.md</span>        <span class="dim">agents/frontend-reviewer</span>
+  <span class="add">+ .claude/commands/create-component.md</span>     <span class="dim">commands/create-component</span>
+  <span class="dim">= 41 unchanged</span>
+<span class="k">kiro</span>
+  <span class="add">+ .kiro/steering/frontend-angular.md</span>        <span class="dim">inclusion: fileMatch **/*.ts</span>
+  <span class="chg">~ .kiro/agents/frontend-reviewer.json</span>       <span class="dim">resources: steering/frontend-angular.md</span>
+  <span class="del">- .kiro/steering/frontend-react.md</span>          <span class="dim">orphan — recipe removed</span>
+  <span class="dim">! hook format-on-edit has no Kiro equivalent; skipped</span>
+
+<span class="c">kept</span>     .claude/rules/local-notes.md              <span class="dim">not managed by craftar</span>
+<span class="c">lock</span>     craftar.lock updated · 3 added, 2 changed, 1 removed
+<span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
+    </div>
+  </section>
+
+  <!-- ================= PROBLEM ================= -->
+  <section id="problem">
+    <div class="eyebrow">Problem statement</div>
+    <h2>Two problems, one root: the harness has no source and no record.</h2>
+
+    <div class="pgrid">
+      <article class="pcard" id="p1">
+        <div class="pnum"><span class="ptag">P1</span><h3>One harness, T teams, K AI coders, A agents each — maintained by hand.</h3></div>
+        <p>A harness is a <strong>roster of agents</strong> — a reviewer per architecture, a docs author, an executor — plus the rules they are bound to, the workflow commands, hooks and MCP servers. Across T teams it exists as <strong>T copies in K formats</strong> (<code>.claude/</code>, <code>.kiro/</code>, <code>AGENTS.md</code>, <code>.cursor/</code>), each holding the same A agents. A change costs T × K manual edits, with no record of what was generated from what.</p>
+        <p class="req"><b>requires</b>one source; emission per target; a record per file.</p>
+      </article>
+      <article class="pcard" id="p2">
+        <div class="pnum"><span class="ptag">P2</span><h3>One developer, many workspaces, separate remotes.</h3></div>
+        <p>One machine, one workspace per team. Each workspace groups that team's repositories on <strong>that team's Git host</strong>; no repository is common to all of them. The harness in each was copied in by hand at a different time. Nothing on the machine records which version each workspace carries, or whether a file in <code>.claude/</code> is still the copy or has been edited in place.</p>
+        <p class="req"><b>requires</b>a channel that is no team repository's remote; a lock per workspace; a registry.</p>
+      </article>
+    </div>
+
+    <div class="stage">
+      <div class="stage-bar" role="tablist" aria-label="Problem diagrams">
+        <button class="seg" role="tab" id="tab-p1" aria-selected="true" aria-controls="fig-p1" data-fig="fig-p1">P1 · today</button>
+        <button class="seg" role="tab" id="tab-p2" aria-selected="false" aria-controls="fig-p2" data-fig="fig-p2">P2 · today</button>
+        <span class="stage-hint">state before Craftar — the resolved state of each is in <a href="#model">Model</a></span>
+      </div>
+      <div id="fig-p1" role="tabpanel" aria-labelledby="tab-p1" class="fig">
+        <div class="fig-inner narrow">
+        <svg class="diagram" style="margin-top:0" viewBox="9.5 0 621 430" role="img" aria-labelledby="d1t" aria-describedby="d1d">
+          <title id="d1t">Today: one harness copied by hand into four team workspaces, each in a different AI coder format</title>
+      <desc id="d1d">Mechanism: a single harness (about 12 rules, 7 agents, 9 commands, skills, hooks and 4 MCP servers) exists only as a folder on the developer's machine. It is copied and translated by hand into four team workspaces: team A uses Claude Code and Kiro (two formats), team B uses Kimi via AGENTS.md, team C uses Codex, team D uses Cursor. Because the copies are manual, they diverge: team B has one stale agent, team C is missing one agent, team D carries version 3 of 5. No edge in this graph is recorded anywhere, so nothing can report which copy is current.</desc>
+          <!-- source -->
+          <rect class="box src" x="10" y="140" width="150" height="150" rx="4"/>
+          <text class="t" x="24" y="164">harness (yours)</text>
+          <text class="s" x="24" y="184">rules ×12</text>
+          <text class="s" x="24" y="200">agents ×7</text>
+          <text class="s" x="24" y="216">commands ×9</text>
+          <text class="s" x="24" y="232">skills · hooks</text>
+          <text class="s" x="24" y="248">mcp ×4</text>
+          <text class="em s" x="24" y="276">a folder + memory</text>
+          <!-- manual edges -->
+          <path class="edge manual" d="M160 215 C 230 215, 230 50, 300 50"/>
+          <path class="edge manual" d="M160 215 C 230 215, 230 160, 300 160"/>
+          <path class="edge manual" d="M160 215 C 230 215, 230 270, 300 270"/>
+          <path class="edge manual" d="M160 215 C 230 215, 230 380, 300 380"/>
+          <text class="bad s" x="196" y="118">copy</text>
+          <text class="bad s" x="196" y="131">translate</text>
+          <text class="bad s" x="196" y="144">by hand</text>
+          <!-- workspaces -->
+          <g>
+            <rect class="box" x="300" y="14" width="330" height="80" rx="4"/>
+            <text class="t" x="314" y="36">team A · workspace</text>
+            <rect class="chip" x="480" y="24" width="64" height="18" rx="3"/><text class="st" x="488" y="37">.claude/</text>
+            <rect class="chip" x="550" y="24" width="72" height="18" rx="3"/><text class="st" x="558" y="37">.kiro/</text>
+            <g transform="translate(314,54)">
+              <rect class="agent" width="38" height="20" rx="3"/><rect class="agent" x="42" width="38" height="20" rx="3"/><rect class="agent" x="84" width="38" height="20" rx="3"/><rect class="agent" x="126" width="38" height="20" rx="3"/><rect class="agent" x="168" width="38" height="20" rx="3"/><rect class="agent" x="210" width="38" height="20" rx="3"/><rect class="agent" x="252" width="38" height="20" rx="3"/>
+            </g>
+            <text class="bad s" x="620" y="84" text-anchor="end">×2 formats</text>
+          </g>
+          <g>
+            <rect class="box" x="300" y="124" width="330" height="80" rx="4"/>
+            <text class="t" x="314" y="146">team B · workspace</text>
+            <rect class="chip" x="540" y="134" width="82" height="18" rx="3"/><text class="st" x="548" y="147">AGENTS.md</text>
+            <g transform="translate(314,164)">
+              <rect class="agent" width="38" height="20" rx="3"/><rect class="agent" x="42" width="38" height="20" rx="3"/><rect class="agent" x="84" width="38" height="20" rx="3"/><rect class="agent faded" x="126" width="38" height="20" rx="3"/><rect class="agent" x="168" width="38" height="20" rx="3"/><rect class="agent" x="210" width="38" height="20" rx="3"/><rect class="agent" x="252" width="38" height="20" rx="3"/>
+            </g>
+            <text class="bad s" x="620" y="194" text-anchor="end">1 stale</text>
+          </g>
+          <g>
+            <rect class="box" x="300" y="234" width="330" height="80" rx="4"/>
+            <text class="t" x="314" y="256">team C · workspace</text>
+            <rect class="chip" x="540" y="244" width="82" height="18" rx="3"/><text class="st" x="548" y="257">codex cfg</text>
+            <g transform="translate(314,274)">
+              <rect class="agent" width="38" height="20" rx="3"/><rect class="agent faded" x="42" width="38" height="20" rx="3"/><rect class="agent" x="84" width="38" height="20" rx="3"/><rect class="agent" x="126" width="38" height="20" rx="3"/><rect class="agent faded" x="168" width="38" height="20" rx="3"/><rect class="agent" x="210" width="38" height="20" rx="3"/>
+            </g>
+            <text class="bad s" x="620" y="304" text-anchor="end">1 missing</text>
+          </g>
+          <g>
+            <rect class="box" x="300" y="344" width="330" height="80" rx="4"/>
+            <text class="t" x="314" y="366">team D · workspace</text>
+            <rect class="chip" x="518" y="354" width="104" height="18" rx="3"/><text class="st" x="526" y="367">.cursor/rules</text>
+            <g transform="translate(314,384)">
+              <rect class="agent" width="38" height="20" rx="3"/><rect class="agent" x="42" width="38" height="20" rx="3"/><rect class="agent" x="84" width="38" height="20" rx="3"/><rect class="agent" x="126" width="38" height="20" rx="3"/><rect class="agent" x="168" width="38" height="20" rx="3"/><rect class="agent" x="210" width="38" height="20" rx="3"/><rect class="agent" x="252" width="38" height="20" rx="3"/>
+            </g>
+            <text class="bad s" x="620" y="414" text-anchor="end">harness v3 of 5</text>
+          </g>
+        </svg>
+        </div>
+        <p class="diagram-cap">dashed edges are manual work; no edge records provenance. Each small block is one agent (reviewer, author, executor…). Faded = diverged or absent.</p>
+      </div>
+      <div id="fig-p2" role="tabpanel" aria-labelledby="tab-p2" class="fig" hidden>
+        <svg class="diagram" style="margin-top:0" viewBox="9.5 0 901 364" role="img" aria-labelledby="d3bt" aria-describedby="d3bd">
+          <title id="d3bt">Today: one developer machine with four team workspaces on separate remotes, each carrying a hand-copied harness of unknown version</title>
+      <desc id="d3bd">Mechanism: one developer machine holds four workspaces, one per team. Each workspace contains that team's repositories cloned from that team's own Git remote (four different hosts), so no repository is shared across workspaces. Each workspace also contains a hand-copied .claude/ harness of unknown version — v3?, v2?, v5?, v4+? — copied at different times or edited in place, with no lockfile. The machine has no registry of workspaces, no shared source for the harness, and no way to verify versions.</desc>
+          <rect class="box" x="10" y="40" width="210" height="250" rx="4"/><text class="t" x="22" y="62">team-a/</text><text class="s bad" x="208" y="61" text-anchor="end">harness v3?</text><line x1="10" y1="74" x2="220" y2="74" stroke="var(--seam-2)"/><text class="s" x="22" y="94">targets  claude-code · kiro</text><text class="s" x="22" y="110">copied   <tspan class="bad">2 months ago</tspan></text><text class="s" x="22" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="22" y="138" width="186" height="20" rx="3"/><text class="s" x="28" y="152">.claude/ · hand-copied</text><text class="s" x="22" y="180" fill="var(--faint)">remote  git.team-a.example</text><rect class="chip" x="22" y="190" width="186" height="20" rx="3"/><text class="s" x="30" y="204" fill="var(--text)">api-core/</text><rect class="chip" x="22" y="216" width="186" height="20" rx="3"/><text class="s" x="30" y="230" fill="var(--text)">web-portal/</text><rect class="chip" x="22" y="242" width="186" height="20" rx="3"/><text class="s" x="30" y="256" fill="var(--text)">worker-jobs/</text><rect class="box" x="240" y="40" width="210" height="250" rx="4"/><text class="t" x="252" y="62">team-b/</text><text class="s bad" x="438" y="61" text-anchor="end">harness v2?</text><line x1="240" y1="74" x2="450" y2="74" stroke="var(--seam-2)"/><text class="s" x="252" y="94">targets  kimi</text><text class="s" x="252" y="110">copied   <tspan class="bad">hand-translated</tspan></text><text class="s" x="252" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="252" y="138" width="186" height="20" rx="3"/><text class="s" x="258" y="152">.claude/ · hand-copied</text><text class="s" x="252" y="180" fill="var(--faint)">remote  github.com/team-b</text><rect class="chip" x="252" y="190" width="186" height="20" rx="3"/><text class="s" x="260" y="204" fill="var(--text)">assets-api/</text><rect class="chip" x="252" y="216" width="186" height="20" rx="3"/><text class="s" x="260" y="230" fill="var(--text)">assets-web/</text><rect class="box" x="470" y="40" width="210" height="250" rx="4"/><text class="t" x="482" y="62">team-c/</text><text class="s bad" x="668" y="61" text-anchor="end">harness v5?</text><line x1="470" y1="74" x2="680" y2="74" stroke="var(--seam-2)"/><text class="s" x="482" y="94">targets  codex</text><text class="s" x="482" y="110">copied   <tspan class="bad">last week</tspan></text><text class="s" x="482" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="482" y="138" width="186" height="20" rx="3"/><text class="s" x="488" y="152">.claude/ · hand-copied</text><text class="s" x="482" y="180" fill="var(--faint)">remote  azure.example/team-c</text><rect class="chip" x="482" y="190" width="186" height="20" rx="3"/><text class="s" x="490" y="204" fill="var(--text)">ledger-api/</text><rect class="chip" x="482" y="216" width="186" height="20" rx="3"/><text class="s" x="490" y="230" fill="var(--text)">ledger-web/</text><rect class="chip" x="482" y="242" width="186" height="20" rx="3"/><text class="s" x="490" y="256" fill="var(--text)">ledger-cli/</text><rect class="box" x="700" y="40" width="210" height="250" rx="4"/><text class="t" x="712" y="62">team-d/</text><text class="s bad" x="898" y="61" text-anchor="end">harness v4+?</text><line x1="700" y1="74" x2="910" y2="74" stroke="var(--seam-2)"/><text class="s" x="712" y="94">targets  cursor</text><text class="s" x="712" y="110">copied   <tspan class="bad">edited in place</tspan></text><text class="s" x="712" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="712" y="138" width="186" height="20" rx="3"/><text class="s" x="718" y="152">.claude/ · hand-copied</text><text class="s" x="712" y="180" fill="var(--faint)">remote  gitlab.team-d.example</text><rect class="chip" x="712" y="190" width="186" height="20" rx="3"/><text class="s" x="720" y="204" fill="var(--text)">backoffice/</text><rect class="chip" x="712" y="216" width="186" height="20" rx="3"/><text class="s" x="720" y="230" fill="var(--text)">backoffice-desktop/</text><path class="edge manual" d="M220 160 H 240"/><path class="edge manual" d="M450 160 H 470"/><path class="edge manual" d="M680 160 H 700"/>
+          <rect class="box" x="10" y="300" width="900" height="50" rx="4"/>
+          <text class="t" x="24" y="322">developer machine</text>
+          <text class="s" x="24" y="340">4 workspaces · 10 repositories · 4 remotes · <tspan class="bad">no registry · no shared source · versions unknown</tspan></text>
+        </svg>
+        <p class="diagram-cap">four copies of the harness, four ages, no common repository, no lock; the dashed links are the developer comparing folders by hand.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAILURE MODES ================= -->
+  <section id="failures">
+    <div class="eyebrow">Failure modes</div>
+    <h2>What breaks when the harness is duplicated — observed, not hypothetical.</h2>
+    <p class="lede" style="margin-top:22px">Two earlier attempts at generating <code>.claude/</code> from templates were adopted and later removed by the teams using them. Their post-mortems, plus the tech-debt notes of hand-synchronised workspaces, reduce to eight recurring failures — FM-1 to FM-5 stem from P1, FM-6 to FM-8 from maintaining P2 by hand. Each one becomes a design constraint in <a href="#invariants" style="color:var(--steel)">Invariants</a>.</p>
+
+    <div class="fail-wrap">
+      <table>
+        <thead><tr><th>id</th><th>Failure</th><th>Root cause</th></tr></thead>
+        <tbody>
+          <tr><td>FM-1</td><td>Regeneration deletes hand-written agents and rules</td><td>Generator treats the whole <code>.claude/</code> folder as its output; anything not produced by a template is collateral.</td></tr>
+          <tr><td>FM-2</td><td>Every file reports as hand-edited on every run; team runs permanently on <code>--force</code></td><td>Drift guard hashes raw bytes; Git rewrites LF→CRLF on Windows checkout, so the hash never matches.</td></tr>
+          <tr><td>FM-3</td><td>A deleted rule keeps loading into sessions</td><td>Generator only writes; it never removes the outputs of ingredients that left the set. The checker compares present files only, so it still reports "in sync".</td></tr>
+          <tr><td>FM-4</td><td>Kiro steering, agent JSON and command mirrors diverge from their source by 4–52 lines</td><td>Only rules were generated; agents and commands for the second target were kept as manual mirrors of the first.</td></tr>
+          <tr><td>FM-5</td><td>Architecture rule and its reviewer agent contradict each other</td><td>Rule and reviewer are two files stating the same constraints, edited independently.</td></tr>
+          <tr><td>FM-6</td><td>A model pin or MCP version breaks in three places at once; two sessions patch the same line the same day</td><td>Volatile values are inlined in a rule, a script and a steering file rather than declared once.</td></tr>
+          <tr><td>FM-7</td><td>Language policy "everything in English" contradicted by 18 files</td><td>Language treated as a property of the workspace instead of each ingredient; re-syncing became a bilingual merge.</td></tr>
+          <tr><td>FM-8</td><td>Real package-feed tokens in a staged <code>settings.json</code></td><td>Generated settings carried values instead of references to environment variables.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= MODEL ================= -->
+  <section id="model">
+    <div class="eyebrow">Model</div>
+    <h2>Source, resolution, emission.</h2>
+    <p class="lede" style="margin-top:22px">Craftar borrows the shape of a build system. Ingredients are source; recipes and profiles compose them; <code>craftar sync</code> resolves the composition for one workspace and emits target-specific outputs, recording every output in a lockfile. The generated files are committed to the workspace, so a team that only uses Kiro never needs Craftar installed.</p>
+
+    <svg class="diagram" viewBox="9.5 0 881 400" role="img" aria-labelledby="d2t" aria-describedby="d2d">
+      <title id="d2t">With Craftar: one Forge resolved per workspace and emitted to each team's AI coders</title>
+      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace fetches the Forge at a pinned ref, resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ and .kiro/ with 7 agents; team B swaps the frontend recipe and emits AGENTS.md for Kimi; team C pins the Forge at tag v2.3 and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.</desc>
+      <!-- forge -->
+      <rect class="box src" x="10" y="90" width="240" height="220" rx="4"/>
+      <text class="t" x="24" y="114">Forge <tspan class="s">· git repo</tspan></text>
+      <text class="s" x="24" y="140">ingredients/</text>
+      <text class="s" x="40" y="156">rules · agents · commands</text>
+      <text class="s" x="40" y="172">skills · hooks · mcp · services</text>
+      <text class="s" x="24" y="198">recipes/</text>
+      <text class="s" x="40" y="214">base · backend-* · frontend-*</text>
+      <text class="s" x="40" y="230">aws-local · pm-*</text>
+      <text class="s" x="24" y="256">profiles/</text>
+      <text class="s" x="40" y="272">team-a · team-b · team-c · team-d</text>
+      <text class="em s" x="24" y="298">single source of truth</text>
+      <!-- sync engine -->
+      <rect class="box" x="290" y="160" width="150" height="80" rx="4"/>
+      <text class="t" x="304" y="186">craftar sync</text>
+      <text class="s" x="304" y="204">resolve layers</text>
+      <text class="s" x="304" y="218">emit per target</text>
+      <text class="s" x="304" y="232">write craftar.lock</text>
+      <path class="edge src" d="M250 200 H 284"/>
+      <text class="s" x="267" y="214" text-anchor="middle">@ref</text>
+      <!-- fan out to workspaces -->
+      <path class="edge gen" d="M440 200 C 480 200, 480 45, 520 45"/>
+      <path class="edge gen" d="M440 200 C 480 200, 480 145, 520 145"/>
+      <path class="edge gen" d="M440 200 C 480 200, 480 245, 520 245"/>
+      <path class="edge gen" d="M440 200 C 480 200, 480 345, 520 345"/>
+      <!-- workspaces -->
+      <g>
+        <rect class="box tgt" x="520" y="14" width="370" height="66" rx="4"/>
+        <text class="t" x="534" y="36">team A</text><text class="s" x="534" y="54">craftar.yaml · profile: team-a</text>
+        <rect class="chip" x="700" y="24" width="70" height="18" rx="3"/><text class="st" x="708" y="37">.claude/</text>
+        <rect class="chip" x="776" y="24" width="56" height="18" rx="3"/><text class="st" x="784" y="37">.kiro/</text>
+        <text class="s" x="878" y="68" text-anchor="end">7 agents · 2 targets · lock ok</text>
+      </g>
+      <g>
+        <rect class="box tgt" x="520" y="114" width="370" height="66" rx="4"/>
+        <text class="t" x="534" y="136">team B</text><text class="s" x="534" y="154">recipes: −frontend-angular +frontend-react</text>
+        <rect class="chip" x="760" y="124" width="82" height="18" rx="3"/><text class="st" x="768" y="137">AGENTS.md</text>
+        <text class="s" x="878" y="168" text-anchor="end">6 agents · kimi · lock ok</text>
+      </g>
+      <g>
+        <rect class="box tgt" x="520" y="214" width="370" height="66" rx="4"/>
+        <text class="t" x="534" y="236">team C</text><text class="s" x="534" y="254">forge pinned @ v2.3</text>
+        <rect class="chip" x="760" y="224" width="82" height="18" rx="3"/><text class="st" x="768" y="237">codex cfg</text>
+        <text class="s" x="878" y="268" text-anchor="end">5 agents · codex · behind 2</text>
+      </g>
+      <g>
+        <rect class="box tgt" x="520" y="314" width="370" height="66" rx="4"/>
+        <text class="t" x="534" y="336">team D</text><text class="s" x="534" y="354">craftar.local.yaml: +cursor</text>
+        <rect class="chip" x="740" y="324" width="102" height="18" rx="3"/><text class="st" x="748" y="337">.cursor/rules</text>
+        <text class="s" x="878" y="368" text-anchor="end">7 agents · cursor · drift 1</text>
+      </g>
+    </svg>
+    <p class="diagram-cap">P1 resolved — solid edges are generated and recorded in each workspace's lockfile; <code>status</code> reads the lock to report behind / drift per workspace.</p>
+
+
+    <h3 style="margin-top:72px">P2 resolved — one Forge, one lock per workspace, one registry</h3>
+    <p class="prose" style="margin-top:10px">Same machine, same four workspaces, same four remotes. The Forge is a fifth repository that none of the team repositories reference; each workspace's <code>craftar.yaml</code> points to it. What the workspaces now share is the harness: every workspace is generated from the same Forge, so <code>base</code> rules, commands and agents are identical across all of them, and the lockfile in each records exactly which Forge commit produced it. <code>craftar ls</code> reads the registry and reports, per workspace, whether it is at the Forge head, behind, or drifted.</p>
+    <svg class="diagram" viewBox="9.5 0 901 464" role="img" aria-labelledby="d3t" aria-describedby="d3d">
+      <title id="d3t">One developer machine with four team workspaces, each with its own repositories on separate Git remotes, all generated from a single Forge</title>
+      <desc id="d3d">Mechanism: same developer machine and same four workspaces as the problem statement, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's craftar.yaml and is not a remote of any team repository. Each workspace carries a generated harness with the same base ingredients and a craftar.lock naming the Forge commit that produced it (7c1e9a2 for three of them, 5b0d3f1 for the pinned one). The registry at ~/.craftar/registry.json lists all four, and craftar ls reports per workspace: up to date, behind, or drift.</desc>
+      <rect class="box src" x="340" y="10" width="240" height="82" rx="4"/>
+      <text class="t" x="354" y="34">forge</text>
+      <text class="s" x="354" y="70" fill="var(--steel)">sync → workspaces · recorded in each lock</text>
+      <text class="s" x="354" y="52">main @ <tspan class="em">7c1e9a2</tspan> · one git repo</text>
+      <path class="edge gen" d="M460 92 C 460 115, 115.0 95, 115.0 130"/><rect class="box tgt" x="10" y="130" width="210" height="250" rx="4"/><text class="t" x="22" y="152">team-a/</text><circle cx="206" cy="147" r="4" fill="var(--ok)"/><text class="s" x="196" y="151" text-anchor="end" fill="var(--ok)">up to date</text><line x1="10" y1="164" x2="220" y2="164" stroke="var(--seam-2)"/><text class="s" x="22" y="184">profile  <tspan class="em">team-a</tspan></text><text class="s" x="22" y="200">lock     <tspan class="st">forge@7c1e9a2</tspan></text><text class="s" x="22" y="216">targets  claude-code · kiro</text><rect class="agent" x="22" y="228" width="186" height="20" rx="3"/><text class="s" x="28" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="22" y="270" fill="var(--faint)">remote  git.team-a.example</text><rect class="chip" x="22" y="280" width="186" height="20" rx="3"/><text class="s" x="30" y="294" fill="var(--text)">api-core/</text><rect class="chip" x="22" y="306" width="186" height="20" rx="3"/><text class="s" x="30" y="320" fill="var(--text)">web-portal/</text><rect class="chip" x="22" y="332" width="186" height="20" rx="3"/><text class="s" x="30" y="346" fill="var(--text)">worker-jobs/</text><path class="edge gen" d="M460 92 C 460 115, 345.0 95, 345.0 130"/><rect class="box tgt" x="240" y="130" width="210" height="250" rx="4"/><text class="t" x="252" y="152">team-b/</text><circle cx="436" cy="147" r="4" fill="var(--ok)"/><text class="s" x="426" y="151" text-anchor="end" fill="var(--ok)">up to date</text><line x1="240" y1="164" x2="450" y2="164" stroke="var(--seam-2)"/><text class="s" x="252" y="184">profile  <tspan class="em">team-b</tspan></text><text class="s" x="252" y="200">lock     <tspan class="st">forge@7c1e9a2</tspan></text><text class="s" x="252" y="216">targets  kimi</text><rect class="agent" x="252" y="228" width="186" height="20" rx="3"/><text class="s" x="258" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="252" y="270" fill="var(--faint)">remote  github.com/team-b</text><rect class="chip" x="252" y="280" width="186" height="20" rx="3"/><text class="s" x="260" y="294" fill="var(--text)">assets-api/</text><rect class="chip" x="252" y="306" width="186" height="20" rx="3"/><text class="s" x="260" y="320" fill="var(--text)">assets-web/</text><path class="edge gen" d="M460 92 C 460 115, 575.0 95, 575.0 130"/><rect class="box tgt" x="470" y="130" width="210" height="250" rx="4"/><text class="t" x="482" y="152">team-c/</text><circle cx="666" cy="147" r="4" fill="var(--warn)"/><text class="s" x="656" y="151" text-anchor="end" fill="var(--warn)">behind 2 · v2.3</text><line x1="470" y1="164" x2="680" y2="164" stroke="var(--seam-2)"/><text class="s" x="482" y="184">profile  <tspan class="em">team-c</tspan></text><text class="s" x="482" y="200">lock     <tspan class="st">forge@5b0d3f1</tspan></text><text class="s" x="482" y="216">targets  codex</text><rect class="agent" x="482" y="228" width="186" height="20" rx="3"/><text class="s" x="488" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="482" y="270" fill="var(--faint)">remote  azure.example/team-c</text><rect class="chip" x="482" y="280" width="186" height="20" rx="3"/><text class="s" x="490" y="294" fill="var(--text)">ledger-api/</text><rect class="chip" x="482" y="306" width="186" height="20" rx="3"/><text class="s" x="490" y="320" fill="var(--text)">ledger-web/</text><rect class="chip" x="482" y="332" width="186" height="20" rx="3"/><text class="s" x="490" y="346" fill="var(--text)">ledger-cli/</text><path class="edge gen" d="M460 92 C 460 115, 805.0 95, 805.0 130"/><rect class="box tgt" x="700" y="130" width="210" height="250" rx="4"/><text class="t" x="712" y="152">team-d/</text><circle cx="896" cy="147" r="4" fill="#D98A8A"/><text class="s" x="886" y="151" text-anchor="end" fill="#D98A8A">drift 1</text><line x1="700" y1="164" x2="910" y2="164" stroke="var(--seam-2)"/><text class="s" x="712" y="184">profile  <tspan class="em">team-d</tspan></text><text class="s" x="712" y="200">lock     <tspan class="st">forge@7c1e9a2</tspan></text><text class="s" x="712" y="216">targets  cursor</text><rect class="agent" x="712" y="228" width="186" height="20" rx="3"/><text class="s" x="718" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="712" y="270" fill="var(--faint)">remote  gitlab.team-d.example</text><rect class="chip" x="712" y="280" width="186" height="20" rx="3"/><text class="s" x="720" y="294" fill="var(--text)">backoffice/</text><rect class="chip" x="712" y="306" width="186" height="20" rx="3"/><text class="s" x="720" y="320" fill="var(--text)">backoffice-desktop/</text>
+      <rect class="box" x="10" y="400" width="900" height="50" rx="4"/>
+      <text class="t" x="24" y="422">developer machine</text>
+      <text class="s" x="24" y="440">~/.craftar/registry.json · 4 workspaces · 10 repositories · 4 remotes · 1 Forge</text>
+      <text class="s" x="896" y="430" text-anchor="end">$ craftar ls</text>
+    </svg>
+    <p class="diagram-cap">the Forge is never a remote of any team repository; generated files are committed inside each workspace, so a team's own clone of its repo already contains the harness in its tool's format.</p>
+
+    <div class="term" style="margin-top:28px" aria-label="craftar ls output">
+      <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~</div>
+<pre><span class="p">$</span> craftar ls
+<span class="c">WORKSPACE            PROFILE   STACK             TARGETS             FORGE     STATUS</span>
+team-a-workspace     team-a    angular · dotnet  claude-code, kiro   7c1e9a2   <span class="add">up to date</span>
+team-b-workspace     team-b    react · dotnet    kimi                7c1e9a2   <span class="add">up to date</span>
+team-c-workspace     team-c    angular · dotnet  codex               5b0d3f1   <span class="chg">behind 2 (pinned v2.3)</span>
+team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   <span class="del">drift 1</span>  .claude/rules/workflow.md
+<span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
+    </div>
+
+    <h3 style="margin-top:72px">Layer resolution</h3>
+    <p class="prose" style="margin-top:10px">A workspace is the result of layers applied in a fixed order, weakest first. Ingredients with the same name resolve to the strongest layer; stack recipes that declare the same <code>slot</code> are mutually exclusive; <code>{{params}}</code> are substituted from the winning layer. <code>craftar explain &lt;file&gt;</code> prints the layer that decided each output.</p>
+
+    <div class="flow">
+      <div>
+        <div class="col-h"><span>Layers, weakest → strongest</span><span class="tag">source</span></div>
+        <div class="stack">
+          <div class="layer"><b>base</b><span>recipe · every workspace</span></div>
+          <div class="layer"><b>stack recipes</b><span>backend-clean-arch · frontend-angular</span></div>
+          <div class="layer"><b>team profile</b><span>profiles/team-a</span></div>
+          <div class="layer"><b>craftar.yaml</b><span>this workspace · committed</span></div>
+          <div class="layer"><b>craftar.local.yaml</b><span>one developer · git-ignored</span></div>
+        </div>
+        <p class="stack-cap">All layers are versioned in the Forge except the last two, which live in the workspace.</p>
+      </div>
+
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h36M30 2l6 6-6 6"/></svg>resolve</div>
+
+      <div>
+        <div class="col-h"><span>Pipeline</span><span class="tag">craftar sync</span></div>
+        <div class="engine">
+          <div class="cmd"><span class="p">$</span> craftar sync</div>
+          <ol>
+            <li>Read <code>craftar.yaml</code>; fetch the Forge at the pinned ref (branch, tag or SHA).</li>
+            <li>Resolve layers, exclusive slots and params into the final ingredient set.</li>
+            <li>Emit open standards verbatim: <code>AGENTS.md</code>, Agent Skills (<code>SKILL.md</code>), <code>mcp.json</code>.</li>
+            <li>Emit tool-specific formats — inclusion modes, subagents, hooks — through rulesync plus Craftar's own emitters and post-processors.</li>
+            <li>Diff against <code>craftar.lock</code>; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h36M30 2l6 6-6 6"/></svg>emit</div>
+
+      <div>
+        <div class="col-h"><span>Targets, native format</span><span class="tag steel">generated · committed</span></div>
+        <div class="targets">
+          <div class="target"><b>Claude Code</b><code>.claude/ · CLAUDE.md</code></div>
+          <div class="target"><b>Kiro</b><code>.kiro/steering · agents/*.json</code></div>
+          <div class="target"><b>Kimi</b><code>AGENTS.md · skills</code></div>
+          <div class="target"><b>Codex</b><code>AGENTS.md · [hooks]</code></div>
+          <div class="target"><b>Cursor</b><code>.cursor/rules/*.mdc</code></div>
+          <div class="target"><b>Warp</b><code>workflows · mcp</code></div>
+        </div>
+        <p class="stack-cap">Every generated file carries a <code>generated by craftar from forge@sha</code> header where the format allows comments; JSON gets a <code>_craftar</code> field.</p>
+      </div>
+    </div>
+
+    <div class="concepts" aria-label="Core concepts">
+      <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces reference it by branch, tag or SHA.</p></div>
+      <div class="concept"><h3>Ingredient</h3><code>ingredients/rules/frontend-angular/</code><p>Smallest reusable unit: a rule, agent, command, skill, hook, MCP server, local service or template. A folder with an <code>ingredient.yaml</code> declaring type, targets, inclusion mode and globs.</p></div>
+      <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
+      <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
+      <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
+      <div class="concept"><h3>Target</h3><code>claude-code · kiro · kimi · codex · cursor</code><p>An AI coder to emit for. Each has a <code>capabilities.yaml</code>; what a target cannot express is reported and, where possible, given a fallback.</p></div>
+      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, resolved recipes and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
+      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Backs <code>craftar ls</code> and the local dashboard.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= CAPABILITIES ================= -->
+  <section id="features">
+    <div class="eyebrow">Capabilities</div>
+    <h2>Twelve capabilities, each tied to the problem it addresses.</h2>
+    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today against real workspaces under an oracle test; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+
+    <div class="features">
+
+      <article class="feature">
+        <div><div class="id">F1 <span class="pill now">working</span><span class="pill mvp">mvp</span></div><h3>Forge → workspace sync</h3></div>
+        <p class="why"><b>problem · P1 · P2</b>A change to any of A agents or their rules must reach T workspaces in K formats; today that is T × K manual edits with no provenance.</p>
+        <div class="how">
+          <div class="cmds">
+            <code><span class="p">$</span> craftar sync <span class="c">[--forge-ref v2.3] [--targets claude-code,kiro] [--dry-run] [--check]</span></code>
+            <code><span class="p">$</span> craftar diff <span class="c"># planned changes, writes nothing</span></code>
+            <code><span class="p">$</span> craftar status <span class="c"># up-to-date · behind · drift · never synced</span></code>
+            <code><span class="p">$</span> craftar update <span class="c"># sync to latest Forge with confirmation</span></code>
+          </div>
+          <p class="mech">One command resolves and emits for every active target and prints added / changed / removed / skipped per target. Workspaces follow a branch by default or pin a tag.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F2 <span class="pill now">working</span><span class="pill mvp">mvp</span></div><h3>Multi-target emission</h3></div>
+        <p class="why"><b>problem · P1</b>Each team's AI coder has its own file layout, frontmatter and agent schema. Translating by hand yields FM-4: mirrors that diverge.</p>
+        <div class="how">
+          <div class="cmds">
+            <code><span class="p">$</span> craftar import --from claude-code <span class="c"># existing .claude/ → ingredients + recipes + profile</span></code>
+            <code><span class="p">$</span> craftar targets <span class="c"># targets and capability coverage</span></code>
+          </div>
+          <p class="mech">Three layers: open standards emitted verbatim (AGENTS.md, Agent Skills, Agent Plugins <code>mcp.json</code>); rulesync for tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. The Kiro emitter currently reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F3 <span class="pill now">working</span></div><h3>Layers and stack slots</h3></div>
+        <p class="why"><b>problem · P1</b>Teams differ in stack. Without composition, a React team inherits Angular reviewers, or every team gets a hand-pruned fork of the harness.</p>
+        <div class="how">
+          <div class="cmds">
+            <code><span class="p">$</span> craftar add recipe frontend-react · craftar remove recipe frontend-angular</code>
+            <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular</code>
+            <code><span class="p">$</span> craftar explain .kiro/steering/workflow.md <span class="c"># which layer decided this file</span></code>
+          </div>
+          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file may add targets only.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F4</div><h3>Workspace bootstrap</h3></div>
+        <p class="why"><b>problem · P2</b>Starting with a new team means reassembling repos, harness, templates and local services from memory.</p>
+        <div class="how">
+          <div class="cmds">
+            <code><span class="p">$</span> craftar init <span class="c"># Forge → profile → recipes/targets → clone repos? → templates/services? → sync</span></code>
+            <code><span class="p">$</span> craftar init --profile team-a --targets claude-code,kiro --yes</code>
+          </div>
+          <p class="mech">Reads the profile's <code>repos</code>, templates and services; registers the workspace in the registry.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F5</div><h3>PM tool and internal platform per profile</h3></div>
+        <p class="why"><b>problem · P1</b>Agents need to read user stories and talk to the team's internal developer platform; each team uses a different tool for both.</p>
+        <div class="how">
+          <p class="mech"><code>integrations.pm.kind ∈ {github, azure-devops, notion, jira}</code> selects the matching MCP ingredient plus a rule describing how stories are located and interpreted for that team. <code>integrations.idp</code> registers the platform's MCP server in every target that supports MCP and adds a rule describing its operations. Tokens are referenced by <code>authEnv</code>, never stored (FM-8).</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F6</div><h3>Local services per workspace</h3></div>
+        <p class="why"><b>problem · P1</b>Cloud dependencies (queues, buckets) need a local stand-in, and the agent has to know its endpoints and fake credentials.</p>
+        <div class="how">
+          <div class="cmds"><code><span class="p">$</span> craftar services up <span class="c">| down | status</span></code></div>
+          <p class="mech">A <code>service</code> ingredient carries a <code>docker-compose</code> fragment, default variables and a rule for the agent. Fragments merge into <code>.craftar/compose.yaml</code>. First ingredient: LocalStack-style SQS/S3.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F7</div><h3>Project templates</h3></div>
+        <p class="why"><b>problem · P1</b>New projects should use the team's own <code>dotnet new</code> (or <code>npm create</code>, <code>nx</code>, <code>cookiecutter</code>) templates; agents need to know which.</p>
+        <div class="how">
+          <div class="cmds"><code><span class="p">$</span> craftar templates install · /create-project</code></div>
+          <p class="mech">The profile declares feeds and packages; Craftar installs them and generates a rule mapping archetype → template plus a wrapping command.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F8 <span class="pill now">detection working</span></div><h3>Drift and reverse contribution</h3></div>
+        <p class="why"><b>problem · P2</b>Generated files get edited in place. Either the edit is lost on the next sync, or the generator is abandoned (FM-2).</p>
+        <div class="how">
+          <div class="cmds">
+            <code><span class="p">$</span> craftar status <span class="c"># drifted files listed; never overwritten without --overwrite-drift</span></code>
+            <code><span class="p">$</span> craftar drift show &lt;file&gt; · drift discard · drift promote</code>
+          </div>
+          <p class="mech">Normalized hashes from the lock are compared with disk. <code>promote</code> converts the edit back into an ingredient via <code>import</code> and opens a Forge branch. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F9</div><h3>CI</h3></div>
+        <p class="why"><b>problem · P2</b>Sync that depends on someone remembering will lag by workspace.</p>
+        <div class="how">
+          <div class="cmds"><code><span class="p">$</span> craftar sync --check <span class="c"># exit ≠ 0 when behind or drifted</span></code></div>
+          <p class="mech">GitHub Action and Azure Pipelines task open a PR with the change summary when the Forge moves; optional Forge-side dispatch to registered workspaces; pre-commit hook running <code>--check</code>.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F10 <span class="pill now">ls working</span></div><h3>Registry and dashboard</h3></div>
+        <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
+        <div class="how">
+          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui</code></div>
+          <p class="mech">Table or local web page: workspace, profile, stack, targets, Forge SHA, status; actions <code>sync</code> / <code>diff</code> / <code>explain</code>; Forge view of recipes, ingredients and who uses what.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F11</div><h3>Craftar as an MCP server</h3></div>
+        <p class="why"><b>problem · P1 · P2</b>The agent itself should be able to check status, sync, or add a recipe without leaving the session.</p>
+        <div class="how">
+          <div class="cmds"><code><span class="p">$</span> craftar mcp</code></div>
+          <p class="mech">Exposes <code>status</code>, <code>sync</code>, <code>diff</code>, <code>explain</code>, <code>recipes</code>, <code>add recipe</code>, <code>services up</code>. Packaged as a Claude Code plugin, an Agent Plugin, and Warp workflows — thin shells over the CLI.</p>
+        </div>
+      </article>
+
+      <article class="feature">
+        <div><div class="id">F12</div><h3>Diagnostics</h3></div>
+        <p class="why"><b>problem · P2</b>Sync failures usually come from the environment: missing env vars, wrong Node, no Docker, unreachable Forge.</p>
+        <div class="how">
+          <div class="cmds"><code><span class="p">$</span> craftar doctor</code></div>
+          <p class="mech">Checks Node and rulesync versions, Git access to the Forge, every <code>authEnv</code> required by MCP ingredients, Docker when services exist, <code>dotnet</code> when templates exist, and lockfile consistency.</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= INVARIANTS ================= -->
+  <section id="invariants">
+    <div class="eyebrow">Invariants</div>
+    <h2>Constraints derived from the failure modes.</h2>
+    <p class="lede" style="margin-top:22px">These hold in every command and every emitter. They are what distinguishes Craftar from a template renderer.</p>
+
+    <div class="rules">
+      <div class="rule"><div class="never">never</div><h3>Touch a file not in the lockfile</h3><p>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved, listed by <code>status</code> as unmanaged, and never removed. Regeneration is per file.</p><p class="ref">← FM-1</p></div>
+      <div class="rule"><div class="never">never</div><h3>Hash raw bytes</h3><p>Content hashes are computed after normalization: LF line endings, UTF-8, BOM stripped; JSON compared structurally. Existing files keep their EOL on write.</p><p class="ref">← FM-2</p></div>
+      <div class="rule"><div class="never">never</div><h3>Leave an orphan on disk</h3><p>An output whose ingredient left the resolved set is removed on the next sync and named in the summary, in every target. <code>--check</code> fails on orphans.</p><p class="ref">← FM-3</p></div>
+      <div class="rule"><div class="never">never</div><h3>Require a manual mirror</h3><p>Everything a second target needs — steering, agent JSON, command copies — is emitted from the same ingredient. If two files must say the same thing, both are generated.</p><p class="ref">← FM-4</p></div>
+      <div class="rule"><div class="never">never</div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are one ingredient with two outputs, so they cannot disagree.</p><p class="ref">← FM-5</p></div>
+      <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited.</p><p class="ref">← FM-6</p></div>
+      <div class="rule"><div class="never">never</div><h3>Translate</h3><p>Language is an attribute of the ingredient. The Forge may hold rules in one language and docs in another; Craftar emits text as written.</p><p class="ref">← FM-7</p></div>
+      <div class="rule"><div class="never">never</div><h3>Store a secret</h3><p>Ingredients declare <code>authEnv</code>; settings are emitted as <code>settings.example.json</code>; <code>doctor</code> verifies the variables exist on the machine.</p><p class="ref">← FM-8</p></div>
+    </div>
+  </section>
+
+  <!-- ================= TARGETS ================= -->
+  <section id="targets">
+    <div class="eyebrow steel">Targets</div>
+    <h2>Capability matrix.</h2>
+    <p class="lede" style="margin-top:22px">Each target has a <code>capabilities.yaml</code>. During sync, an ingredient the target cannot express produces an explicit warning and, where defined, a fallback (a subagent emitted as a command, for instance). Nothing is dropped silently.</p>
+
+    <div class="matrix-wrap">
+      <table>
+        <thead><tr><th>Target</th><th>Emits to</th><th>Rules &amp; inclusion modes</th><th>Commands</th><th>Subagents</th><th>Hooks</th><th>Skills</th><th>MCP</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code</td><td><code>.claude/ · CLAUDE.md</code></td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td></tr>
+          <tr><td>Kiro</td><td><code>.kiro/steering · .kiro/agents/*.json</code></td><td class="y">always · fileMatch · manual</td><td class="y">yes</td><td class="y">custom agents</td><td class="part">partial</td><td class="y">yes</td><td class="y">yes</td></tr>
+          <tr><td>Kimi</td><td><code>AGENTS.md · SKILL.md</code></td><td class="part">AGENTS.md only</td><td class="part">fallback</td><td class="part">as commands</td><td class="n">—</td><td class="y">yes</td><td class="y">yes</td></tr>
+          <tr><td>Codex</td><td><code>AGENTS.md · config</code></td><td class="part">AGENTS.md only</td><td class="part">fallback</td><td class="n">—</td><td class="y">[hooks] block</td><td class="y">yes</td><td class="y">yes</td></tr>
+          <tr><td>Cursor</td><td><code>.cursor/rules/*.mdc</code></td><td class="y">globs · always</td><td class="part">fallback</td><td class="n">—</td><td class="n">—</td><td class="y">Agent Plugin</td><td class="y">yes</td></tr>
+          <tr><td>Warp</td><td><code>workflows · mcp</code></td><td class="part">AGENTS.md</td><td class="y">workflows</td><td class="n">—</td><td class="n">—</td><td class="part">partial</td><td class="y">yes</td></tr>
+          <tr><td>AGENTS.md</td><td><code>root and per-folder</code></td><td class="y">plain</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="y">yes</td><td class="y">mcp.json</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend"><span class="y">yes — native</span><span class="part">partial / fallback — emitted with a warning</span><span class="n">— unsupported; reported and skipped</span><span>Kimi and Codex rows pending verification against the tools.</span></div>
+  </section>
+
+  <!-- ================= STATUS ================= -->
+  <section id="status">
+    <div class="eyebrow">Status</div>
+    <h2>Phase 0 — validated against existing workspaces with an oracle test.</h2>
+    <p class="lede" style="margin-top:22px">Before generating anything new, Craftar has to reproduce what teams already have. The oracle imports a hand-built workspace (Claude Code + Kiro), syncs it, and asserts byte equality of every generated file; a second sync must be a no-op; a Forge edit must reach both targets; a manual edit must surface as drift and survive; a removed ingredient must disappear; an unmanaged file must be untouched.</p>
+
+    <div class="phases">
+      <div class="phase now">
+        <div class="n0"><span>Phase 0</span><span style="color:var(--ember)">in progress</span></div>
+        <h3>Foundations</h3>
+        <ul>
+          <li>Forge schema: ingredients, recipes, profiles</li>
+          <li>Layer resolver with exclusive slots and params</li>
+          <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
+          <li><code>import --from claude-code</code></li>
+          <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
+          <li>11 oracle tests passing on two real workspaces</li>
+        </ul>
+        <div class="bar" aria-hidden="true"><i style="width:70%"></i></div>
+      </div>
+      <div class="phase">
+        <div class="n0"><span>Phase 1</span></div>
+        <h3>Team profile</h3>
+        <ul><li>Profiles and <code>craftar init</code></li><li>Remote Forge (Git URL)</li><li>PM tool → MCP, platform → MCP</li><li><code>doctor</code>, registry</li></ul>
+      </div>
+      <div class="phase">
+        <div class="n0"><span>Phase 2</span></div>
+        <h3>Environment</h3>
+        <ul><li><code>service</code> ingredient</li><li>Project templates</li><li><code>drift show / discard / promote</code></li><li><code>docs validate</code></li></ul>
+      </div>
+      <div class="phase">
+        <div class="n0"><span>Phase 3</span></div>
+        <h3>Automation</h3>
+        <ul><li><code>sync --check</code></li><li>GitHub Action, Azure Pipelines task</li><li><code>craftar ui</code></li></ul>
+      </div>
+      <div class="phase">
+        <div class="n0"><span>Phase 4</span></div>
+        <h3>Ecosystem</h3>
+        <ul><li><code>craftar mcp</code></li><li>Claude Code plugin, Agent Plugin</li><li>Warp workflows</li><li>Kimi, Codex, Cursor emitters</li><li>Documentation</li></ul>
+      </div>
+    </div>
+
+    <div class="status-grid">
+      <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>); rulesync as the conversion dependency for tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
+      <div><h3>Open questions</h3><ul><li>License: MIT or Apache-2.0</li><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
+      <div><h3>Trying it</h3><p>Point <code>craftar import --from claude-code</code> at an existing workspace to obtain a Forge, then <code>craftar diff</code> to see what a sync would change. No files are written until <code>sync</code>.</p></div>
+    </div>
+  </section>
+
+  <div class="colophon">
+    <a class="stamp" href="llms.txt" aria-label="Made by AI, for AI — plain-text version">
+      <svg class="ring" viewBox="0 0 168 168" aria-hidden="true">
+        <defs>
+          <path id="ring-top" d="M30 84 a54 54 0 0 1 108 0"/>
+          <path id="ring-bottom" d="M20 84 a64 64 0 0 0 128 0"/>
+        </defs>
+        <text><textPath href="#ring-top" startOffset="50%" text-anchor="middle">made by AI · for AI</textPath></text>
+        <text><textPath href="#ring-bottom" startOffset="50%" text-anchor="middle">human-reviewed</textPath></text>
+      </svg>
+      <span class="center">
+        <span class="big">AI</span>
+        <span class="sep"></span>
+        <span class="small">llms.txt</span>
+      </span>
+    </a>
+    <p>This page was written by a language model, from the project's specification and the notes of the workspaces that motivated it, and reviewed by a person. It is also meant to be read by language models: every diagram carries a prose description, the metadata is structured, and a plain-text version lives at <a href="llms.txt">llms.txt</a>.</p>
+  </div>
+
+  <footer>
+    <span>Craftar — open-source workspace harness manager. TypeScript / Node, built on rulesync.</span>
+    <span><a href="#top">Top</a> · <a href="#model">Model</a> · <a href="#" rel="noopener">github</a></span>
+  </footer>
+</div>
+<script>
+  (function () {
+    var tabs = document.querySelectorAll('.stage .seg');
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        tabs.forEach(function (o) {
+          var on = o === t;
+          o.setAttribute('aria-selected', on ? 'true' : 'false');
+          document.getElementById(o.dataset.fig).hidden = !on;
+        });
+      });
+    });
+  })();
+</script>
+</body>
+</html>
