@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Keep rules, agents, commands, skills, hooks and MCPs in one Forge in Git. Craftar emits them natively into every workspace, for every AI coder your team uses.">
 <meta name="twitter:image" content="https://craftar.dev/og.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Craftar","description":"Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients and recipes, and emits it in the native format of each AI coder (Claude Code, Kiro, Kimi, Codex, Cursor, Warp, AGENTS.md) into every workspace, with a lockfile for drift detection and a registry of workspaces.","programmingLanguage":"TypeScript","runtimePlatform":"Node.js","applicationCategory":"DeveloperApplication","keywords":["AI coding agents","harness","Claude Code","Kiro","Cursor","Codex","AGENTS.md","MCP","rulesync","developer tooling","monorepo","workspace sync"],"isBasedOn":"https://github.com/dyoshikawa/rulesync"}
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Craftar","description":"Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients and recipes, and emits it in the native format of each AI coder (Claude Code, Kiro, Kimi, Codex, Cursor, Warp, AGENTS.md) into every workspace, with a lockfile for drift detection and a registry of workspaces.","programmingLanguage":"TypeScript","runtimePlatform":"Node.js","applicationCategory":"DeveloperApplication","keywords":["AI coding agents","harness","Claude Code","Kiro","Cursor","Codex","AGENTS.md","MCP","rulesync","developer tooling","monorepo","workspace sync"]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -755,7 +755,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="features">
     <div class="eyebrow">Capabilities</div>
     <h2>Twelve capabilities, each tied to the problem it addresses.</h2>
-    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today against real workspaces under an oracle test; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today and is covered by tests; commands marked <em>planned</em> are designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
 
     <div class="features">
 
@@ -764,12 +764,12 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <p class="why"><b>problem · P1 · P2</b>A change to any of A agents or their rules must reach T workspaces in K formats; today that is T × K manual edits with no provenance.</p>
         <div class="how">
           <div class="cmds">
-            <code><span class="p">$</span> craftar sync <span class="c">[--forge-ref v2.3] [--targets claude-code,kiro] [--dry-run] [--check]</span></code>
-            <code><span class="p">$</span> craftar diff <span class="c"># planned changes, writes nothing</span></code>
-            <code><span class="p">$</span> craftar status <span class="c"># up-to-date · behind · drift · never synced</span></code>
-            <code><span class="p">$</span> craftar update <span class="c"># sync to latest Forge with confirmation</span></code>
+            <code><span class="p">$</span> craftar sync <span class="c">[--dry-run] [--check] [--overwrite-drift]</span></code>
+            <code><span class="p">$</span> craftar diff <span class="c"># what sync would change, writes nothing</span></code>
+            <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan</span></code>
+            <code><span class="p">$</span> craftar sync --forge-ref v2.3 --targets kiro · craftar update <span class="c"># planned</span></code>
           </div>
-          <p class="mech">One command resolves and emits for every active target and prints added / changed / removed / skipped per target. Workspaces follow a branch by default or pin a tag.</p>
+          <p class="mech">One command resolves and emits for every active target and prints added / changed / removed / skipped per target. Following a Forge branch or pinning a tag is planned.</p>
         </div>
       </article>
 
@@ -779,22 +779,22 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar import --from claude-code <span class="c"># existing .claude/ → ingredients + recipes + profile</span></code>
-            <code><span class="p">$</span> craftar targets <span class="c"># targets and capability coverage</span></code>
+            <code><span class="p">$</span> craftar targets <span class="c"># targets and capability coverage — planned</span></code>
           </div>
-          <p class="mech">Three layers: open standards emitted verbatim (AGENTS.md, Agent Skills, Agent Plugins <code>mcp.json</code>); rulesync for tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. The Kiro emitter currently reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors.</p>
+          <p class="mech">Three layers: open standards emitted verbatim (AGENTS.md, Agent Skills, Agent Plugins <code>mcp.json</code>); tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned.</p>
         </div>
       </article>
 
       <article class="feature">
-        <div><div class="id">F3 <span class="pill now">working</span></div><h3>Layers and stack slots</h3></div>
+        <div><div class="id">F3 <span class="pill now">resolution working</span></div><h3>Layers and stack slots</h3></div>
         <p class="why"><b>problem · P1</b>Teams differ in stack. Without composition, a React team inherits Angular reviewers, or every team gets a hand-pruned fork of the harness.</p>
         <div class="how">
           <div class="cmds">
-            <code><span class="p">$</span> craftar add recipe frontend-react · craftar remove recipe frontend-angular</code>
-            <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular</code>
+            <code><span class="p">$</span> craftar add recipe frontend-react · craftar remove recipe frontend-angular <span class="c"># planned</span></code>
+            <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular <span class="c"># planned</span></code>
             <code><span class="p">$</span> craftar explain .kiro/steering/workflow.md <span class="c"># which layer decided this file</span></code>
           </div>
-          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file may add targets only.</p>
+          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's.</p>
         </div>
       </article>
 
@@ -849,7 +849,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       </article>
 
       <article class="feature">
-        <div><div class="id">F9</div><h3>CI</h3></div>
+        <div><div class="id">F9 <span class="pill now">--check working</span></div><h3>CI</h3></div>
         <p class="why"><b>problem · P2</b>Sync that depends on someone remembering will lag by workspace.</p>
         <div class="how">
           <div class="cmds"><code><span class="p">$</span> craftar sync --check <span class="c"># exit ≠ 0 when behind or drifted</span></code></div>
@@ -858,7 +858,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       </article>
 
       <article class="feature">
-        <div><div class="id">F10 <span class="pill now">ls working</span></div><h3>Registry and dashboard</h3></div>
+        <div><div class="id">F10</div><h3>Registry and dashboard</h3></div>
         <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
         <div class="how">
           <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui</code></div>
@@ -894,7 +894,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     <p class="lede" style="margin-top:22px">These hold in every command and every emitter. They are what distinguishes Craftar from a template renderer.</p>
 
     <div class="rules">
-      <div class="rule"><div class="never">never</div><h3>Touch a file not in the lockfile</h3><p>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved, listed by <code>status</code> as unmanaged, and never removed. Regeneration is per file.</p><p class="ref">← FM-1</p></div>
+      <div class="rule"><div class="never">never</div><h3>Touch a file not in the lockfile</h3><p>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved and never removed; one at a path the Forge would write is reported by <code>status</code> as a collision and never touched. Regeneration is per file.</p><p class="ref">← FM-1</p></div>
       <div class="rule"><div class="never">never</div><h3>Hash raw bytes</h3><p>Content hashes are computed after normalization: LF line endings, UTF-8, BOM stripped; JSON compared structurally. Existing files keep their EOL on write.</p><p class="ref">← FM-2</p></div>
       <div class="rule"><div class="never">never</div><h3>Leave an orphan on disk</h3><p>An output whose ingredient left the resolved set is removed on the next sync and named in the summary, in every target. <code>--check</code> fails on orphans.</p><p class="ref">← FM-3</p></div>
       <div class="rule"><div class="never">never</div><h3>Require a manual mirror</h3><p>Everything a second target needs — steering, agent JSON, command copies — is emitted from the same ingredient. If two files must say the same thing, both are generated.</p><p class="ref">← FM-4</p></div>
@@ -944,7 +944,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
           <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
           <li><code>import --from claude-code</code></li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
-          <li>11 oracle tests passing on two real workspaces</li>
+          <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
         <div class="bar" aria-hidden="true"><i style="width:70%"></i></div>
       </div>
@@ -961,7 +961,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <div class="phase">
         <div class="n0"><span>Phase 3</span></div>
         <h3>Automation</h3>
-        <ul><li><code>sync --check</code></li><li>GitHub Action, Azure Pipelines task</li><li><code>craftar ui</code></li></ul>
+        <ul><li>GitHub Action, Azure Pipelines task</li><li><code>craftar ui</code></li></ul>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 4</span></div>
@@ -971,8 +971,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     </div>
 
     <div class="status-grid">
-      <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>); rulesync as the conversion dependency for tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
-      <div><h3>Open questions</h3><ul><li>License: MIT or Apache-2.0</li><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
+      <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
+      <div><h3>Open questions</h3><ul><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
       <div><h3>Trying it</h3><p>Point <code>craftar import --from claude-code</code> at an existing workspace to obtain a Forge, then <code>craftar diff</code> to see what a sync would change. No files are written until <code>sync</code>.</p></div>
     </div>
   </section>
@@ -997,7 +997,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   </div>
 
   <footer>
-    <span>Craftar — open-source workspace harness manager. TypeScript / Node, built on rulesync.</span>
+    <span>Craftar — open-source workspace harness manager. TypeScript / Node · MIT.</span>
     <span><a href="#top">Top</a> · <a href="#model">Model</a> · <a href="https://github.com/llima/craftar-cli" rel="noopener">github</a></span>
   </footer>
 </div>

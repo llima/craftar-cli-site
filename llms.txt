@@ -89,24 +89,24 @@ graph LR
 
 P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the pinned one). The registry at `~/.craftar/registry.json` lists all four, and `craftar ls` reports per workspace: up to date, behind, or drift.
 
-## Capabilities (F1–F12; "working" = runs today under an oracle test; "mvp" = first release)
+## Capabilities (F1–F12; "working" = runs today and is covered by tests; "mvp" = first release; "planned" = designed, not built)
 
-- F1 Forge → workspace sync [working, mvp] (P1, P2): `craftar sync [--forge-ref] [--targets] [--dry-run] [--check]`, `diff`, `status`, `update`.
-- F2 Multi-target emission [working, mvp] (P1): `craftar import --from claude-code`, `craftar targets`. Open standards verbatim, rulesync for tool-specific formats, Craftar post-processors for gaps (e.g. Kiro agent `resources`).
-- F3 Layers and stack slots [working] (P1): `add recipe`, `remove recipe`, `recipes`, `ingredients`, `explain`.
+- F1 Forge → workspace sync [working, mvp] (P1, P2): `craftar sync [--dry-run] [--check] [--overwrite-drift]`, `diff`, `status` (per file: new, update, unchanged, adopt, drift, collision, orphan). Planned: `--forge-ref`, `--targets`, `update`, following a Forge branch or pinning a tag.
+- F2 Multi-target emission [working, mvp] (P1): `craftar import --from claude-code`; Craftar's own emitters for Claude Code, Kiro (byte-identical to a hand-built workspace, including agent JSON and command mirrors) and AGENTS.md; post-processors for gaps (e.g. Kiro agent `resources`). Planned: `craftar targets`, rulesync for further tool-specific formats.
+- F3 Layers and stack slots [resolution working] (P1): layer resolution, exclusive slots, params, `explain`; `craftar.local.yaml` overrides the workspace for one developer. Planned: `add recipe`, `remove recipe`, `recipes`, `ingredients`.
 - F4 Workspace bootstrap (P2): `craftar init [--profile --targets --yes]`.
 - F5 PM tool and internal platform per profile (P1): `integrations.pm.kind ∈ {github, azure-devops, notion, jira}`; `integrations.idp` registers the platform MCP; tokens via `authEnv`.
 - F6 Local services per workspace (P1): `service` ingredient with docker-compose fragment; `craftar services up|down|status`.
 - F7 Project templates (P1): `craftar templates install`; generated `/create-project` command.
 - F8 Drift and reverse contribution [detection working] (P2): `status`, `drift show|discard|promote`; never overwritten without `--overwrite-drift`.
-- F9 CI (P2): `craftar sync --check`; GitHub Action / Azure Pipelines task; pre-commit hook.
-- F10 Registry and dashboard [ls working] (P2): `craftar ls`, `craftar ui`.
+- F9 CI [--check working] (P2): `craftar sync --check`. Planned: GitHub Action / Azure Pipelines task; pre-commit hook.
+- F10 Registry and dashboard (P2): `craftar ls` over the registry, `craftar ui`. (Today's `craftar ls` lists the recipes and ingredients resolved for one workspace.)
 - F11 Craftar as an MCP server (P1, P2): `craftar mcp`; Claude Code plugin, Agent Plugin, Warp workflows as thin shells.
 - F12 Diagnostics (P2): `craftar doctor`.
 
 ## Invariants (each derived from a failure mode)
 
-- Never touch a file not in the lockfile (FM-1).
+- Never touch a file not in the lockfile — unknown files are preserved; one at a path the Forge would write is reported as a collision (FM-1).
 - Never hash raw bytes — normalize LF, UTF-8, strip BOM; compare JSON structurally (FM-2).
 - Never leave an orphan on disk (FM-3).
 - Never require a manual mirror — everything a second target needs is generated (FM-4).
@@ -121,8 +121,8 @@ Claude Code: full. Kiro: rules with always/fileMatch/manual inclusion, commands,
 
 ## Status
 
-Phase 0 (in progress): Forge schema; layer resolver with exclusive slots and params; `sync`, `diff`, `status`, `explain`, `ls`, lockfile; `import --from claude-code`; emitters for Claude Code, Kiro and AGENTS.md; 11 oracle tests passing on two real workspaces (byte-identical reproduction of a hand-built Claude Code + Kiro workspace; second sync is a no-op; Forge edits reach both targets; manual edits surface as drift and survive; removed ingredients disappear; unmanaged files untouched).
+Phase 0 (in progress): Forge schema; layer resolver with exclusive slots and params; `sync`, `diff`, `status`, `explain`, `ls`, lockfile; `import --from claude-code`; emitters for Claude Code, Kiro and AGENTS.md; an oracle suite against a private hand-built workspace plus a synthetic suite in CI on Linux and Windows (byte-identical reproduction of a hand-built Claude Code + Kiro workspace; second sync is a no-op; Forge edits reach both targets; manual edits surface as drift and survive; removed ingredients disappear; unmanaged files untouched).
 
-Later phases: team profiles and `init`, remote Forge, PM/platform MCP, `doctor`, registry (1); local services, templates, drift promote, `docs validate` (2); `--check`, CI actions, `craftar ui` (3); `craftar mcp`, plugins, Warp, Kimi/Codex/Cursor emitters, documentation (4).
+Later phases: team profiles and `init`, remote Forge, PM/platform MCP, `doctor`, registry (1); local services, templates, drift promote, `docs validate` (2); CI actions, `craftar ui` (3); `craftar mcp`, plugins, Warp, Kimi/Codex/Cursor emitters, documentation (4).
 
-Stack: TypeScript/Node CLI (commander, zod, yaml); rulesync as the conversion dependency. Open questions: license (MIT or Apache-2.0); Forge as separate repo vs monorepo; what Kimi and Codex read beyond AGENTS.md; multiple Forges per workspace.
+Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync planned as the conversion dependency for further formats. License: MIT. Open questions: Forge as separate repo vs monorepo; what Kimi and Codex read beyond AGENTS.md; multiple Forges per workspace.
