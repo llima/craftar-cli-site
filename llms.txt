@@ -93,12 +93,12 @@ P2 resolved (diagram): same developer machine and same four workspaces as the pr
 
 - F1 Forge → workspace sync [working, mvp] (P1, P2): `craftar sync [--dry-run] [--check] [--overwrite-drift]`, `diff`, `status` (per file: new, update, unchanged, adopt, drift, collision, orphan). Planned: `--forge-ref`, `--targets`, `update`, following a Forge branch or pinning a tag.
 - F2 Multi-target emission [working, mvp] (P1): `craftar import --from claude-code`; Craftar's own emitters for Claude Code, Kiro (byte-identical to a hand-built workspace, including agent JSON and command mirrors) and AGENTS.md; post-processors for gaps (e.g. Kiro agent `resources`). Planned: `craftar targets`, rulesync for further tool-specific formats.
-- F3 Layers and stack slots [resolution working] (P1): layer resolution, exclusive slots, params, `explain`; `craftar.local.yaml` overrides the workspace for one developer. Planned: `add recipe`, `remove recipe`, `recipes`, `ingredients`.
+- F3 Layers and stack slots [resolution working] (P1): layer resolution, exclusive slots, params, `explain`; `craftar.local.yaml` (git-ignored) overrides the workspace for one developer, its arrays replacing the workspace's. Planned: `add recipe`, `remove recipe`, `recipes`, `ingredients`.
 - F4 Workspace bootstrap (P2): `craftar init [--profile --targets --yes]`.
 - F5 PM tool and internal platform per profile (P1): `integrations.pm.kind ∈ {github, azure-devops, notion, jira}`; `integrations.idp` registers the platform MCP; tokens via `authEnv`.
 - F6 Local services per workspace (P1): `service` ingredient with docker-compose fragment; `craftar services up|down|status`.
 - F7 Project templates (P1): `craftar templates install`; generated `/create-project` command.
-- F8 Drift and reverse contribution [detection working] (P2): `status`, `drift show|discard|promote`; never overwritten without `--overwrite-drift`.
+- F8 Drift and reverse contribution [detection working] (P2): `status` reports drift; never overwritten without `--overwrite-drift`. Planned: `drift show|discard|promote`.
 - F9 CI [--check working] (P2): `craftar sync --check`. Planned: GitHub Action / Azure Pipelines task; pre-commit hook.
 - F10 Registry and dashboard (P2): `craftar ls` over the registry, `craftar ui`. (Today's `craftar ls` lists the recipes and ingredients resolved for one workspace.)
 - F11 Craftar as an MCP server (P1, P2): `craftar mcp`; Claude Code plugin, Agent Plugin, Warp workflows as thin shells.

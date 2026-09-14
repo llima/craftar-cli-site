@@ -842,9 +842,9 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar status <span class="c"># drifted files listed; never overwritten without --overwrite-drift</span></code>
-            <code><span class="p">$</span> craftar drift show &lt;file&gt; · drift discard · drift promote</code>
+            <code><span class="p">$</span> craftar drift show &lt;file&gt; · drift discard · drift promote <span class="c"># planned</span></code>
           </div>
-          <p class="mech">Normalized hashes from the lock are compared with disk. <code>promote</code> converts the edit back into an ingredient via <code>import</code> and opens a Forge branch. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
+          <p class="mech">Normalized hashes from the lock are compared with disk. Planned: <code>promote</code> will convert the edit back into an ingredient via <code>import</code> and open a Forge branch. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
         </div>
       </article>
 
@@ -853,7 +853,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <p class="why"><b>problem · P2</b>Sync that depends on someone remembering will lag by workspace.</p>
         <div class="how">
           <div class="cmds"><code><span class="p">$</span> craftar sync --check <span class="c"># exit ≠ 0 when behind or drifted</span></code></div>
-          <p class="mech">GitHub Action and Azure Pipelines task open a PR with the change summary when the Forge moves; optional Forge-side dispatch to registered workspaces; pre-commit hook running <code>--check</code>.</p>
+          <p class="mech">Planned: a GitHub Action and an Azure Pipelines task that open a PR with the change summary when the Forge moves; optional Forge-side dispatch to registered workspaces; a pre-commit hook running <code>--check</code>.</p>
         </div>
       </article>
 
@@ -861,7 +861,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F10</div><h3>Registry and dashboard</h3></div>
         <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui</code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui <span class="c"># planned — today's ls lists the recipes resolved for one workspace</span></code></div>
           <p class="mech">Table or local web page: workspace, profile, stack, targets, Forge SHA, status; actions <code>sync</code> / <code>diff</code> / <code>explain</code>; Forge view of recipes, ingredients and who uses what.</p>
         </div>
       </article>
@@ -931,7 +931,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <!-- ================= STATUS ================= -->
   <section id="status">
     <div class="eyebrow">Status</div>
-    <h2>Phase 0 — validated against existing workspaces with an oracle test.</h2>
+    <h2>Phase 0 — validated against a hand-built workspace with an oracle test.</h2>
     <p class="lede" style="margin-top:22px">Before generating anything new, Craftar has to reproduce what teams already have. The oracle imports a hand-built workspace (Claude Code + Kiro), syncs it, and asserts byte equality of every generated file; a second sync must be a no-op; a Forge edit must reach both targets; a manual edit must surface as drift and survive; a removed ingredient must disappear; an unmanaged file must be untouched.</p>
 
     <div class="phases">
