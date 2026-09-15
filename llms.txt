@@ -129,4 +129,4 @@ Later phases: team profiles and `init`, remote Forge, PM/platform MCP, `doctor`,
 
 Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync planned as the conversion dependency for further formats. License: MIT. Open questions: Forge as separate repo vs monorepo; what Kimi and Codex read beyond AGENTS.md; multiple Forges per workspace.
 
-Trying it: install with `npm install -g craftar` (Node ≥ 22), or prefix any command with `npx`. Then point `craftar import --from claude-code` at an existing workspace to obtain a Forge, and run `craftar diff` to see what a sync would change. No files are written until `sync`.
+Trying it: install with `npm install -g craftar` (Node ≥ 22), or prefix any command with `npx`. Then, inside an existing Claude Code workspace, run `craftar import --from claude-code --forge <dir> --profile <name> --write-config` to obtain a Forge and a `craftar.yaml`, and `craftar diff` to see what a sync would change. Nothing in `.claude/` or `.kiro/` is rewritten until `sync`.

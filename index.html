@@ -968,7 +968,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     <div class="status-grid">
       <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
       <div><h3>Open questions</h3><ul><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
-      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then point <code>craftar import --from claude-code</code> at an existing workspace to obtain a Forge, and run <code>craftar diff</code> to see what a sync would change. No files are written until <code>sync</code>.</p></div>
+      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>.</p></div>
     </div>
   </section>
 
