@@ -87,22 +87,22 @@ graph LR
   REG["~/.craftar/registry.json · read by craftar ls"] -.-> W1 & W2 & W3 & W4
 ```
 
-P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the pinned one). The registry at `~/.craftar/registry.json` lists all four, and `craftar ls` reports per workspace: up to date, behind, or drift.
+P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the pinned one). The registry at `~/.craftar/registry.json` lists all four, and `craftar ls` will report per workspace: up to date, behind, or drift.
 
 ## Capabilities (F1–F12; "working" = runs today and is covered by tests; "mvp" = first release; "planned" = designed, not built)
 
 - F1 Forge → workspace sync [working, mvp] (P1, P2): `craftar sync [--dry-run] [--check] [--overwrite-drift]`, `diff`, `status` (per file: new, update, unchanged, adopt, drift, collision, orphan, orphan-drift); sync prints what it wrote, removed and skipped, file by file. Planned: `--forge-ref`, `--targets`, `update`, following a Forge branch or pinning a tag.
 - F2 Multi-target emission [working, mvp] (P1): `craftar import --from claude-code`; Craftar's own emitters for Claude Code, Kiro (byte-identical to a hand-built workspace, including agent JSON and command mirrors) and AGENTS.md; post-processors for gaps (e.g. Kiro agent `resources`). Planned: `craftar targets`, rulesync for further tool-specific formats.
 - F3 Layers and stack slots [resolution working] (P1): layer resolution, exclusive slots, params, `explain`; `craftar.local.yaml` (git-ignored) overrides the workspace for one developer, its arrays replacing the workspace's. Planned: `add recipe`, `remove recipe`, `recipes`, `ingredients`.
-- F4 Workspace bootstrap (P2): `craftar init [--profile --targets --yes]`.
+- F4 Workspace bootstrap (P2): planned: `craftar init [--profile --targets --yes]`.
 - F5 PM tool and internal platform per profile (P1): `integrations.pm.kind ∈ {github, azure-devops, notion, jira}`; `integrations.idp` registers the platform MCP; tokens via `authEnv`.
-- F6 Local services per workspace (P1): `service` ingredient with docker-compose fragment; `craftar services up|down|status`.
-- F7 Project templates (P1): `craftar templates install`; generated `/create-project` command.
+- F6 Local services per workspace (P1): `service` ingredient with docker-compose fragment; planned: `craftar services up|down|status`.
+- F7 Project templates (P1): planned: `craftar templates install`; generated `/create-project` command.
 - F8 Drift and reverse contribution [detection working] (P2): `status` reports drift; never overwritten without `--overwrite-drift`. Planned: `drift show|discard|promote`.
 - F9 CI [--check working] (P2): `craftar sync --check`. Planned: GitHub Action / Azure Pipelines task; pre-commit hook.
 - F10 Registry and dashboard (P2): `craftar ls` over the registry, `craftar ui` — planned; today's `craftar ls` lists the recipes and ingredients resolved for one workspace.
-- F11 Craftar as an MCP server (P1, P2): `craftar mcp`; Claude Code plugin, Agent Plugin, Warp workflows as thin shells.
-- F12 Diagnostics (P2): `craftar doctor`.
+- F11 Craftar as an MCP server (P1, P2): planned: `craftar mcp`; Claude Code plugin, Agent Plugin, Warp workflows as thin shells.
+- F12 Diagnostics (P2): planned: `craftar doctor`.
 
 ## Invariants (each derived from a failure mode; these are the constraints Craftar is built against — the two marked (planned) are design commitments, not yet enforced by the code)
 
