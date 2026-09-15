@@ -741,8 +741,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
       <div class="concept"><h3>Target</h3><code>claude-code · kiro · kimi · codex · cursor</code><p>An AI coder to emit for. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today an emitter that cannot express an ingredient warns and skips it — a fallback is planned.</p></div>
-      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, resolved recipes and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
-      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Backs <code>craftar ls</code> and the local dashboard.</p></div>
+      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
+      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar ls</code> and the local dashboard — planned.</p></div>
     </div>
   </section>
 
@@ -750,7 +750,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="features">
     <div class="eyebrow">Capabilities</div>
     <h2>Twelve capabilities, each tied to the problem it addresses.</h2>
-    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code># planned</code> comment in a snippet marks a command that is designed, not built; a plain <span class="pill">planned</span> pill marks the same status on something other than a command; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code># planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
 
     <div class="features">
 
@@ -890,7 +890,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 
     <div class="rules">
       <div class="rule"><div class="never">never</div><h3>Touch a file not in the lockfile</h3><p>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved and never removed; one at a path the Forge would write is reported by <code>status</code> as a collision and never touched. Regeneration is per file.</p><p class="ref">← FM-1</p></div>
-      <div class="rule"><div class="never">never</div><h3>Hash raw bytes</h3><p>Content hashes are computed after normalization: LF line endings, UTF-8, BOM stripped; JSON compared structurally. Existing files keep their EOL on write.</p><p class="ref">← FM-2</p></div>
+      <div class="rule"><div class="never">never</div><h3>Hash raw bytes</h3><p>Content hashes are computed after normalization: LF line endings, UTF-8, BOM stripped; JSON compared structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output is always CRLF without BOM.</p><p class="ref">← FM-2</p></div>
       <div class="rule"><div class="never">never</div><h3>Leave an orphan on disk</h3><p>An output whose ingredient left the resolved set is removed on the next sync and named in the summary, in every target. <code>--check</code> fails on orphans.</p><p class="ref">← FM-3</p></div>
       <div class="rule"><div class="never">never</div><h3>Require a manual mirror</h3><p>Everything a second target needs — steering, agent JSON, command copies — is emitted from the same ingredient. If two files must say the same thing, both are generated.</p><p class="ref">← FM-4</p></div>
       <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today the rule and its reviewer are separate ingredients (<code>rule/&lt;name&gt;</code>, <code>agent/&lt;name&gt;-reviewer</code>) grouped by a stack recipe.</p><p class="ref">← FM-5</p></div>

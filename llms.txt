@@ -13,7 +13,7 @@ This file is the plain-text companion of the Craftar page (index.html), written 
 - Profile: one team — its recipes, repositories, template feeds, project-management tool, internal platform, and which AI coders that team uses.
 - Workspace: a local folder (one repo or a folder of repos) with a `craftar.yaml` declaring profile, recipe add/remove and targets, plus a git-ignored `craftar.local.yaml` for per-developer overrides.
 - Target: an AI coder to emit for — `claude-code`, `kiro`, `kimi`, `codex`, `cursor`, `warp`, `agents-md`. A per-target `capabilities.yaml` is planned; today an emitter that cannot express an ingredient warns and skips it directly.
-- Lockfile (`craftar.lock`): Forge SHA, resolved recipes, and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.
+- Lockfile (`craftar.lock`): Forge SHA, the resolved profile name, and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.
 - Registry (`~/.craftar/registry.json`): every workspace on the machine with path, profile, last sync and status.
 
 ## Problem statement
