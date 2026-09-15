@@ -105,11 +105,11 @@
 
   /* ---------- hero ---------- */
   .hero { padding-block: 72px 96px; border-top: 0; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; }
-  @media (max-width: 960px) { .hero { grid-template-columns: 1fr; padding-block: 40px 72px; gap: 40px; } }
+  @media (max-width: 960px) { .hero { grid-template-columns: minmax(0, 1fr); padding-block: 40px 72px; gap: 40px; } }
   .hero h1 .em { color: var(--ember); }
   .hero .lede { margin-top: 26px; }
   .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; align-items: center; }
-  .install { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--seam-2); border-radius: var(--r); background: var(--plate); font-family: var(--mono); font-size: 14px; color: var(--muted); }
+  .install { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--seam-2); border-radius: var(--r); background: var(--plate); font-family: var(--mono); font-size: 14px; color: var(--muted); overflow-wrap: anywhere; max-width: 100%; }
   .install b { color: var(--text); font-weight: 500; }
   .install .dollar { color: var(--ember); }
   .hero-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 28px; font-family: var(--mono); font-size: 12.5px; color: var(--faint); letter-spacing: .02em; }
@@ -443,7 +443,7 @@
       <p class="lede">A <strong>harness</strong> is everything that shapes how coding agents behave in a repository: rules, agents, commands, skills, hooks and MCP servers. Craftar addresses two problems with it: keeping <strong>one harness</strong> consistent across many teams that use different AI coders (<a href="#p1" style="color:var(--steel);text-decoration:none">P1</a>), and keeping <strong>one developer's</strong> many workspaces — each on a different team's Git remote — on the same version of it (<a href="#p2" style="color:var(--steel);text-decoration:none">P2</a>). It does so by treating the harness as source in a Git repository, the <strong>Forge</strong>, composed per team and emitted in each tool's native format with a lockfile.</p>
       <div class="cta">
         <a class="btn primary" href="#model">Read the model</a>
-        <span class="install"><span class="dollar">$</span><b>git clone https://github.com/llima/craftar-cli && cd craftar-cli && npm install && npm run dev -- sync <span style="white-space:nowrap">--workspace &lt;path-to-your-workspace&gt;</span></b></span>
+        <span class="install"><span class="dollar">$</span><b>git clone https://github.com/llima/craftar-cli && cd craftar-cli && npm install && npm run dev -- sync --workspace &lt;path-to-your-workspace&gt;</b></span>
       </div>
       <div class="hero-meta">
         <span>claude-code</span><span>kiro</span><span>kimi</span><span>codex</span><span>cursor</span><span>warp</span><span>agents-md</span>
@@ -904,7 +904,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="targets">
     <div class="eyebrow steel">Targets</div>
     <h2>Capability matrix.</h2>
-    <p class="lede" style="margin-top:22px">This table is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target <code>capabilities.yaml</code> is planned. During sync, an ingredient a target cannot express produces an explicit warning and is skipped — nothing is dropped silently.</p>
+    <p class="lede" style="margin-top:22px">This table is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target <code>capabilities.yaml</code> is planned. Nothing may be dropped silently: today the Kiro emitter warns and skips what it cannot express; closing the remaining gaps is planned.</p>
 
     <div class="matrix-wrap">
       <table>

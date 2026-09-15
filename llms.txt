@@ -14,7 +14,7 @@ This file is the plain-text companion of the Craftar page (index.html), written 
 - Workspace: a local folder (one repo or a folder of repos) with a `craftar.yaml` declaring profile, recipe add/remove and targets, plus a git-ignored `craftar.local.yaml` for per-developer overrides.
 - Target: an AI coder to emit for — `claude-code`, `kiro`, `kimi`, `codex`, `cursor`, `warp`, `agents-md`. A per-target `capabilities.yaml` is planned; today an emitter that cannot express an ingredient warns and skips it directly.
 - Lockfile (`craftar.lock`): Forge SHA, the resolved profile name, and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.
-- Registry (`~/.craftar/registry.json`): every workspace on the machine with path, profile, last sync and status.
+- Registry (`~/.craftar/registry.json`): every workspace on the machine with path, profile, last sync and status. Will back `craftar ls` and the local dashboard — planned.
 
 ## Problem statement
 
@@ -107,7 +107,7 @@ P2 resolved (diagram): same developer machine and same four workspaces as the pr
 ## Invariants (each derived from a failure mode; these are the constraints Craftar is built against — the two marked (planned) are design commitments, not yet enforced by the code)
 
 - Never touch a file not in the lockfile — unknown files are preserved; one at a path the Forge would write is reported as a collision (FM-1).
-- Never hash raw bytes — normalize LF, UTF-8, strip BOM; compare JSON structurally (FM-2).
+- Never hash raw bytes — normalize LF, UTF-8, strip BOM; compare JSON structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output is always CRLF without BOM (FM-2).
 - Never leave an orphan on disk (FM-3).
 - Never require a manual mirror — everything a second target needs is generated (FM-4).
 - Never split a rule from its reviewer — one ingredient, two outputs (FM-5) (planned; today the rule and its reviewer are separate ingredients (rule/<name>, agent/<name>-reviewer) grouped by a stack recipe).
@@ -117,7 +117,7 @@ P2 resolved (diagram): same developer machine and same four workspaces as the pr
 
 ## Targets and capability coverage
 
-This is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target `capabilities.yaml` is planned. During sync, an ingredient a target cannot express produces an explicit warning and is skipped — nothing is dropped silently.
+This is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target `capabilities.yaml` is planned. Nothing may be dropped silently: today the Kiro emitter warns and skips what it cannot express; closing the remaining gaps is planned.
 
 Claude Code: full. Kiro: rules with always/fileMatch/manual inclusion, commands, custom agents, hooks partial, skills, MCP. Kimi: AGENTS.md and skills; commands and subagents via fallback; no hooks. Codex: AGENTS.md, `[hooks]` block, skills, MCP; commands via fallback; no subagents. Cursor: `.cursor/rules/*.mdc` with globs/always, Agent Plugin skills, MCP; commands via fallback. Warp: workflows and MCP. AGENTS.md: plain rules, skills, `mcp.json`. Anything a target cannot express is reported and skipped or given a declared fallback; nothing is dropped silently. Kimi and Codex rows are pending verification.
 
