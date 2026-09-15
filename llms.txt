@@ -119,7 +119,7 @@ P2 resolved (diagram): same developer machine and same four workspaces as the pr
 
 This is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target `capabilities.yaml` is planned. Nothing may be dropped silently: today the Kiro emitter warns and skips what it cannot express; closing the remaining gaps is planned.
 
-Claude Code: full. Kiro: rules with always/fileMatch/manual inclusion, commands, custom agents, hooks partial, skills, MCP. Kimi: AGENTS.md and skills; commands and subagents via fallback; no hooks. Codex: AGENTS.md, `[hooks]` block, skills, MCP; commands via fallback; no subagents. Cursor: `.cursor/rules/*.mdc` with globs/always, Agent Plugin skills, MCP; commands via fallback. Warp: workflows and MCP. AGENTS.md: plain rules, skills, `mcp.json`. Anything a target cannot express is reported and skipped or given a declared fallback; nothing is dropped silently. Kimi and Codex rows are pending verification.
+Claude Code: full. Kiro: rules with always/fileMatch/manual inclusion, commands, custom agents, hooks partial, skills, MCP. Kimi: AGENTS.md and skills; commands and subagents via fallback; no hooks. Codex: AGENTS.md, `[hooks]` block, skills, MCP; commands via fallback; no subagents. Cursor: `.cursor/rules/*.mdc` with globs/always, Agent Plugin skills, MCP; commands via fallback. Warp: workflows and MCP. AGENTS.md: plain rules, skills, `mcp.json`. In this design, anything a target cannot express is reported and skipped or given a declared fallback. Kimi and Codex rows are pending verification.
 
 ## Status
 
