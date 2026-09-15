@@ -7,7 +7,7 @@ This file is the plain-text companion of the Craftar page (index.html), written 
 ## Terminology
 
 - Harness: everything that shapes how coding agents behave in a repository — rules, agents, commands, skills, hooks, MCP servers.
-- Forge: one Git repository holding every ingredient, recipe and profile. Versioned; workspaces reference it by branch, tag or SHA. It is never a Git remote of any team repository.
+- Forge: one Git repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned. It is never a Git remote of any team repository.
 - Ingredient: smallest reusable unit — a rule, agent, command, skill, hook, MCP server, local service or template. A folder with an `ingredient.yaml` declaring type, targets, inclusion mode and globs.
 - Recipe: named set of ingredients with parameters. Recipes `extend` others; stack recipes declare a `slot` so two stacks for the same role (e.g. two front-end frameworks) cannot coexist.
 - Profile: one team — its recipes, repositories, template feeds, project-management tool, internal platform, and which AI coders that team uses.
@@ -71,11 +71,11 @@ Pipeline of `craftar sync`:
 4. Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.
 5. Diff against `craftar.lock`; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.
 
-P1 resolved (diagram): the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (`base`, `backend-*`, `frontend-*`, `aws-local`, `pm-*`) and one profile per team. Running `craftar sync` in a workspace fetches the Forge at a pinned ref, resolves layers, emits files for each of the workspace's targets and writes `craftar.lock`. Team A emits to `.claude/` with 7 agents; team B swaps the frontend recipe and has three workspaces, one AI coder each — `.opencode/`, `.kimi/` and `.aider/`; team C pins the Forge at tag `v2.3`, emits `.kiro/` and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.
+P1 resolved (diagram): the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (`base`, `backend-*`, `frontend-*`, `aws-local`, `pm-*`) and one profile per team. Running `craftar sync` in a workspace loads the Forge (a pinned ref is planned), resolves layers, emits files for each of the workspace's targets and writes `craftar.lock`. Team A emits to `.claude/` with 7 agents; team B swaps the frontend recipe and has three workspaces, one AI coder each — `.opencode/`, `.kimi/` and `.aider/`; team C pins the Forge at tag `v2.3`, emits `.kiro/` and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.
 
 ```mermaid
 graph LR
-  F["Forge · one Git repository · ingredients, recipes, profiles"] --> CR["craftar · reads the Forge at the ref pinned in each craftar.yaml, emits per target"]
+  F["Forge · one Git repository · ingredients, recipes, profiles"] --> CR["craftar · will read the Forge at the ref pinned in each craftar.yaml, emits per target"]
   CR --> W1["workspace-1 · .claude/ · craftar.lock 7c1e9a2 · up to date"]
   CR --> W2["workspace-2 · AGENTS.md · craftar.lock 7c1e9a2 · up to date"]
   CR --> W3["workspace-3 · .kiro/ · craftar.lock 5b0d3f1 · behind, pinned at tag v2.3"]

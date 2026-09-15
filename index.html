@@ -598,7 +598,7 @@
 
     <svg id="flow" class="diagram" viewBox="9.5 0 881 400" role="img" aria-labelledby="d2t" aria-describedby="d2d">
       <title id="d2t">With Craftar: one Forge resolved per workspace and emitted to each team's AI coders</title>
-      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace fetches the Forge at a pinned ref, resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one AI coder each — .opencode/, .kimi/ and .aider/; team C pins the Forge at tag v2.3, emits .kiro/ and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.</desc>
+      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace loads the Forge (a pinned ref is planned), resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one AI coder each — .opencode/, .kimi/ and .aider/; team C pins the Forge at tag v2.3, emits .kiro/ and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.</desc>
       <!-- forge -->
       <rect class="box src" x="10" y="90" width="240" height="220" rx="4"/>
       <text class="t" x="24" y="114">Forge <tspan class="s">· git repo</tspan></text>
@@ -735,7 +735,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     </div>
 
     <div class="concepts" aria-label="Core concepts">
-      <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces reference it by branch, tag or SHA.</p></div>
+      <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
       <div class="concept"><h3>Ingredient</h3><code>ingredients/rules/frontend-angular/</code><p>Smallest reusable unit: a rule, agent, command, skill, hook, MCP server, local service or template. A folder with an <code>ingredient.yaml</code> declaring type, targets, inclusion mode and globs.</p></div>
       <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
       <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
@@ -817,7 +817,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F6</div><h3>Local services per workspace</h3></div>
         <p class="why"><b>problem · P1</b>Cloud dependencies (queues, buckets) need a local stand-in, and the agent has to know its endpoints and fake credentials.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar services up <span class="c">| down | status · # planned</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar services up | down | status <span class="c"># planned</span></code></div>
           <p class="mech">A <code>service</code> ingredient carries a <code>docker-compose</code> fragment, default variables and a rule for the agent. Fragments merge into <code>.craftar/compose.yaml</code>. First ingredient: LocalStack-style SQS/S3.</p>
         </div>
       </article>
