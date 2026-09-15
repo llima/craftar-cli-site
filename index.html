@@ -709,10 +709,10 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div class="engine">
           <div class="cmd"><span class="p">$</span> craftar sync</div>
           <ol>
-            <li>Read <code>craftar.yaml</code>; fetch the Forge at the pinned ref (branch, tag or SHA).</li>
+            <li>Read <code>craftar.yaml</code>; load the Forge (a local path today; a pinned git ref is planned).</li>
             <li>Resolve layers, exclusive slots and params into the final ingredient set.</li>
             <li>Emit open standards verbatim: <code>AGENTS.md</code>, Agent Skills (<code>SKILL.md</code>), <code>mcp.json</code>.</li>
-            <li>Emit tool-specific formats — inclusion modes, subagents, hooks — through rulesync plus Craftar's own emitters and post-processors.</li>
+            <li>Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.</li>
             <li>Diff against <code>craftar.lock</code>; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.</li>
           </ol>
         </div>

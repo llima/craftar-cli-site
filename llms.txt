@@ -12,7 +12,7 @@ This file is the plain-text companion of the Craftar page (index.html), written 
 - Recipe: named set of ingredients with parameters. Recipes `extend` others; stack recipes declare a `slot` so two stacks for the same role (e.g. two front-end frameworks) cannot coexist.
 - Profile: one team — its recipes, repositories, template feeds, project-management tool, internal platform, and which AI coders that team uses.
 - Workspace: a local folder (one repo or a folder of repos) with a `craftar.yaml` declaring profile, recipe add/remove and targets, plus a git-ignored `craftar.local.yaml` for per-developer overrides.
-- Target: an AI coder to emit for — `claude-code`, `kiro`, `kimi`, `codex`, `cursor`, `warp`, `agents-md`. A per-target `capabilities.yaml` is planned; today the Kiro emitter warns and skips what it cannot express directly.
+- Target: an AI coder to emit for — `claude-code`, `kiro`, `kimi`, `codex`, `cursor`, `warp`, `agents-md`. A per-target `capabilities.yaml` is planned; today the Kiro emitter warns and skips what it cannot express — a fallback is planned.
 - Lockfile (`craftar.lock`): Forge SHA, the resolved profile name, and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.
 - Registry (`~/.craftar/registry.json`): every workspace on the machine with path, profile, last sync and status. Will back `craftar ls` and the local dashboard — planned.
 
@@ -65,10 +65,10 @@ Craftar borrows the shape of a build system. Ingredients are source; recipes and
 Layer resolution, weakest to strongest: `base` recipe → stack recipes → team profile → `craftar.yaml` (workspace, committed) → `craftar.local.yaml` (one developer, git-ignored). Same-named ingredients resolve to the strongest layer; stack recipes sharing a `slot` are mutually exclusive; `{{params}}` are substituted from the winning layer. `craftar explain <file>` prints the layer that decided each output.
 
 Pipeline of `craftar sync`:
-1. Read `craftar.yaml`; fetch the Forge at the pinned ref.
+1. Read `craftar.yaml`; load the Forge (a local path today; a pinned git ref is planned).
 2. Resolve layers, exclusive slots and params into the final ingredient set.
 3. Emit open standards verbatim: `AGENTS.md`, Agent Skills (`SKILL.md`), `mcp.json`.
-4. Emit tool-specific formats (inclusion modes, subagents, hooks) through rulesync plus Craftar's own emitters and post-processors.
+4. Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.
 5. Diff against `craftar.lock`; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.
 
 P1 resolved (diagram): the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (`base`, `backend-*`, `frontend-*`, `aws-local`, `pm-*`) and one profile per team. Running `craftar sync` in a workspace fetches the Forge at a pinned ref, resolves layers, emits files for each of the workspace's targets and writes `craftar.lock`. Team A emits to `.claude/` with 7 agents; team B swaps the frontend recipe and has three workspaces, one AI coder each — `.opencode/`, `.kimi/` and `.aider/`; team C pins the Forge at tag `v2.3`, emits `.kiro/` and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.
