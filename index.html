@@ -443,7 +443,7 @@
       <p class="lede">A <strong>harness</strong> is everything that shapes how coding agents behave in a repository: rules, agents, commands, skills, hooks and MCP servers. Craftar addresses two problems with it: keeping <strong>one harness</strong> consistent across many teams that use different AI coders (<a href="#p1" style="color:var(--steel);text-decoration:none">P1</a>), and keeping <strong>one developer's</strong> many workspaces — each on a different team's Git remote — on the same version of it (<a href="#p2" style="color:var(--steel);text-decoration:none">P2</a>). It does so by treating the harness as source in a Git repository, the <strong>Forge</strong>, composed per team and emitted in each tool's native format with a lockfile.</p>
       <div class="cta">
         <a class="btn primary" href="#model">Read the model</a>
-        <span class="install"><span class="dollar">$</span><b>git clone https://github.com/llima/craftar-cli && cd craftar-cli && npm install && npm run dev -- sync --workspace &lt;path-to-your-workspace&gt;</b></span>
+        <span class="install"><span class="dollar">$</span><b>git clone https://github.com/llima/craftar-cli && cd craftar-cli && npm install && npm run dev -- sync <span style="white-space:nowrap">--workspace &lt;path-to-your-workspace&gt;</span></b></span>
       </div>
       <div class="hero-meta">
         <span>claude-code</span><span>kiro</span><span>kimi</span><span>codex</span><span>cursor</span><span>warp</span><span>agents-md</span>
@@ -740,7 +740,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
       <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
-      <div class="concept"><h3>Target</h3><code>claude-code · kiro · kimi · codex · cursor</code><p>An AI coder to emit for. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); what a target cannot express is reported and, where possible, given a fallback.</p></div>
+      <div class="concept"><h3>Target</h3><code>claude-code · kiro · kimi · codex · cursor</code><p>An AI coder to emit for. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today an emitter that cannot express an ingredient warns and skips it — a fallback is planned.</p></div>
       <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, resolved recipes and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
       <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Backs <code>craftar ls</code> and the local dashboard.</p></div>
     </div>
@@ -750,7 +750,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="features">
     <div class="eyebrow">Capabilities</div>
     <h2>Twelve capabilities, each tied to the problem it addresses.</h2>
-    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today and is covered by tests; commands marked <em>planned</em> (or <code># planned</code> in a snippet) are designed, not built; a plain <span class="pill">planned</span> pill marks the same status on something other than a command; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code># planned</code> comment in a snippet marks a command that is designed, not built; a plain <span class="pill">planned</span> pill marks the same status on something other than a command; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
 
     <div class="features">
 

@@ -100,7 +100,7 @@ P2 resolved (diagram): same developer machine and same four workspaces as the pr
 - F7 Project templates (P1): `craftar templates install`; generated `/create-project` command.
 - F8 Drift and reverse contribution [detection working] (P2): `status` reports drift; never overwritten without `--overwrite-drift`. Planned: `drift show|discard|promote`.
 - F9 CI [--check working] (P2): `craftar sync --check`. Planned: GitHub Action / Azure Pipelines task; pre-commit hook.
-- F10 Registry and dashboard (P2): `craftar ls` over the registry, `craftar ui`. (Today's `craftar ls` lists the recipes and ingredients resolved for one workspace.)
+- F10 Registry and dashboard (P2): `craftar ls` over the registry, `craftar ui` — planned; today's `craftar ls` lists the recipes and ingredients resolved for one workspace.
 - F11 Craftar as an MCP server (P1, P2): `craftar mcp`; Claude Code plugin, Agent Plugin, Warp workflows as thin shells.
 - F12 Diagnostics (P2): `craftar doctor`.
 
