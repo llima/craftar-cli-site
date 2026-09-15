@@ -128,3 +128,5 @@ Phase 0 (in progress): Forge schema; layer resolver with exclusive slots and par
 Later phases: team profiles and `init`, remote Forge, PM/platform MCP, `doctor`, registry (1); local services, templates, drift promote, `docs validate` (2); CI actions, `craftar ui` (3); `craftar mcp`, plugins, Warp, Kimi/Codex/Cursor emitters, documentation (4).
 
 Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync planned as the conversion dependency for further formats. License: MIT. Open questions: Forge as separate repo vs monorepo; what Kimi and Codex read beyond AGENTS.md; multiple Forges per workspace.
+
+Trying it: install with `npm install -g craftar` (Node ≥ 22), or prefix any command with `npx`. Then point `craftar import --from claude-code` at an existing workspace to obtain a Forge, and run `craftar diff` to see what a sync would change. No files are written until `sync`.
