@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Keep rules, agents, commands, skills, hooks and MCPs in one Forge in Git. Craftar emits them natively into every workspace, for every AI coder your team uses.">
 <meta name="twitter:image" content="https://craftar.dev/og.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Craftar","description":"Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients and recipes, and emits it in the native format of each AI coder (Claude Code, Kiro, Kimi, Codex, Cursor, Warp, AGENTS.md) into every workspace, with a lockfile for drift detection and a registry of workspaces.","programmingLanguage":"TypeScript","runtimePlatform":"Node.js","applicationCategory":"DeveloperApplication","keywords":["AI coding agents","harness","Claude Code","Kiro","Cursor","Codex","AGENTS.md","MCP","rulesync","developer tooling","monorepo","workspace sync"],"isBasedOn":"https://github.com/dyoshikawa/rulesync"}
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Craftar","description":"Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients and recipes, and emits it in the native format of each AI coder (Claude Code, Kiro, Kimi, Codex, Cursor, Warp, AGENTS.md) into every workspace, with a lockfile for drift detection and a registry of workspaces.","programmingLanguage":"TypeScript","runtimePlatform":"Node.js","applicationCategory":"DeveloperApplication","keywords":["AI coding agents","harness","Claude Code","Kiro","Cursor","Codex","AGENTS.md","MCP","rulesync","developer tooling","monorepo","workspace sync"]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -105,11 +105,11 @@
 
   /* ---------- hero ---------- */
   .hero { padding-block: 72px 96px; border-top: 0; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; }
-  @media (max-width: 960px) { .hero { grid-template-columns: 1fr; padding-block: 40px 72px; gap: 40px; } }
+  @media (max-width: 960px) { .hero { grid-template-columns: minmax(0, 1fr); padding-block: 40px 72px; gap: 40px; } }
   .hero h1 .em { color: var(--ember); }
   .hero .lede { margin-top: 26px; }
   .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; align-items: center; }
-  .install { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--seam-2); border-radius: var(--r); background: var(--plate); font-family: var(--mono); font-size: 14px; color: var(--muted); }
+  .install { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--seam-2); border-radius: var(--r); background: var(--plate); font-family: var(--mono); font-size: 14px; color: var(--muted); overflow-wrap: anywhere; max-width: 100%; }
   .install b { color: var(--text); font-weight: 500; }
   .install .dollar { color: var(--ember); }
   .hero-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 28px; font-family: var(--mono); font-size: 12.5px; color: var(--faint); letter-spacing: .02em; }
@@ -122,7 +122,7 @@
   .term-bar .dots { display: flex; gap: 6px; margin-right: 6px; }
   .term-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--seam-2); display: block; }
   .term pre { margin: 0; padding: 18px 20px 20px; font-size: 12.5px; line-height: 1.65; overflow-x: auto; color: #C9D3DD; white-space: pre; }
-  .term .p { color: var(--ember); } .term .c { color: var(--faint); } .term .k { color: var(--steel); }
+  .term .p { color: var(--ember); } .term .c { color: var(--faint); }
   .term .add { color: var(--ok); } .term .chg { color: var(--warn); } .term .del { color: #D98A8A; }
   .term .dim { color: var(--faint); }
   .cursor { display: inline-block; width: 8px; height: 14px; background: var(--ember); vertical-align: -2px; animation: blink 1.1s steps(1) infinite; }
@@ -443,7 +443,7 @@
       <p class="lede">A <strong>harness</strong> is everything that shapes how coding agents behave in a repository: rules, agents, commands, skills, hooks and MCP servers. Craftar addresses two problems with it: keeping <strong>one harness</strong> consistent across many teams that use different AI coders (<a href="#p1" style="color:var(--steel);text-decoration:none">P1</a>), and keeping <strong>one developer's</strong> many workspaces — each on a different team's Git remote — on the same version of it (<a href="#p2" style="color:var(--steel);text-decoration:none">P2</a>). It does so by treating the harness as source in a Git repository, the <strong>Forge</strong>, composed per team and emitted in each tool's native format with a lockfile.</p>
       <div class="cta">
         <a class="btn primary" href="#model">Read the model</a>
-        <span class="install"><span class="dollar">$</span><b>npx craftar sync</b></span>
+        <span class="install"><span class="dollar">$</span><b>git clone https://github.com/llima/craftar-cli && cd craftar-cli && npm install && npm run dev -- sync --workspace &lt;path-to-your-workspace&gt;</b></span>
       </div>
       <div class="hero-meta">
         <span>claude-code</span><span>kiro</span><span>kimi</span><span>codex</span><span>cursor</span><span>warp</span><span>agents-md</span>
@@ -453,24 +453,15 @@
     <div class="term" aria-label="Terminal showing craftar sync output">
       <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~/work/team-a/platform-workspace</div>
 <pre><span class="p">$</span> craftar sync
-<span class="c">forge</span>    git@git.example/org/forge <span class="dim">@ 7c1e9a2</span>  <span class="c">(main)</span>
-<span class="c">profile</span>  team-a
-<span class="c">recipes</span>  base, backend-clean-arch, frontend-angular, aws-local, pm-azure-devops
-<span class="c">targets</span>  claude-code, kiro
+<b>craftar sync — profile team-a · recipes base → backend-clean-arch → frontend-angular → aws-local → pm-azure-devops · targets claude-code, kiro</b>
 
-<span class="k">claude-code</span>
-  <span class="add">+ .claude/rules/frontend-angular.md</span>          <span class="dim">rules/frontend-angular</span>
-  <span class="chg">~ .claude/agents/frontend-reviewer.md</span>        <span class="dim">agents/frontend-reviewer</span>
-  <span class="add">+ .claude/commands/create-component.md</span>     <span class="dim">commands/create-component</span>
-  <span class="dim">= 41 unchanged</span>
-<span class="k">kiro</span>
-  <span class="add">+ .kiro/steering/frontend-angular.md</span>        <span class="dim">inclusion: fileMatch **/*.ts</span>
-  <span class="chg">~ .kiro/agents/frontend-reviewer.json</span>       <span class="dim">resources: steering/frontend-angular.md</span>
-  <span class="del">- .kiro/steering/frontend-react.md</span>          <span class="dim">orphan — recipe removed</span>
-  <span class="dim">! hook format-on-edit has no Kiro equivalent; skipped</span>
-
-<span class="c">kept</span>     .claude/rules/local-notes.md              <span class="dim">not managed by craftar</span>
-<span class="c">lock</span>     craftar.lock updated · 3 added, 2 changed, 1 removed
+  wrote <span class="add">4</span>, removed <span class="del">1</span> orphan(s), skipped <span class="chg">1</span>
+  <span class="add">+</span> .claude/rules/frontend-angular.md
+  <span class="add">+</span> .claude/agents/frontend-reviewer.md
+  <span class="add">+</span> .claude/commands/create-component.md
+  <span class="add">+</span> .kiro/steering/frontend-angular.md
+  <span class="del">-</span> .kiro/steering/frontend-react.md  <span class="dim">(orphan: no longer produced by the Forge)</span>
+  <span class="chg">!</span> .kiro/agents/frontend-reviewer.json  <span class="dim">hand-edited since last sync — run `craftar diff` and either `--overwrite-drift` or promote the change to the Forge</span>
 <span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
     </div>
   </section>
@@ -566,7 +557,7 @@
         <svg class="diagram" style="margin-top:0" viewBox="9.5 0 901 364" role="img" aria-labelledby="d3bt" aria-describedby="d3bd">
           <title id="d3bt">Today: one developer machine with four team workspaces on separate remotes, each carrying a hand-copied harness of unknown version</title>
       <desc id="d3bd">Mechanism: one developer machine holds four workspaces, workspace-1 to workspace-4, one per team. Each workspace contains that team's repositories cloned from that team's own Git remote (four different hosts), so no repository is shared across workspaces. Each workspace also contains a hand-copied .claude/ harness of unknown version — v3?, v2?, v5?, v4+? — copied at different times or edited in place, with no lockfile. The harness moves from one workspace to the next by hand, one copy at a time, which is how the versions drift apart. The machine has no registry of workspaces, no shared source for the harness, and no way to verify versions.</desc>
-          <rect class="box" x="10" y="40" width="210" height="250" rx="4"/><text class="t" x="22" y="62">workspace-1/</text><text class="s bad" x="208" y="61" text-anchor="end">harness v3?</text><line x1="10" y1="74" x2="220" y2="74" stroke="var(--seam-2)"/><text class="s" x="22" y="94">targets  claude-code</text><text class="s" x="22" y="110">copied   <tspan class="bad">2 months ago</tspan></text><text class="s" x="22" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="22" y="138" width="186" height="20" rx="3"/><text class="s" x="28" y="152">.claude/ · hand-copied</text><text class="s" x="22" y="180" fill="var(--faint)">remote  git.team-a.example</text><rect class="chip" x="22" y="190" width="186" height="20" rx="3"/><text class="s" x="30" y="204" fill="var(--text)">api-core/</text><rect class="chip" x="22" y="216" width="186" height="20" rx="3"/><text class="s" x="30" y="230" fill="var(--text)">web-portal/</text><rect class="chip" x="22" y="242" width="186" height="20" rx="3"/><text class="s" x="30" y="256" fill="var(--text)">worker-jobs/</text><rect class="box" x="240" y="40" width="210" height="250" rx="4"/><text class="t" x="252" y="62">workspace-2/</text><text class="s bad" x="438" y="61" text-anchor="end">harness v2?</text><line x1="240" y1="74" x2="450" y2="74" stroke="var(--seam-2)"/><text class="s" x="252" y="94">targets  kimi</text><text class="s" x="252" y="110">copied   <tspan class="bad">hand-translated</tspan></text><text class="s" x="252" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="252" y="138" width="186" height="20" rx="3"/><text class="s" x="258" y="152">.claude/ · hand-copied</text><text class="s" x="252" y="180" fill="var(--faint)">remote  github.com/team-b</text><rect class="chip" x="252" y="190" width="186" height="20" rx="3"/><text class="s" x="260" y="204" fill="var(--text)">assets-api/</text><rect class="chip" x="252" y="216" width="186" height="20" rx="3"/><text class="s" x="260" y="230" fill="var(--text)">assets-web/</text><rect class="box" x="470" y="40" width="210" height="250" rx="4"/><text class="t" x="482" y="62">workspace-3/</text><text class="s bad" x="668" y="61" text-anchor="end">harness v5?</text><line x1="470" y1="74" x2="680" y2="74" stroke="var(--seam-2)"/><text class="s" x="482" y="94">targets  kiro</text><text class="s" x="482" y="110">copied   <tspan class="bad">last week</tspan></text><text class="s" x="482" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="482" y="138" width="186" height="20" rx="3"/><text class="s" x="488" y="152">.claude/ · hand-copied</text><text class="s" x="482" y="180" fill="var(--faint)">remote  azure.example/team-c</text><rect class="chip" x="482" y="190" width="186" height="20" rx="3"/><text class="s" x="490" y="204" fill="var(--text)">ledger-api/</text><rect class="chip" x="482" y="216" width="186" height="20" rx="3"/><text class="s" x="490" y="230" fill="var(--text)">ledger-web/</text><rect class="chip" x="482" y="242" width="186" height="20" rx="3"/><text class="s" x="490" y="256" fill="var(--text)">ledger-cli/</text><rect class="box" x="700" y="40" width="210" height="250" rx="4"/><text class="t" x="712" y="62">workspace-4/</text><text class="s bad" x="898" y="61" text-anchor="end">harness v4+?</text><line x1="700" y1="74" x2="910" y2="74" stroke="var(--seam-2)"/><text class="s" x="712" y="94">targets  cursor</text><text class="s" x="712" y="110">copied   <tspan class="bad">edited in place</tspan></text><text class="s" x="712" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="712" y="138" width="186" height="20" rx="3"/><text class="s" x="718" y="152">.claude/ · hand-copied</text><text class="s" x="712" y="180" fill="var(--faint)">remote  gitlab.team-d.example</text><rect class="chip" x="712" y="190" width="186" height="20" rx="3"/><text class="s" x="720" y="204" fill="var(--text)">backoffice/</text><rect class="chip" x="712" y="216" width="186" height="20" rx="3"/><text class="s" x="720" y="230" fill="var(--text)">backoffice-desktop/</text><path class="edge manual" d="M220 160 H 240"/><path class="edge manual" d="M450 160 H 470"/><path class="edge manual" d="M680 160 H 700"/>
+          <rect class="box" x="10" y="40" width="210" height="250" rx="4"/><text class="t" x="22" y="62">workspace-1/</text><text class="s bad" x="208" y="61" text-anchor="end">harness v3?</text><line x1="10" y1="74" x2="220" y2="74" stroke="var(--seam-2)"/><text class="s" x="22" y="94">targets  claude-code</text><text class="s" x="22" y="110">copied   <tspan class="bad">2 months ago</tspan></text><text class="s" x="22" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="22" y="138" width="186" height="20" rx="3"/><text class="s" x="28" y="152">.claude/ · hand-copied</text><text class="s" x="22" y="180" fill="var(--faint)">remote  git.team-a.example</text><rect class="chip" x="22" y="190" width="186" height="20" rx="3"/><text class="s" x="30" y="204" fill="var(--text)">api-core/</text><rect class="chip" x="22" y="216" width="186" height="20" rx="3"/><text class="s" x="30" y="230" fill="var(--text)">web-app/</text><rect class="chip" x="22" y="242" width="186" height="20" rx="3"/><text class="s" x="30" y="256" fill="var(--text)">worker-jobs/</text><rect class="box" x="240" y="40" width="210" height="250" rx="4"/><text class="t" x="252" y="62">workspace-2/</text><text class="s bad" x="438" y="61" text-anchor="end">harness v2?</text><line x1="240" y1="74" x2="450" y2="74" stroke="var(--seam-2)"/><text class="s" x="252" y="94">targets  kimi</text><text class="s" x="252" y="110">copied   <tspan class="bad">hand-translated</tspan></text><text class="s" x="252" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="252" y="138" width="186" height="20" rx="3"/><text class="s" x="258" y="152">.claude/ · hand-copied</text><text class="s" x="252" y="180" fill="var(--faint)">remote  github.example/team-b</text><rect class="chip" x="252" y="190" width="186" height="20" rx="3"/><text class="s" x="260" y="204" fill="var(--text)">catalog-api/</text><rect class="chip" x="252" y="216" width="186" height="20" rx="3"/><text class="s" x="260" y="230" fill="var(--text)">catalog-web/</text><rect class="box" x="470" y="40" width="210" height="250" rx="4"/><text class="t" x="482" y="62">workspace-3/</text><text class="s bad" x="668" y="61" text-anchor="end">harness v5?</text><line x1="470" y1="74" x2="680" y2="74" stroke="var(--seam-2)"/><text class="s" x="482" y="94">targets  kiro</text><text class="s" x="482" y="110">copied   <tspan class="bad">last week</tspan></text><text class="s" x="482" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="482" y="138" width="186" height="20" rx="3"/><text class="s" x="488" y="152">.claude/ · hand-copied</text><text class="s" x="482" y="180" fill="var(--faint)">remote  azure.example/team-c</text><rect class="chip" x="482" y="190" width="186" height="20" rx="3"/><text class="s" x="490" y="204" fill="var(--text)">billing-api/</text><rect class="chip" x="482" y="216" width="186" height="20" rx="3"/><text class="s" x="490" y="230" fill="var(--text)">billing-web/</text><rect class="chip" x="482" y="242" width="186" height="20" rx="3"/><text class="s" x="490" y="256" fill="var(--text)">billing-cli/</text><rect class="box" x="700" y="40" width="210" height="250" rx="4"/><text class="t" x="712" y="62">workspace-4/</text><text class="s bad" x="898" y="61" text-anchor="end">harness v4+?</text><line x1="700" y1="74" x2="910" y2="74" stroke="var(--seam-2)"/><text class="s" x="712" y="94">targets  cursor</text><text class="s" x="712" y="110">copied   <tspan class="bad">edited in place</tspan></text><text class="s" x="712" y="126">lock     <tspan class="bad">none</tspan></text><rect class="agent faded" x="712" y="138" width="186" height="20" rx="3"/><text class="s" x="718" y="152">.claude/ · hand-copied</text><text class="s" x="712" y="180" fill="var(--faint)">remote  gitlab.team-d.example</text><rect class="chip" x="712" y="190" width="186" height="20" rx="3"/><text class="s" x="720" y="204" fill="var(--text)">admin/</text><rect class="chip" x="712" y="216" width="186" height="20" rx="3"/><text class="s" x="720" y="230" fill="var(--text)">admin-desktop/</text><path class="edge manual" d="M220 160 H 240"/><path class="edge manual" d="M450 160 H 470"/><path class="edge manual" d="M680 160 H 700"/>
           <rect class="box" x="10" y="300" width="900" height="50" rx="4"/>
           <text class="t" x="24" y="322">developer machine</text>
           <text class="s" x="24" y="340">4 workspaces · 10 repositories · 4 remotes · <tspan class="bad">no registry · no shared source · versions unknown</tspan></text>
@@ -607,7 +598,7 @@
 
     <svg id="flow" class="diagram" viewBox="9.5 0 881 400" role="img" aria-labelledby="d2t" aria-describedby="d2d">
       <title id="d2t">With Craftar: one Forge resolved per workspace and emitted to each team's AI coders</title>
-      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace fetches the Forge at a pinned ref, resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one AI coder each — .opencode/, .kimi/ and .aider/; team C pins the Forge at tag v2.3, emits .kiro/ and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.</desc>
+      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace loads the Forge (a pinned ref is planned), resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one AI coder each — .opencode/, .kimi/ and .aider/; team C pins the Forge at tag v2.3, emits .kiro/ and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.</desc>
       <!-- forge -->
       <rect class="box src" x="10" y="90" width="240" height="220" rx="4"/>
       <text class="t" x="24" y="114">Forge <tspan class="s">· git repo</tspan></text>
@@ -668,15 +659,15 @@
 
 
     <h3 style="margin-top:72px">P2 resolved — one Forge, one lock per workspace, one registry</h3>
-    <p class="prose" style="margin-top:10px">Same machine, same four workspaces, same four remotes. The Forge is a fifth repository that none of the team repositories reference; each workspace's <code>craftar.yaml</code> points to it. What the workspaces now share is the harness: every workspace is generated from the same Forge, so <code>base</code> rules, commands and agents are identical across all of them, and the lockfile in each records exactly which Forge commit produced it. <code>craftar ls</code> reads the registry and reports, per workspace, whether it is at the Forge head, behind, or drifted.</p>
+    <p class="prose" style="margin-top:10px">Same machine, same four workspaces, same four remotes. The Forge is a fifth repository that none of the team repositories reference; each workspace's <code>craftar.yaml</code> points to it. What the workspaces now share is the harness: every workspace is generated from the same Forge, so <code>base</code> rules, commands and agents are identical across all of them, and the lockfile in each records exactly which Forge commit produced it. <code>craftar ls</code> will read the registry and report, per workspace, whether it is at the Forge head, behind, or drifted.</p>
     <svg class="diagram" viewBox="9.5 0 901 534" role="img" aria-labelledby="d3t" aria-describedby="d3d">
       <title id="d3t">One developer machine with four team workspaces, each with its own repositories on separate Git remotes, all generated from a single Forge</title>
-      <desc id="d3d">Mechanism: same developer machine and same four workspaces as the problem statement, workspace-1 to workspace-4, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's craftar.yaml and is not a remote of any team repository. Between them sits craftar itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a craftar.lock naming the Forge commit that produced it (7c1e9a2 for three of them, 5b0d3f1 for the pinned one). The registry at ~/.craftar/registry.json lists all four, and craftar ls reports per workspace: up to date, behind, or drift.</desc>
+      <desc id="d3d">Mechanism: same developer machine and same four workspaces as the problem statement, workspace-1 to workspace-4, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's craftar.yaml and is not a remote of any team repository. Between them sits craftar itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a craftar.lock naming the Forge commit that produced it (7c1e9a2 for three of them, 5b0d3f1 for the pinned one). The registry at ~/.craftar/registry.json lists all four, and craftar ls will report per workspace: up to date, behind, or drift.</desc>
       <rect class="box src" x="310" y="10" width="300" height="82" rx="4"/>
       <text class="t" x="324" y="34">forge</text>
       <text class="s" x="324" y="70" fill="var(--steel)">sync → workspaces · recorded in each lock</text>
       <text class="s" x="324" y="52">main @ <tspan class="em">7c1e9a2</tspan> · one git repo</text>
-      <path class="edge src" d="M460 92 V 110"/><rect class="box" x="310" y="110" width="300" height="52" rx="4"/><text class="t" x="324" y="133">craftar sync</text><text class="s" x="324" y="152">reads the Forge · emits per target</text><path class="edge gen" d="M460 162 C 460 185, 115 165, 115 200"/><path class="edge gen" d="M460 162 C 460 185, 345 165, 345 200"/><path class="edge gen" d="M460 162 C 460 185, 575 165, 575 200"/><path class="edge gen" d="M460 162 C 460 185, 805 165, 805 200"/><g aria-hidden="true"><path class="comet r1 em" d="M460 162 C 460 185, 115 165, 115 200"/><path class="comet r2 em" d="M460 162 C 460 185, 345 165, 345 200"/><path class="comet r3 em" d="M460 92 V 110"/><path class="comet r4 em" d="M460 92 V 110"/><path class="comet r5 st" d="M460 162 C 460 185, 115 165, 115 200"/><path class="comet r6 st" d="M460 162 C 460 185, 345 165, 345 200"/><path class="comet r7 st" d="M460 162 C 460 185, 575 165, 575 200"/><path class="comet r8 st" d="M460 162 C 460 185, 805 165, 805 200"/></g><g transform="translate(0,70)"><rect class="box tgt" x="10" y="130" width="210" height="250" rx="4"/><text class="t" x="22" y="152">workspace-1/</text><circle cx="206" cy="147" r="4" fill="var(--ok)"/><text class="s" x="196" y="151" text-anchor="end" fill="var(--ok)">up to date</text><line x1="10" y1="164" x2="220" y2="164" stroke="var(--seam-2)"/><text class="s" x="22" y="184">profile  <tspan class="em">team-a</tspan></text><text class="s" x="22" y="200">lock     <tspan class="st">forge@7c1e9a2</tspan></text><text class="s" x="22" y="216">targets  claude-code</text><rect class="agent" x="22" y="228" width="186" height="20" rx="3"/><text class="s" x="28" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="22" y="270" fill="var(--faint)">remote  git.team-a.example</text><rect class="chip" x="22" y="280" width="186" height="20" rx="3"/><text class="s" x="30" y="294" fill="var(--text)">api-core/</text><rect class="chip" x="22" y="306" width="186" height="20" rx="3"/><text class="s" x="30" y="320" fill="var(--text)">web-portal/</text><rect class="chip" x="22" y="332" width="186" height="20" rx="3"/><text class="s" x="30" y="346" fill="var(--text)">worker-jobs/</text><rect class="box tgt" x="240" y="130" width="210" height="250" rx="4"/><text class="t" x="252" y="152">workspace-2/</text><circle cx="436" cy="147" r="4" fill="var(--ok)"/><text class="s" x="426" y="151" text-anchor="end" fill="var(--ok)">up to date</text><line x1="240" y1="164" x2="450" y2="164" stroke="var(--seam-2)"/><text class="s" x="252" y="184">profile  <tspan class="em">team-b</tspan></text><text class="s" x="252" y="200">lock     <tspan class="st">forge@7c1e9a2</tspan></text><text class="s" x="252" y="216">targets  kimi</text><rect class="agent" x="252" y="228" width="186" height="20" rx="3"/><text class="s" x="258" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="252" y="270" fill="var(--faint)">remote  github.com/team-b</text><rect class="chip" x="252" y="280" width="186" height="20" rx="3"/><text class="s" x="260" y="294" fill="var(--text)">assets-api/</text><rect class="chip" x="252" y="306" width="186" height="20" rx="3"/><text class="s" x="260" y="320" fill="var(--text)">assets-web/</text><rect class="box tgt" x="470" y="130" width="210" height="250" rx="4"/><text class="t" x="482" y="152">workspace-3/</text><circle cx="666" cy="147" r="4" fill="var(--warn)"/><text class="s" x="656" y="151" text-anchor="end" fill="var(--warn)">behind 2</text><line x1="470" y1="164" x2="680" y2="164" stroke="var(--seam-2)"/><text class="s" x="482" y="184">profile  <tspan class="em">team-c</tspan></text><text class="s" x="482" y="200">lock     <tspan class="st">forge@5b0d3f1</tspan> · v2.3</text><text class="s" x="482" y="216">targets  kiro</text><rect class="agent" x="482" y="228" width="186" height="20" rx="3"/><text class="s" x="488" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="482" y="270" fill="var(--faint)">remote  azure.example/team-c</text><rect class="chip" x="482" y="280" width="186" height="20" rx="3"/><text class="s" x="490" y="294" fill="var(--text)">ledger-api/</text><rect class="chip" x="482" y="306" width="186" height="20" rx="3"/><text class="s" x="490" y="320" fill="var(--text)">ledger-web/</text><rect class="chip" x="482" y="332" width="186" height="20" rx="3"/><text class="s" x="490" y="346" fill="var(--text)">ledger-cli/</text><rect class="box tgt" x="700" y="130" width="210" height="250" rx="4"/><text class="t" x="712" y="152">workspace-4/</text><circle cx="896" cy="147" r="4" fill="#D98A8A"/><text class="s" x="886" y="151" text-anchor="end" fill="#D98A8A">drift 1</text><line x1="700" y1="164" x2="910" y2="164" stroke="var(--seam-2)"/><text class="s" x="712" y="184">profile  <tspan class="em">team-d</tspan></text><text class="s" x="712" y="200">lock     <tspan class="st">forge@7c1e9a2</tspan></text><text class="s" x="712" y="216">targets  cursor</text><rect class="agent" x="712" y="228" width="186" height="20" rx="3"/><text class="s" x="718" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="712" y="270" fill="var(--faint)">remote  gitlab.team-d.example</text><rect class="chip" x="712" y="280" width="186" height="20" rx="3"/><text class="s" x="720" y="294" fill="var(--text)">backoffice/</text><rect class="chip" x="712" y="306" width="186" height="20" rx="3"/><text class="s" x="720" y="320" fill="var(--text)">backoffice-desktop/</text>
+      <path class="edge src" d="M460 92 V 110"/><rect class="box" x="310" y="110" width="300" height="52" rx="4"/><text class="t" x="324" y="133">craftar sync</text><text class="s" x="324" y="152">reads the Forge · emits per target</text><path class="edge gen" d="M460 162 C 460 185, 115 165, 115 200"/><path class="edge gen" d="M460 162 C 460 185, 345 165, 345 200"/><path class="edge gen" d="M460 162 C 460 185, 575 165, 575 200"/><path class="edge gen" d="M460 162 C 460 185, 805 165, 805 200"/><g aria-hidden="true"><path class="comet r1 em" d="M460 162 C 460 185, 115 165, 115 200"/><path class="comet r2 em" d="M460 162 C 460 185, 345 165, 345 200"/><path class="comet r3 em" d="M460 92 V 110"/><path class="comet r4 em" d="M460 92 V 110"/><path class="comet r5 st" d="M460 162 C 460 185, 115 165, 115 200"/><path class="comet r6 st" d="M460 162 C 460 185, 345 165, 345 200"/><path class="comet r7 st" d="M460 162 C 460 185, 575 165, 575 200"/><path class="comet r8 st" d="M460 162 C 460 185, 805 165, 805 200"/></g><g transform="translate(0,70)"><rect class="box tgt" x="10" y="130" width="210" height="250" rx="4"/><text class="t" x="22" y="152">workspace-1/</text><circle cx="206" cy="147" r="4" fill="var(--ok)"/><text class="s" x="196" y="151" text-anchor="end" fill="var(--ok)">up to date</text><line x1="10" y1="164" x2="220" y2="164" stroke="var(--seam-2)"/><text class="s" x="22" y="184">profile  <tspan class="em">team-a</tspan></text><text class="s" x="22" y="200">lock     <tspan class="st">forge@7c1e9a2</tspan></text><text class="s" x="22" y="216">targets  claude-code</text><rect class="agent" x="22" y="228" width="186" height="20" rx="3"/><text class="s" x="28" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="22" y="270" fill="var(--faint)">remote  git.team-a.example</text><rect class="chip" x="22" y="280" width="186" height="20" rx="3"/><text class="s" x="30" y="294" fill="var(--text)">api-core/</text><rect class="chip" x="22" y="306" width="186" height="20" rx="3"/><text class="s" x="30" y="320" fill="var(--text)">web-app/</text><rect class="chip" x="22" y="332" width="186" height="20" rx="3"/><text class="s" x="30" y="346" fill="var(--text)">worker-jobs/</text><rect class="box tgt" x="240" y="130" width="210" height="250" rx="4"/><text class="t" x="252" y="152">workspace-2/</text><circle cx="436" cy="147" r="4" fill="var(--ok)"/><text class="s" x="426" y="151" text-anchor="end" fill="var(--ok)">up to date</text><line x1="240" y1="164" x2="450" y2="164" stroke="var(--seam-2)"/><text class="s" x="252" y="184">profile  <tspan class="em">team-b</tspan></text><text class="s" x="252" y="200">lock     <tspan class="st">forge@7c1e9a2</tspan></text><text class="s" x="252" y="216">targets  kimi</text><rect class="agent" x="252" y="228" width="186" height="20" rx="3"/><text class="s" x="258" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="252" y="270" fill="var(--faint)">remote  github.example/team-b</text><rect class="chip" x="252" y="280" width="186" height="20" rx="3"/><text class="s" x="260" y="294" fill="var(--text)">catalog-api/</text><rect class="chip" x="252" y="306" width="186" height="20" rx="3"/><text class="s" x="260" y="320" fill="var(--text)">catalog-web/</text><rect class="box tgt" x="470" y="130" width="210" height="250" rx="4"/><text class="t" x="482" y="152">workspace-3/</text><circle cx="666" cy="147" r="4" fill="var(--warn)"/><text class="s" x="656" y="151" text-anchor="end" fill="var(--warn)">behind 2</text><line x1="470" y1="164" x2="680" y2="164" stroke="var(--seam-2)"/><text class="s" x="482" y="184">profile  <tspan class="em">team-c</tspan></text><text class="s" x="482" y="200">lock     <tspan class="st">forge@5b0d3f1</tspan> · v2.3</text><text class="s" x="482" y="216">targets  kiro</text><rect class="agent" x="482" y="228" width="186" height="20" rx="3"/><text class="s" x="488" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="482" y="270" fill="var(--faint)">remote  azure.example/team-c</text><rect class="chip" x="482" y="280" width="186" height="20" rx="3"/><text class="s" x="490" y="294" fill="var(--text)">billing-api/</text><rect class="chip" x="482" y="306" width="186" height="20" rx="3"/><text class="s" x="490" y="320" fill="var(--text)">billing-web/</text><rect class="chip" x="482" y="332" width="186" height="20" rx="3"/><text class="s" x="490" y="346" fill="var(--text)">billing-cli/</text><rect class="box tgt" x="700" y="130" width="210" height="250" rx="4"/><text class="t" x="712" y="152">workspace-4/</text><circle cx="896" cy="147" r="4" fill="#D98A8A"/><text class="s" x="886" y="151" text-anchor="end" fill="#D98A8A">drift 1</text><line x1="700" y1="164" x2="910" y2="164" stroke="var(--seam-2)"/><text class="s" x="712" y="184">profile  <tspan class="em">team-d</tspan></text><text class="s" x="712" y="200">lock     <tspan class="st">forge@7c1e9a2</tspan></text><text class="s" x="712" y="216">targets  cursor</text><rect class="agent" x="712" y="228" width="186" height="20" rx="3"/><text class="s" x="718" y="242" fill="var(--ember)">harness · generated · base</text><text class="s" x="712" y="270" fill="var(--faint)">remote  gitlab.team-d.example</text><rect class="chip" x="712" y="280" width="186" height="20" rx="3"/><text class="s" x="720" y="294" fill="var(--text)">admin/</text><rect class="chip" x="712" y="306" width="186" height="20" rx="3"/><text class="s" x="720" y="320" fill="var(--text)">admin-desktop/</text>
       <rect class="box" x="10" y="400" width="900" height="50" rx="4"/>
       <text class="t" x="24" y="422">developer machine</text>
       <text class="s" x="24" y="440">~/.craftar/registry.json · 4 workspaces · 10 repositories · 4 remotes · 1 Forge</text>
@@ -686,7 +677,7 @@
 
     <div class="term" style="margin-top:28px" aria-label="craftar ls output">
       <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~</div>
-<pre><span class="p">$</span> craftar ls
+<pre><span class="p">$</span> craftar ls  <span class="c"># planned</span>
 <span class="c">WORKSPACE            PROFILE   STACK             TARGETS             FORGE     STATUS</span>
 team-a-workspace     team-a    angular · dotnet  claude-code, kiro   7c1e9a2   <span class="add">up to date</span>
 team-b-workspace     team-b    react · dotnet    kimi                7c1e9a2   <span class="add">up to date</span>
@@ -718,10 +709,10 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div class="engine">
           <div class="cmd"><span class="p">$</span> craftar sync</div>
           <ol>
-            <li>Read <code>craftar.yaml</code>; fetch the Forge at the pinned ref (branch, tag or SHA).</li>
+            <li>Read <code>craftar.yaml</code>; load the Forge (a local path today; a pinned git ref is planned).</li>
             <li>Resolve layers, exclusive slots and params into the final ingredient set.</li>
             <li>Emit open standards verbatim: <code>AGENTS.md</code>, Agent Skills (<code>SKILL.md</code>), <code>mcp.json</code>.</li>
-            <li>Emit tool-specific formats — inclusion modes, subagents, hooks — through rulesync plus Craftar's own emitters and post-processors.</li>
+            <li>Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.</li>
             <li>Diff against <code>craftar.lock</code>; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.</li>
           </ol>
         </div>
@@ -744,14 +735,14 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     </div>
 
     <div class="concepts" aria-label="Core concepts">
-      <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces reference it by branch, tag or SHA.</p></div>
+      <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
       <div class="concept"><h3>Ingredient</h3><code>ingredients/rules/frontend-angular/</code><p>Smallest reusable unit: a rule, agent, command, skill, hook, MCP server, local service or template. A folder with an <code>ingredient.yaml</code> declaring type, targets, inclusion mode and globs.</p></div>
       <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
       <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
-      <div class="concept"><h3>Target</h3><code>claude-code · kiro · kimi · codex · cursor</code><p>An AI coder to emit for. Each has a <code>capabilities.yaml</code>; what a target cannot express is reported and, where possible, given a fallback.</p></div>
-      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, resolved recipes and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
-      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Backs <code>craftar ls</code> and the local dashboard.</p></div>
+      <div class="concept"><h3>Target</h3><code>claude-code · kiro · kimi · codex · cursor</code><p>An AI coder to emit for. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today the Kiro emitter warns and skips what it cannot express — a fallback is planned.</p></div>
+      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
+      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar ls</code> and the local dashboard — planned.</p></div>
     </div>
   </section>
 
@@ -759,7 +750,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="features">
     <div class="eyebrow">Capabilities</div>
     <h2>Twelve capabilities, each tied to the problem it addresses.</h2>
-    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today against real workspaces under an oracle test; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code># planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
 
     <div class="features">
 
@@ -768,12 +759,12 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <p class="why"><b>problem · P1 · P2</b>A change to any of A agents or their rules must reach T workspaces in K formats; today that is T × K manual edits with no provenance.</p>
         <div class="how">
           <div class="cmds">
-            <code><span class="p">$</span> craftar sync <span class="c">[--forge-ref v2.3] [--targets claude-code,kiro] [--dry-run] [--check]</span></code>
-            <code><span class="p">$</span> craftar diff <span class="c"># planned changes, writes nothing</span></code>
-            <code><span class="p">$</span> craftar status <span class="c"># up-to-date · behind · drift · never synced</span></code>
-            <code><span class="p">$</span> craftar update <span class="c"># sync to latest Forge with confirmation</span></code>
+            <code><span class="p">$</span> craftar sync <span class="c">[--dry-run] [--check] [--overwrite-drift]</span></code>
+            <code><span class="p">$</span> craftar diff <span class="c"># what sync would change, writes nothing</span></code>
+            <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan · orphan-drift</span></code>
+            <code><span class="p">$</span> craftar sync --forge-ref v2.3 --targets kiro · craftar update <span class="c"># planned</span></code>
           </div>
-          <p class="mech">One command resolves and emits for every active target and prints added / changed / removed / skipped per target. Workspaces follow a branch by default or pin a tag.</p>
+          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. Following a Forge branch or pinning a tag is planned.</p>
         </div>
       </article>
 
@@ -783,22 +774,22 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar import --from claude-code <span class="c"># existing .claude/ → ingredients + recipes + profile</span></code>
-            <code><span class="p">$</span> craftar targets <span class="c"># targets and capability coverage</span></code>
+            <code><span class="p">$</span> craftar targets <span class="c"># targets and capability coverage — planned</span></code>
           </div>
-          <p class="mech">Three layers: open standards emitted verbatim (AGENTS.md, Agent Skills, Agent Plugins <code>mcp.json</code>); rulesync for tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. The Kiro emitter currently reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors.</p>
+          <p class="mech">Three layers: open standards emitted verbatim (AGENTS.md, Agent Skills, Agent Plugins <code>mcp.json</code>); tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned.</p>
         </div>
       </article>
 
       <article class="feature">
-        <div><div class="id">F3 <span class="pill now">working</span></div><h3>Layers and stack slots</h3></div>
+        <div><div class="id">F3 <span class="pill now">resolution working</span></div><h3>Layers and stack slots</h3></div>
         <p class="why"><b>problem · P1</b>Teams differ in stack. Without composition, a React team inherits Angular reviewers, or every team gets a hand-pruned fork of the harness.</p>
         <div class="how">
           <div class="cmds">
-            <code><span class="p">$</span> craftar add recipe frontend-react · craftar remove recipe frontend-angular</code>
-            <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular</code>
+            <code><span class="p">$</span> craftar add recipe frontend-react · craftar remove recipe frontend-angular <span class="c"># planned</span></code>
+            <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular <span class="c"># planned</span></code>
             <code><span class="p">$</span> craftar explain .kiro/steering/workflow.md <span class="c"># which layer decided this file</span></code>
           </div>
-          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file may add targets only.</p>
+          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's.</p>
         </div>
       </article>
 
@@ -807,8 +798,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <p class="why"><b>problem · P2</b>Starting with a new team means reassembling repos, harness, templates and local services from memory.</p>
         <div class="how">
           <div class="cmds">
-            <code><span class="p">$</span> craftar init <span class="c"># Forge → profile → recipes/targets → clone repos? → templates/services? → sync</span></code>
-            <code><span class="p">$</span> craftar init --profile team-a --targets claude-code,kiro --yes</code>
+            <code><span class="p">$</span> craftar init <span class="c"># planned — Forge → profile → recipes/targets → clone repos? → templates/services? → sync</span></code>
+            <code><span class="p">$</span> craftar init --profile team-a --targets claude-code,kiro --yes <span class="c"># planned</span></code>
           </div>
           <p class="mech">Reads the profile's <code>repos</code>, templates and services; registers the workspace in the registry.</p>
         </div>
@@ -826,7 +817,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F6</div><h3>Local services per workspace</h3></div>
         <p class="why"><b>problem · P1</b>Cloud dependencies (queues, buckets) need a local stand-in, and the agent has to know its endpoints and fake credentials.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar services up <span class="c">| down | status</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar services up | down | status <span class="c"># planned</span></code></div>
           <p class="mech">A <code>service</code> ingredient carries a <code>docker-compose</code> fragment, default variables and a rule for the agent. Fragments merge into <code>.craftar/compose.yaml</code>. First ingredient: LocalStack-style SQS/S3.</p>
         </div>
       </article>
@@ -835,7 +826,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F7</div><h3>Project templates</h3></div>
         <p class="why"><b>problem · P1</b>New projects should use the team's own <code>dotnet new</code> (or <code>npm create</code>, <code>nx</code>, <code>cookiecutter</code>) templates; agents need to know which.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar templates install · /create-project</code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar templates install · /create-project <span class="c"># planned</span></code></div>
           <p class="mech">The profile declares feeds and packages; Craftar installs them and generates a rule mapping archetype → template plus a wrapping command.</p>
         </div>
       </article>
@@ -846,26 +837,26 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar status <span class="c"># drifted files listed; never overwritten without --overwrite-drift</span></code>
-            <code><span class="p">$</span> craftar drift show &lt;file&gt; · drift discard · drift promote</code>
+            <code><span class="p">$</span> craftar drift show &lt;file&gt; · drift discard · drift promote <span class="c"># planned</span></code>
           </div>
-          <p class="mech">Normalized hashes from the lock are compared with disk. <code>promote</code> converts the edit back into an ingredient via <code>import</code> and opens a Forge branch. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
+          <p class="mech">Normalized hashes from the lock are compared with disk. Planned: <code>promote</code> will convert the edit back into an ingredient via <code>import</code> and open a Forge branch. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
         </div>
       </article>
 
       <article class="feature">
-        <div><div class="id">F9</div><h3>CI</h3></div>
+        <div><div class="id">F9 <span class="pill now">--check working</span></div><h3>CI</h3></div>
         <p class="why"><b>problem · P2</b>Sync that depends on someone remembering will lag by workspace.</p>
         <div class="how">
           <div class="cmds"><code><span class="p">$</span> craftar sync --check <span class="c"># exit ≠ 0 when behind or drifted</span></code></div>
-          <p class="mech">GitHub Action and Azure Pipelines task open a PR with the change summary when the Forge moves; optional Forge-side dispatch to registered workspaces; pre-commit hook running <code>--check</code>.</p>
+          <p class="mech">Planned: a GitHub Action and an Azure Pipelines task that open a PR with the change summary when the Forge moves; optional Forge-side dispatch to registered workspaces; a pre-commit hook running <code>--check</code>.</p>
         </div>
       </article>
 
       <article class="feature">
-        <div><div class="id">F10 <span class="pill now">ls working</span></div><h3>Registry and dashboard</h3></div>
+        <div><div class="id">F10</div><h3>Registry and dashboard</h3></div>
         <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui</code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui <span class="c"># planned — today's ls lists the recipes and ingredients resolved for one workspace</span></code></div>
           <p class="mech">Table or local web page: workspace, profile, stack, targets, Forge SHA, status; actions <code>sync</code> / <code>diff</code> / <code>explain</code>; Forge view of recipes, ingredients and who uses what.</p>
         </div>
       </article>
@@ -874,7 +865,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F11</div><h3>Craftar as an MCP server</h3></div>
         <p class="why"><b>problem · P1 · P2</b>The agent itself should be able to check status, sync, or add a recipe without leaving the session.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar mcp</code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar mcp <span class="c"># planned</span></code></div>
           <p class="mech">Exposes <code>status</code>, <code>sync</code>, <code>diff</code>, <code>explain</code>, <code>recipes</code>, <code>add recipe</code>, <code>services up</code>. Packaged as a Claude Code plugin, an Agent Plugin, and Warp workflows — thin shells over the CLI.</p>
         </div>
       </article>
@@ -883,7 +874,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F12</div><h3>Diagnostics</h3></div>
         <p class="why"><b>problem · P2</b>Sync failures usually come from the environment: missing env vars, wrong Node, no Docker, unreachable Forge.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar doctor</code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar doctor <span class="c"># planned</span></code></div>
           <p class="mech">Checks Node and rulesync versions, Git access to the Forge, every <code>authEnv</code> required by MCP ingredients, Docker when services exist, <code>dotnet</code> when templates exist, and lockfile consistency.</p>
         </div>
       </article>
@@ -895,17 +886,17 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="invariants">
     <div class="eyebrow">Invariants</div>
     <h2>Constraints derived from the failure modes.</h2>
-    <p class="lede" style="margin-top:22px">These hold in every command and every emitter. They are what distinguishes Craftar from a template renderer.</p>
+    <p class="lede" style="margin-top:22px">These are the constraints Craftar is built against, in every command and every emitter — what distinguishes it from a template renderer. The two marked <span class="pill">planned</span> are design commitments, not yet enforced by the code.</p>
 
     <div class="rules">
-      <div class="rule"><div class="never">never</div><h3>Touch a file not in the lockfile</h3><p>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved, listed by <code>status</code> as unmanaged, and never removed. Regeneration is per file.</p><p class="ref">← FM-1</p></div>
-      <div class="rule"><div class="never">never</div><h3>Hash raw bytes</h3><p>Content hashes are computed after normalization: LF line endings, UTF-8, BOM stripped; JSON compared structurally. Existing files keep their EOL on write.</p><p class="ref">← FM-2</p></div>
+      <div class="rule"><div class="never">never</div><h3>Touch a file not in the lockfile</h3><p>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved and never removed; one at a path the Forge would write is reported by <code>status</code> as a collision and never touched. Regeneration is per file.</p><p class="ref">← FM-1</p></div>
+      <div class="rule"><div class="never">never</div><h3>Hash raw bytes</h3><p>Content hashes are computed after normalization: LF line endings, UTF-8, BOM stripped; JSON compared structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output is always CRLF without BOM.</p><p class="ref">← FM-2</p></div>
       <div class="rule"><div class="never">never</div><h3>Leave an orphan on disk</h3><p>An output whose ingredient left the resolved set is removed on the next sync and named in the summary, in every target. <code>--check</code> fails on orphans.</p><p class="ref">← FM-3</p></div>
       <div class="rule"><div class="never">never</div><h3>Require a manual mirror</h3><p>Everything a second target needs — steering, agent JSON, command copies — is emitted from the same ingredient. If two files must say the same thing, both are generated.</p><p class="ref">← FM-4</p></div>
-      <div class="rule"><div class="never">never</div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are one ingredient with two outputs, so they cannot disagree.</p><p class="ref">← FM-5</p></div>
+      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today the rule and its reviewer are separate ingredients (<code>rule/&lt;name&gt;</code>, <code>agent/&lt;name&gt;-reviewer</code>) grouped by a stack recipe.</p><p class="ref">← FM-5</p></div>
       <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited.</p><p class="ref">← FM-6</p></div>
       <div class="rule"><div class="never">never</div><h3>Translate</h3><p>Language is an attribute of the ingredient. The Forge may hold rules in one language and docs in another; Craftar emits text as written.</p><p class="ref">← FM-7</p></div>
-      <div class="rule"><div class="never">never</div><h3>Store a secret</h3><p>Ingredients declare <code>authEnv</code>; settings are emitted as <code>settings.example.json</code>; <code>doctor</code> verifies the variables exist on the machine.</p><p class="ref">← FM-8</p></div>
+      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Store a secret</h3><p>Ingredients are meant to declare <code>authEnv</code>; settings would be emitted as <code>settings.example.json</code>; <code>doctor</code> would verify the variables exist on the machine. Planned: not built yet, though <code>craftar import</code> already refuses ingredients holding secret-like values.</p><p class="ref">← FM-8</p></div>
     </div>
   </section>
 
@@ -913,7 +904,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="targets">
     <div class="eyebrow steel">Targets</div>
     <h2>Capability matrix.</h2>
-    <p class="lede" style="margin-top:22px">Each target has a <code>capabilities.yaml</code>. During sync, an ingredient the target cannot express produces an explicit warning and, where defined, a fallback (a subagent emitted as a command, for instance). Nothing is dropped silently.</p>
+    <p class="lede" style="margin-top:22px">This table is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target <code>capabilities.yaml</code> is planned. Nothing may be dropped silently: today the Kiro emitter warns and skips what it cannot express; closing the remaining gaps is planned.</p>
 
     <div class="matrix-wrap">
       <table>
@@ -935,7 +926,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <!-- ================= STATUS ================= -->
   <section id="status">
     <div class="eyebrow">Status</div>
-    <h2>Phase 0 — validated against existing workspaces with an oracle test.</h2>
+    <h2>Phase 0 — validated against a hand-built workspace with an oracle test.</h2>
     <p class="lede" style="margin-top:22px">Before generating anything new, Craftar has to reproduce what teams already have. The oracle imports a hand-built workspace (Claude Code + Kiro), syncs it, and asserts byte equality of every generated file; a second sync must be a no-op; a Forge edit must reach both targets; a manual edit must surface as drift and survive; a removed ingredient must disappear; an unmanaged file must be untouched.</p>
 
     <div class="phases">
@@ -948,7 +939,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
           <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
           <li><code>import --from claude-code</code></li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
-          <li>11 oracle tests passing on two real workspaces</li>
+          <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
         <div class="bar" aria-hidden="true"><i style="width:70%"></i></div>
       </div>
@@ -965,7 +956,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <div class="phase">
         <div class="n0"><span>Phase 3</span></div>
         <h3>Automation</h3>
-        <ul><li><code>sync --check</code></li><li>GitHub Action, Azure Pipelines task</li><li><code>craftar ui</code></li></ul>
+        <ul><li>GitHub Action, Azure Pipelines task</li><li><code>craftar ui</code></li></ul>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 4</span></div>
@@ -975,8 +966,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     </div>
 
     <div class="status-grid">
-      <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>); rulesync as the conversion dependency for tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
-      <div><h3>Open questions</h3><ul><li>License: MIT or Apache-2.0</li><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
+      <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
+      <div><h3>Open questions</h3><ul><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
       <div><h3>Trying it</h3><p>Point <code>craftar import --from claude-code</code> at an existing workspace to obtain a Forge, then <code>craftar diff</code> to see what a sync would change. No files are written until <code>sync</code>.</p></div>
     </div>
   </section>
@@ -1001,7 +992,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   </div>
 
   <footer>
-    <span>Craftar — open-source workspace harness manager. TypeScript / Node, built on rulesync.</span>
+    <span>Craftar — open-source workspace harness manager. TypeScript / Node · MIT.</span>
     <span><a href="#top">Top</a> · <a href="#model">Model</a> · <a href="https://github.com/llima/craftar-cli" rel="noopener">github</a></span>
   </footer>
 </div>
