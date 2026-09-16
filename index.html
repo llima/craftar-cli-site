@@ -777,21 +777,10 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       </div>
     </div>
 
-    <div class="concepts" aria-label="Core concepts">
-      <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
-      <div class="concept"><h3>Ingredient</h3><code>ingredients/rules/frontend-angular/</code><p>Smallest reusable unit: a rule, agent, command, skill, hook, MCP server, local service or template. A folder with an <code>ingredient.yaml</code> declaring type, targets, inclusion mode and globs.</p></div>
-      <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
-      <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
-      <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
-      <div class="concept"><h3>Target</h3><code>claude-code · kiro · kimi · codex · cursor</code><p>An AI coder to emit for. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today the Kiro emitter warns and skips what it cannot express — a fallback is planned.</p></div>
-      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
-      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar ls</code> and the local dashboard — planned.</p></div>
-    </div>
-
-    <!-- Example Forges -->
+    <!-- Example Forges - connects to Layer resolution above -->
     <div class="forge-examples" id="forge-examples">
-      <h3 style="margin-bottom: 8px;">Forge → Workspace by stack</h3>
-      <p class="prose" style="margin-bottom: 20px;">A Forge is shaped by the technology stack it serves. Below are three examples showing how ingredients in the Forge become files in the workspace — both inside the AI coder folder (<code>.claude/</code>, <code>.kiro/</code>) and outside it (<code>docs/</code>, <code>local-stack/</code>). Select a stack, then a target to see the mapping.</p>
+      <h3 style="margin-bottom: 8px;">In practice — Forge → Workspace by stack</h3>
+      <p class="prose" style="margin-bottom: 20px;">The diagram above shows the <strong>logical flow</strong> — layers resolving into targets. Below is the <strong>physical mapping</strong>: how a real Forge for a given stack becomes actual files in the workspace. Select a stack, then a target to see exactly what <code>craftar sync</code> produces.</p>
 
       <div class="forge-tabs" role="tablist" aria-label="Example Forges">
         <button class="forge-tab" role="tab" id="tab-dotnet" aria-selected="true" aria-controls="panel-dotnet">.NET Enterprise</button>
@@ -1160,6 +1149,17 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <h5>What syncs where</h5>
         <p>Craftar generates files <strong>inside</strong> the AI coder folder (<code>.claude/</code>, <code>.kiro/</code>, <code>.cursor/</code>) and <strong>outside</strong> it (<code>docs/</code>, <code>local-stack/</code>, <code>AGENTS.md</code>). Files outside are <strong>tool-agnostic</strong> — the same <code>docs/architecture/</code> structure serves Claude Code, Kiro and Cursor users alike. Client-owned folders like <code>src/</code> or <code>infra/</code> are <strong>never touched</strong> by <code>craftar sync</code>.</p>
       </div>
+    </div>
+
+    <div class="concepts" aria-label="Core concepts">
+      <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
+      <div class="concept"><h3>Ingredient</h3><code>ingredients/rules/frontend-angular/</code><p>Smallest reusable unit: a rule, agent, command, skill, hook, MCP server, local service or template. A folder with an <code>ingredient.yaml</code> declaring type, targets, inclusion mode and globs.</p></div>
+      <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
+      <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
+      <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
+      <div class="concept"><h3>Target</h3><code>claude-code · kiro · kimi · codex · cursor</code><p>An AI coder to emit for. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today the Kiro emitter warns and skips what it cannot express — a fallback is planned.</p></div>
+      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
+      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar ls</code> and the local dashboard — planned.</p></div>
     </div>
   </section>
 
