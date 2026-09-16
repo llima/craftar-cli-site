@@ -89,43 +89,80 @@ graph LR
 
 P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the pinned one). The registry at `~/.craftar/registry.json` lists all four, and `craftar ls` will report per workspace: up to date, behind, or drift.
 
-## Example Forges by stack
+## Forge → Workspace by stack
 
-A Forge is shaped by the technology stack it serves. Below are three examples showing the kind of rules, agents and commands each would hold. Every workspace pointing at one of these Forges inherits its full harness.
+A Forge is shaped by the technology stack it serves. Below are three examples showing how ingredients in the Forge become files in the workspace — both inside the AI coder folder (`.claude/`, `.kiro/`) and outside it (`docs/`, `local-stack/`).
 
 ### dotnet-enterprise — .NET backend teams following Clean Architecture
 
 Forge structure:
-- ingredients/rules/: dotnet-clean-architecture (layers, DI, segregation), dotnet-clean-code (naming, SOLID, formatting), dotnet-minimal-api (endpoint patterns), dotnet-entity-framework (migrations, DbContext), dotnet-security (OWASP, auth, secrets)
-- ingredients/agents/: dotnet-arch-reviewer (reviews layer boundaries and Clean Architecture compliance), dotnet-api-reviewer (reviews Minimal API endpoints, routing, validation), dotnet-ef-reviewer (reviews EF Core usage, migrations, query performance), dotnet-security-reviewer (reviews authentication, authorization, OWASP compliance)
+- ingredients/rules/: dotnet-clean-architecture, dotnet-clean-code, dotnet-minimal-api, dotnet-entity-framework, dotnet-security
+- ingredients/agents/: dotnet-arch-reviewer, dotnet-api-reviewer, dotnet-ef-reviewer, dotnet-security-reviewer
 - ingredients/commands/: create-api-endpoint
-- ingredients/templates/: dotnet-api-template
-- recipes/: dotnet-backend.yaml, dotnet-clean-arch.yaml
+- ingredients/docs/: architecture-template, adr-template, tech-debt-template
+- ingredients/services/: localstack-sqs
+- recipes/: dotnet-clean-arch.yaml
 - profiles/: team-dotnet/
+
+Workspace output (Claude Code target):
+- .claude/rules/: dotnet-clean-architecture.md, dotnet-clean-code.md, dotnet-minimal-api.md, dotnet-entity-framework.md, dotnet-security.md
+- .claude/agents/: dotnet-arch-reviewer.md, dotnet-api-reviewer.md, dotnet-ef-reviewer.md, dotnet-security-reviewer.md
+- .claude/commands/: create-api-endpoint.md
+- docs/: architecture/, adr/, tech-debt/ (generated structure)
+- local-stack/: docker-compose.yaml
+- src/ (client code, untouched)
+
+Workspace output (Kiro target):
+- .kiro/steering/: *.md (same rules)
+- .kiro/agents/: *.json (agents as JSON)
+- .kiro/commands/: *.md
+- docs/, local-stack/ (same as Claude Code — tool-agnostic)
 
 ### node-fullstack — Node.js teams using TypeScript
 
 Forge structure:
-- ingredients/rules/: node-typescript-strict (tsconfig, strict mode), node-express-patterns (middlewares, error handling), node-testing-jest (Jest, mocks, coverage), node-eslint-prettier (linting and formatting), node-security-headers (Helmet, CORS, rate limiting)
-- ingredients/agents/: node-arch-reviewer (reviews project structure, module boundaries), node-api-reviewer (reviews Express/Fastify routes, async error handling), node-test-reviewer (reviews test coverage, mock hygiene), node-deps-reviewer (reviews package.json, pinned versions, vulnerabilities)
+- ingredients/rules/: node-typescript-strict, node-express-patterns, node-testing-jest, node-eslint-prettier, node-security-headers
+- ingredients/agents/: node-arch-reviewer, node-api-reviewer, node-test-reviewer, node-deps-reviewer
 - ingredients/commands/: create-express-route
-- ingredients/mcp/: npm-audit (MCP for dependency auditing)
-- recipes/: node-api.yaml, node-express-ts.yaml
+- ingredients/docs/: architecture-template, runbook-template
+- ingredients/mcp/: npm-audit
+- recipes/: node-express-ts.yaml
 - profiles/: team-node/
+
+Workspace output (Claude Code target):
+- .claude/rules/, .claude/agents/, .claude/commands/
+- docs/: architecture/, runbooks/
+- .mcp.json (npm-audit MCP)
+
+Workspace output (Kimi target):
+- AGENTS.md (rules + agents combined)
+- docs/ (same structure)
+- mcp.json
 
 ### iac-multicloud — Platform teams managing infrastructure as code
 
 Forge structure:
-- ingredients/rules/: aws-cloudformation (CFN patterns, best practices), aws-cdk-typescript (CDK constructs), azure-arm-bicep (ARM templates, Bicep), kubernetes-helm (charts, values, templates), terraform-modules (module structure, state)
-- ingredients/agents/: aws-yaml-reviewer (reviews CloudFormation and SAM templates, IAM least privilege), azure-iac-reviewer (reviews ARM/Bicep templates, secure defaults), k8s-manifest-reviewer (reviews Kubernetes manifests and Helm charts, resource limits), terraform-reviewer (reviews HCL, module composition, state management)
+- ingredients/rules/: aws-cloudformation, aws-cdk-typescript, azure-arm-bicep, kubernetes-helm, terraform-modules
+- ingredients/agents/: aws-yaml-reviewer, azure-iac-reviewer, k8s-manifest-reviewer, terraform-reviewer
 - ingredients/commands/: create-aws-stack, create-helm-chart
-- ingredients/services/: localstack-aws (LocalStack for local testing)
-- recipes/: iac-aws.yaml, iac-azure.yaml, iac-kubernetes.yaml
+- ingredients/docs/: runbook-template
+- ingredients/services/: localstack-aws
+- recipes/: iac-aws.yaml, iac-kubernetes.yaml
 - profiles/: team-platform/
 
-### Client-specific definitions stay in the workspace
+Workspace output (Claude Code target):
+- .claude/rules/, .claude/agents/, .claude/commands/
+- docs/runbooks/
+- local-stack/docker-compose.yaml (LocalStack)
 
-Each workspace may also contain client-specific architecture docs and decisions — for example, `docs/architecture/` or `docs/adr/`. These files are not managed by the Forge: the Forge only writes and updates files it generates. Client docs coexist with the generated harness but remain under the client's control, and `craftar sync` will never touch them.
+Workspace output (Codex target):
+- AGENTS.md (rules + agents)
+- codex.toml (hooks block)
+- docs/, local-stack/ (same)
+
+### What syncs where
+
+Craftar generates files inside the AI coder folder (`.claude/`, `.kiro/`, `.cursor/`) and outside it (`docs/`, `local-stack/`, `AGENTS.md`). Files outside are tool-agnostic — the same `docs/architecture/` structure serves Claude Code, Kiro and Cursor users alike. Client-owned folders like `src/` or `infra/` are never touched by `craftar sync`.
 
 ## Capabilities (F1–F12; "working" = runs today and is covered by tests; "mvp" = first release; "planned" = designed, not built)
 

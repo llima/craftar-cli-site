@@ -419,23 +419,36 @@
   .forge-panel { display: none; border: 1px solid var(--seam); border-radius: 0 var(--r) var(--r) var(--r); background: var(--plate); padding: 28px; }
   .forge-panel[aria-hidden="false"] { display: block; }
   .forge-panel h4 { font-family: var(--display); font-size: 18px; font-weight: 700; margin: 0 0 6px; color: var(--text); letter-spacing: -.02em; }
-  .forge-panel .desc { font-size: 15px; color: var(--muted); margin-bottom: 20px; }
-  .forge-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
-  @media (max-width: 800px) { .forge-grid { grid-template-columns: 1fr; } }
-  .forge-col h5 { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; }
-  .forge-col h5.ember { color: var(--ember); }
-  .forge-col h5.steel { color: var(--steel); }
-  .forge-tree { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--muted); background: var(--ink); border: 1px solid var(--seam-2); border-radius: var(--r); padding: 14px 16px; overflow-x: auto; }
+  .forge-panel .desc { font-size: 15px; color: var(--muted); margin-bottom: 24px; }
+  .forge-flow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 16px; align-items: start; }
+  @media (max-width: 960px) { .forge-flow { grid-template-columns: 1fr; } .forge-flow .forge-arrow { transform: rotate(90deg); justify-self: center; margin: 8px 0; } }
+  .forge-col h5 { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; display: flex; justify-content: space-between; align-items: center; }
+  .forge-col h5 .tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; letter-spacing: .06em; }
+  .forge-col h5 .tag.ember { color: var(--ember); border: 1px solid rgba(233,145,90,.4); }
+  .forge-col h5 .tag.steel { color: var(--steel); border: 1px solid rgba(127,180,214,.4); }
+  .forge-tree { font-family: var(--mono); font-size: 12px; line-height: 1.65; color: var(--muted); background: var(--ink); border: 1px solid var(--seam-2); border-radius: var(--r); padding: 12px 14px; overflow-x: auto; white-space: pre; }
   .forge-tree .dir { color: var(--text); font-weight: 500; }
-  .forge-tree .comment { color: var(--faint); font-size: 12px; }
-  .forge-agents { display: grid; gap: 8px; }
-  .forge-agent { background: var(--ink); border: 1px solid var(--seam-2); border-left: 3px solid var(--ember); border-radius: var(--r); padding: 12px 14px; }
-  .forge-agent b { display: block; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .forge-agent span { font-size: 13px; color: var(--muted); }
-  .client-note { margin-top: 32px; padding: 20px 24px; background: var(--steel-soft); border: 1px solid rgba(127,180,214,.3); border-radius: var(--r); }
-  .client-note h5 { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--steel); margin: 0 0 8px; }
-  .client-note p { font-size: 14.5px; color: var(--muted); margin: 0; }
-  .client-note code { color: var(--text); font-size: 13px; }
+  .forge-tree .file { color: var(--muted); }
+  .forge-tree .comment { color: var(--faint); font-size: 11px; }
+  .forge-tree .gen { color: var(--steel); }
+  .forge-tree .client { color: var(--warn); }
+  .forge-arrow { align-self: center; color: var(--faint); display: grid; place-items: center; gap: 4px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+  .forge-arrow svg { width: 32px; height: 14px; }
+  .target-tabs { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+  .target-tab { font-family: var(--mono); font-size: 10px; letter-spacing: .04em; padding: 5px 10px; border-radius: 3px; border: 1px solid var(--seam-2); background: transparent; color: var(--muted); cursor: pointer; }
+  .target-tab:hover { color: var(--text); }
+  .target-tab[aria-selected="true"] { background: var(--steel-soft); border-color: rgba(127,180,214,.4); color: var(--steel); }
+  .target-panel { display: none; }
+  .target-panel[aria-hidden="false"] { display: block; }
+  .sync-legend { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 16px; font-family: var(--mono); font-size: 11px; }
+  .sync-legend span { display: flex; align-items: center; gap: 6px; }
+  .sync-legend .dot { width: 8px; height: 8px; border-radius: 2px; }
+  .sync-legend .dot.gen { background: var(--steel); }
+  .sync-legend .dot.client { background: var(--warn); }
+  .client-note { margin-top: 24px; padding: 16px 20px; background: var(--ink); border: 1px solid var(--seam-2); border-left: 3px solid var(--steel); border-radius: var(--r); }
+  .client-note h5 { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--steel); margin: 0 0 6px; }
+  .client-note p { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.5; }
+  .client-note code { color: var(--text); font-size: 12px; }
 </style>
 </head>
 <body>
@@ -777,8 +790,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 
     <!-- Example Forges -->
     <div class="forge-examples" id="forge-examples">
-      <h3 style="margin-bottom: 8px;">Example Forges by stack</h3>
-      <p class="prose" style="margin-bottom: 20px;">A Forge is shaped by the technology stack it serves. Below are three examples — one for .NET backends, one for Node.js, and one for infrastructure-as-code — showing the kind of rules, agents and commands each would hold. Every workspace pointing at one of these Forges inherits its full harness.</p>
+      <h3 style="margin-bottom: 8px;">Forge → Workspace by stack</h3>
+      <p class="prose" style="margin-bottom: 20px;">A Forge is shaped by the technology stack it serves. Below are three examples showing how ingredients in the Forge become files in the workspace — both inside the AI coder folder (<code>.claude/</code>, <code>.kiro/</code>) and outside it (<code>docs/</code>, <code>local-stack/</code>). Select a stack, then a target to see the mapping.</p>
 
       <div class="forge-tabs" role="tablist" aria-label="Example Forges">
         <button class="forge-tab" role="tab" id="tab-dotnet" aria-selected="true" aria-controls="panel-dotnet">.NET Enterprise</button>
@@ -789,18 +802,19 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <!-- .NET Panel -->
       <div class="forge-panel" id="panel-dotnet" role="tabpanel" aria-labelledby="tab-dotnet" aria-hidden="false">
         <h4>dotnet-enterprise</h4>
-        <p class="desc">A Forge for .NET backend teams following Clean Architecture, with reviewers for Minimal API, Entity Framework and security.</p>
-        <div class="forge-grid">
+        <p class="desc">A Forge for .NET backend teams following Clean Architecture — see how its ingredients map to each target's workspace structure.</p>
+        
+        <div class="forge-flow">
           <div class="forge-col">
-            <h5 class="ember">Forge structure</h5>
+            <h5>Forge <span class="tag ember">source</span></h5>
             <pre class="forge-tree"><span class="dir">forge/</span>
 ├── <span class="dir">ingredients/</span>
 │   ├── <span class="dir">rules/</span>
-│   │   ├── dotnet-clean-architecture/  <span class="comment"># layers, DI, segregation</span>
-│   │   ├── dotnet-clean-code/          <span class="comment"># naming, SOLID, formatting</span>
-│   │   ├── dotnet-minimal-api/         <span class="comment"># endpoint patterns</span>
-│   │   ├── dotnet-entity-framework/    <span class="comment"># migrations, DbContext</span>
-│   │   └── dotnet-security/            <span class="comment"># OWASP, auth, secrets</span>
+│   │   ├── dotnet-clean-architecture/
+│   │   ├── dotnet-clean-code/
+│   │   ├── dotnet-minimal-api/
+│   │   ├── dotnet-entity-framework/
+│   │   └── dotnet-security/
 │   ├── <span class="dir">agents/</span>
 │   │   ├── dotnet-arch-reviewer/
 │   │   ├── dotnet-api-reviewer/
@@ -808,21 +822,118 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   │   └── dotnet-security-reviewer/
 │   ├── <span class="dir">commands/</span>
 │   │   └── create-api-endpoint/
-│   └── <span class="dir">templates/</span>
-│       └── dotnet-api-template/
+│   ├── <span class="dir">docs/</span>
+│   │   ├── architecture-template/
+│   │   ├── adr-template/
+│   │   └── tech-debt-template/
+│   └── <span class="dir">services/</span>
+│       └── localstack-sqs/
 ├── <span class="dir">recipes/</span>
-│   ├── dotnet-backend.yaml
 │   └── dotnet-clean-arch.yaml
 └── <span class="dir">profiles/</span>
     └── team-dotnet/</pre>
           </div>
+
+          <div class="forge-arrow">
+            <svg viewBox="0 0 32 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 7h28M22 1l6 6-6 6"/></svg>
+            sync
+          </div>
+
           <div class="forge-col">
-            <h5 class="steel">Review agents</h5>
-            <div class="forge-agents">
-              <div class="forge-agent"><b>dotnet-arch-reviewer</b><span>Reviews layer boundaries, dependency injection, and Clean Architecture compliance.</span></div>
-              <div class="forge-agent"><b>dotnet-api-reviewer</b><span>Reviews Minimal API endpoints: routing, validation, response codes, OpenAPI annotations.</span></div>
-              <div class="forge-agent"><b>dotnet-ef-reviewer</b><span>Reviews EF Core usage: migrations, DbContext lifetime, query performance, lazy loading.</span></div>
-              <div class="forge-agent"><b>dotnet-security-reviewer</b><span>Reviews authentication, authorization, input validation, secret handling, OWASP compliance.</span></div>
+            <h5>Workspace <span class="tag steel">generated</span></h5>
+            <div class="target-tabs" role="tablist" aria-label="Target selection" data-panel="dotnet">
+              <button class="target-tab" role="tab" aria-selected="true" data-target="claude">Claude Code</button>
+              <button class="target-tab" role="tab" aria-selected="false" data-target="kiro">Kiro</button>
+              <button class="target-tab" role="tab" aria-selected="false" data-target="cursor">Cursor</button>
+            </div>
+            
+            <div class="target-panel" data-panel="dotnet" data-target="claude" aria-hidden="false">
+              <pre class="forge-tree"><span class="dir">workspace/</span>
+├── <span class="dir gen">.claude/</span>                    <span class="comment">← generated</span>
+│   ├── <span class="dir gen">rules/</span>
+│   │   ├── <span class="gen">dotnet-clean-architecture.md</span>
+│   │   ├── <span class="gen">dotnet-clean-code.md</span>
+│   │   ├── <span class="gen">dotnet-minimal-api.md</span>
+│   │   ├── <span class="gen">dotnet-entity-framework.md</span>
+│   │   └── <span class="gen">dotnet-security.md</span>
+│   ├── <span class="dir gen">agents/</span>
+│   │   ├── <span class="gen">dotnet-arch-reviewer.md</span>
+│   │   ├── <span class="gen">dotnet-api-reviewer.md</span>
+│   │   ├── <span class="gen">dotnet-ef-reviewer.md</span>
+│   │   └── <span class="gen">dotnet-security-reviewer.md</span>
+│   └── <span class="dir gen">commands/</span>
+│       └── <span class="gen">create-api-endpoint.md</span>
+├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
+│   ├── <span class="dir gen">architecture/</span>
+│   │   └── <span class="gen">README.md</span>
+│   ├── <span class="dir gen">adr/</span>
+│   │   └── <span class="gen">README.md</span>
+│   └── <span class="dir gen">tech-debt/</span>
+│       └── <span class="gen">README.md</span>
+├── <span class="dir gen">local-stack/</span>               <span class="comment">← generated</span>
+│   └── <span class="gen">docker-compose.yaml</span>
+├── <span class="dir client">src/</span>                        <span class="comment">← client code (untouched)</span>
+├── <span class="gen">craftar.yaml</span>
+└── <span class="gen">craftar.lock</span></pre>
+            </div>
+
+            <div class="target-panel" data-panel="dotnet" data-target="kiro" aria-hidden="true">
+              <pre class="forge-tree"><span class="dir">workspace/</span>
+├── <span class="dir gen">.kiro/</span>                      <span class="comment">← generated</span>
+│   ├── <span class="dir gen">steering/</span>
+│   │   ├── <span class="gen">dotnet-clean-architecture.md</span>
+│   │   ├── <span class="gen">dotnet-clean-code.md</span>
+│   │   ├── <span class="gen">dotnet-minimal-api.md</span>
+│   │   ├── <span class="gen">dotnet-entity-framework.md</span>
+│   │   └── <span class="gen">dotnet-security.md</span>
+│   ├── <span class="dir gen">agents/</span>
+│   │   ├── <span class="gen">dotnet-arch-reviewer.json</span>
+│   │   ├── <span class="gen">dotnet-api-reviewer.json</span>
+│   │   ├── <span class="gen">dotnet-ef-reviewer.json</span>
+│   │   └── <span class="gen">dotnet-security-reviewer.json</span>
+│   └── <span class="dir gen">commands/</span>
+│       └── <span class="gen">create-api-endpoint.md</span>
+├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
+│   ├── <span class="dir gen">architecture/</span>
+│   │   └── <span class="gen">README.md</span>
+│   ├── <span class="dir gen">adr/</span>
+│   │   └── <span class="gen">README.md</span>
+│   └── <span class="dir gen">tech-debt/</span>
+│       └── <span class="gen">README.md</span>
+├── <span class="dir gen">local-stack/</span>               <span class="comment">← generated</span>
+│   └── <span class="gen">docker-compose.yaml</span>
+├── <span class="dir client">src/</span>                        <span class="comment">← client code (untouched)</span>
+├── <span class="gen">craftar.yaml</span>
+└── <span class="gen">craftar.lock</span></pre>
+            </div>
+
+            <div class="target-panel" data-panel="dotnet" data-target="cursor" aria-hidden="true">
+              <pre class="forge-tree"><span class="dir">workspace/</span>
+├── <span class="dir gen">.cursor/</span>                    <span class="comment">← generated</span>
+│   └── <span class="dir gen">rules/</span>
+│       ├── <span class="gen">dotnet-clean-architecture.mdc</span>
+│       ├── <span class="gen">dotnet-clean-code.mdc</span>
+│       ├── <span class="gen">dotnet-minimal-api.mdc</span>
+│       ├── <span class="gen">dotnet-entity-framework.mdc</span>
+│       └── <span class="gen">dotnet-security.mdc</span>
+├── <span class="gen">AGENTS.md</span>                   <span class="comment">← agents as markdown</span>
+├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
+│   ├── <span class="dir gen">architecture/</span>
+│   │   └── <span class="gen">README.md</span>
+│   ├── <span class="dir gen">adr/</span>
+│   │   └── <span class="gen">README.md</span>
+│   └── <span class="dir gen">tech-debt/</span>
+│       └── <span class="gen">README.md</span>
+├── <span class="dir gen">local-stack/</span>               <span class="comment">← generated</span>
+│   └── <span class="gen">docker-compose.yaml</span>
+├── <span class="dir client">src/</span>                        <span class="comment">← client code (untouched)</span>
+├── <span class="gen">craftar.yaml</span>
+└── <span class="gen">craftar.lock</span></pre>
+            </div>
+
+            <div class="sync-legend">
+              <span><span class="dot gen"></span> generated by Craftar</span>
+              <span><span class="dot client"></span> client-owned (untouched)</span>
             </div>
           </div>
         </div>
@@ -831,18 +942,19 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <!-- Node.js Panel -->
       <div class="forge-panel" id="panel-node" role="tabpanel" aria-labelledby="tab-node" aria-hidden="true">
         <h4>node-fullstack</h4>
-        <p class="desc">A Forge for Node.js teams using TypeScript, with reviewers for Express/Fastify patterns, testing and dependency security.</p>
-        <div class="forge-grid">
+        <p class="desc">A Forge for Node.js teams using TypeScript — see how its ingredients map to each target's workspace structure.</p>
+        
+        <div class="forge-flow">
           <div class="forge-col">
-            <h5 class="ember">Forge structure</h5>
+            <h5>Forge <span class="tag ember">source</span></h5>
             <pre class="forge-tree"><span class="dir">forge/</span>
 ├── <span class="dir">ingredients/</span>
 │   ├── <span class="dir">rules/</span>
-│   │   ├── node-typescript-strict/     <span class="comment"># tsconfig, strict mode</span>
-│   │   ├── node-express-patterns/      <span class="comment"># middlewares, error handling</span>
-│   │   ├── node-testing-jest/          <span class="comment"># Jest, mocks, coverage</span>
-│   │   ├── node-eslint-prettier/       <span class="comment"># linting and formatting</span>
-│   │   └── node-security-headers/      <span class="comment"># Helmet, CORS, rate limiting</span>
+│   │   ├── node-typescript-strict/
+│   │   ├── node-express-patterns/
+│   │   ├── node-testing-jest/
+│   │   ├── node-eslint-prettier/
+│   │   └── node-security-headers/
 │   ├── <span class="dir">agents/</span>
 │   │   ├── node-arch-reviewer/
 │   │   ├── node-api-reviewer/
@@ -850,21 +962,85 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   │   └── node-deps-reviewer/
 │   ├── <span class="dir">commands/</span>
 │   │   └── create-express-route/
+│   ├── <span class="dir">docs/</span>
+│   │   ├── architecture-template/
+│   │   └── runbook-template/
 │   └── <span class="dir">mcp/</span>
-│       └── npm-audit/                  <span class="comment"># MCP for dep auditing</span>
+│       └── npm-audit/
 ├── <span class="dir">recipes/</span>
-│   ├── node-api.yaml
 │   └── node-express-ts.yaml
 └── <span class="dir">profiles/</span>
     └── team-node/</pre>
           </div>
+
+          <div class="forge-arrow">
+            <svg viewBox="0 0 32 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 7h28M22 1l6 6-6 6"/></svg>
+            sync
+          </div>
+
           <div class="forge-col">
-            <h5 class="steel">Review agents</h5>
-            <div class="forge-agents">
-              <div class="forge-agent"><b>node-arch-reviewer</b><span>Reviews project structure, module boundaries, barrel exports, and layering conventions.</span></div>
-              <div class="forge-agent"><b>node-api-reviewer</b><span>Reviews Express/Fastify routes: middleware ordering, async error handling, validation.</span></div>
-              <div class="forge-agent"><b>node-test-reviewer</b><span>Reviews test coverage, mock hygiene, assertion quality, and test naming conventions.</span></div>
-              <div class="forge-agent"><b>node-deps-reviewer</b><span>Reviews package.json: pinned versions, known vulnerabilities, unused dependencies.</span></div>
+            <h5>Workspace <span class="tag steel">generated</span></h5>
+            <div class="target-tabs" role="tablist" aria-label="Target selection" data-panel="node">
+              <button class="target-tab" role="tab" aria-selected="true" data-target="claude">Claude Code</button>
+              <button class="target-tab" role="tab" aria-selected="false" data-target="kiro">Kiro</button>
+              <button class="target-tab" role="tab" aria-selected="false" data-target="kimi">Kimi</button>
+            </div>
+            
+            <div class="target-panel" data-panel="node" data-target="claude" aria-hidden="false">
+              <pre class="forge-tree"><span class="dir">workspace/</span>
+├── <span class="dir gen">.claude/</span>                    <span class="comment">← generated</span>
+│   ├── <span class="dir gen">rules/</span>
+│   │   ├── <span class="gen">node-typescript-strict.md</span>
+│   │   ├── <span class="gen">node-express-patterns.md</span>
+│   │   ├── <span class="gen">node-testing-jest.md</span>
+│   │   ├── <span class="gen">node-eslint-prettier.md</span>
+│   │   └── <span class="gen">node-security-headers.md</span>
+│   ├── <span class="dir gen">agents/</span>
+│   │   └── <span class="gen">*.md</span>
+│   └── <span class="dir gen">commands/</span>
+│       └── <span class="gen">create-express-route.md</span>
+├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
+│   ├── <span class="dir gen">architecture/</span>
+│   └── <span class="dir gen">runbooks/</span>
+├── <span class="gen">.mcp.json</span>                   <span class="comment">← npm-audit MCP</span>
+├── <span class="dir client">src/</span>                        <span class="comment">← client code</span>
+├── <span class="gen">craftar.yaml</span>
+└── <span class="gen">craftar.lock</span></pre>
+            </div>
+
+            <div class="target-panel" data-panel="node" data-target="kiro" aria-hidden="true">
+              <pre class="forge-tree"><span class="dir">workspace/</span>
+├── <span class="dir gen">.kiro/</span>                      <span class="comment">← generated</span>
+│   ├── <span class="dir gen">steering/</span>
+│   │   └── <span class="gen">*.md</span>
+│   ├── <span class="dir gen">agents/</span>
+│   │   └── <span class="gen">*.json</span>
+│   └── <span class="dir gen">commands/</span>
+│       └── <span class="gen">create-express-route.md</span>
+├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
+│   ├── <span class="dir gen">architecture/</span>
+│   └── <span class="dir gen">runbooks/</span>
+├── <span class="gen">.mcp.json</span>                   <span class="comment">← npm-audit MCP</span>
+├── <span class="dir client">src/</span>                        <span class="comment">← client code</span>
+├── <span class="gen">craftar.yaml</span>
+└── <span class="gen">craftar.lock</span></pre>
+            </div>
+
+            <div class="target-panel" data-panel="node" data-target="kimi" aria-hidden="true">
+              <pre class="forge-tree"><span class="dir">workspace/</span>
+├── <span class="gen">AGENTS.md</span>                   <span class="comment">← rules + agents</span>
+├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
+│   ├── <span class="dir gen">architecture/</span>
+│   └── <span class="dir gen">runbooks/</span>
+├── <span class="gen">mcp.json</span>                    <span class="comment">← npm-audit MCP</span>
+├── <span class="dir client">src/</span>                        <span class="comment">← client code</span>
+├── <span class="gen">craftar.yaml</span>
+└── <span class="gen">craftar.lock</span></pre>
+            </div>
+
+            <div class="sync-legend">
+              <span><span class="dot gen"></span> generated by Craftar</span>
+              <span><span class="dot client"></span> client-owned (untouched)</span>
             </div>
           </div>
         </div>
@@ -873,18 +1049,19 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <!-- IaC Panel -->
       <div class="forge-panel" id="panel-iac" role="tabpanel" aria-labelledby="tab-iac" aria-hidden="true">
         <h4>iac-multicloud</h4>
-        <p class="desc">A Forge for platform teams managing infrastructure as code across AWS, Azure and Kubernetes.</p>
-        <div class="forge-grid">
+        <p class="desc">A Forge for platform teams managing infrastructure as code — see how its ingredients map to each target's workspace structure.</p>
+        
+        <div class="forge-flow">
           <div class="forge-col">
-            <h5 class="ember">Forge structure</h5>
+            <h5>Forge <span class="tag ember">source</span></h5>
             <pre class="forge-tree"><span class="dir">forge/</span>
 ├── <span class="dir">ingredients/</span>
 │   ├── <span class="dir">rules/</span>
-│   │   ├── aws-cloudformation/         <span class="comment"># CFN patterns, best practices</span>
-│   │   ├── aws-cdk-typescript/         <span class="comment"># CDK constructs</span>
-│   │   ├── azure-arm-bicep/            <span class="comment"># ARM templates, Bicep</span>
-│   │   ├── kubernetes-helm/            <span class="comment"># charts, values, templates</span>
-│   │   └── terraform-modules/          <span class="comment"># module structure, state</span>
+│   │   ├── aws-cloudformation/
+│   │   ├── aws-cdk-typescript/
+│   │   ├── azure-arm-bicep/
+│   │   ├── kubernetes-helm/
+│   │   └── terraform-modules/
 │   ├── <span class="dir">agents/</span>
 │   │   ├── aws-yaml-reviewer/
 │   │   ├── azure-iac-reviewer/
@@ -893,31 +1070,95 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   ├── <span class="dir">commands/</span>
 │   │   ├── create-aws-stack/
 │   │   └── create-helm-chart/
+│   ├── <span class="dir">docs/</span>
+│   │   └── runbook-template/
 │   └── <span class="dir">services/</span>
-│       └── localstack-aws/             <span class="comment"># LocalStack for local testing</span>
+│       └── localstack-aws/
 ├── <span class="dir">recipes/</span>
 │   ├── iac-aws.yaml
-│   ├── iac-azure.yaml
 │   └── iac-kubernetes.yaml
 └── <span class="dir">profiles/</span>
     └── team-platform/</pre>
           </div>
+
+          <div class="forge-arrow">
+            <svg viewBox="0 0 32 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 7h28M22 1l6 6-6 6"/></svg>
+            sync
+          </div>
+
           <div class="forge-col">
-            <h5 class="steel">Review agents</h5>
-            <div class="forge-agents">
-              <div class="forge-agent"><b>aws-yaml-reviewer</b><span>Reviews CloudFormation and SAM templates: resource naming, IAM least privilege, drift risk.</span></div>
-              <div class="forge-agent"><b>azure-iac-reviewer</b><span>Reviews ARM/Bicep templates: parameter validation, secure defaults, resource dependencies.</span></div>
-              <div class="forge-agent"><b>k8s-manifest-reviewer</b><span>Reviews Kubernetes manifests and Helm charts: resource limits, security context, labels.</span></div>
-              <div class="forge-agent"><b>terraform-reviewer</b><span>Reviews HCL: module composition, state management, provider versioning, sensitive outputs.</span></div>
+            <h5>Workspace <span class="tag steel">generated</span></h5>
+            <div class="target-tabs" role="tablist" aria-label="Target selection" data-panel="iac">
+              <button class="target-tab" role="tab" aria-selected="true" data-target="claude">Claude Code</button>
+              <button class="target-tab" role="tab" aria-selected="false" data-target="kiro">Kiro</button>
+              <button class="target-tab" role="tab" aria-selected="false" data-target="codex">Codex</button>
+            </div>
+            
+            <div class="target-panel" data-panel="iac" data-target="claude" aria-hidden="false">
+              <pre class="forge-tree"><span class="dir">workspace/</span>
+├── <span class="dir gen">.claude/</span>                    <span class="comment">← generated</span>
+│   ├── <span class="dir gen">rules/</span>
+│   │   ├── <span class="gen">aws-cloudformation.md</span>
+│   │   ├── <span class="gen">aws-cdk-typescript.md</span>
+│   │   ├── <span class="gen">kubernetes-helm.md</span>
+│   │   └── <span class="gen">terraform-modules.md</span>
+│   ├── <span class="dir gen">agents/</span>
+│   │   └── <span class="gen">*.md</span>
+│   └── <span class="dir gen">commands/</span>
+│       ├── <span class="gen">create-aws-stack.md</span>
+│       └── <span class="gen">create-helm-chart.md</span>
+├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
+│   └── <span class="dir gen">runbooks/</span>
+├── <span class="dir gen">local-stack/</span>               <span class="comment">← LocalStack</span>
+│   └── <span class="gen">docker-compose.yaml</span>
+├── <span class="dir client">infra/</span>                      <span class="comment">← client IaC</span>
+├── <span class="gen">craftar.yaml</span>
+└── <span class="gen">craftar.lock</span></pre>
+            </div>
+
+            <div class="target-panel" data-panel="iac" data-target="kiro" aria-hidden="true">
+              <pre class="forge-tree"><span class="dir">workspace/</span>
+├── <span class="dir gen">.kiro/</span>                      <span class="comment">← generated</span>
+│   ├── <span class="dir gen">steering/</span>
+│   │   └── <span class="gen">*.md</span>
+│   ├── <span class="dir gen">agents/</span>
+│   │   └── <span class="gen">*.json</span>
+│   └── <span class="dir gen">commands/</span>
+│       └── <span class="gen">*.md</span>
+├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
+│   └── <span class="dir gen">runbooks/</span>
+├── <span class="dir gen">local-stack/</span>               <span class="comment">← LocalStack</span>
+│   └── <span class="gen">docker-compose.yaml</span>
+├── <span class="dir client">infra/</span>                      <span class="comment">← client IaC</span>
+├── <span class="gen">craftar.yaml</span>
+└── <span class="gen">craftar.lock</span></pre>
+            </div>
+
+            <div class="target-panel" data-panel="iac" data-target="codex" aria-hidden="true">
+              <pre class="forge-tree"><span class="dir">workspace/</span>
+├── <span class="gen">AGENTS.md</span>                   <span class="comment">← rules + agents</span>
+├── <span class="gen">codex.toml</span>                  <span class="comment">← hooks block</span>
+├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
+│   └── <span class="dir gen">runbooks/</span>
+├── <span class="dir gen">local-stack/</span>               <span class="comment">← LocalStack</span>
+│   └── <span class="gen">docker-compose.yaml</span>
+├── <span class="dir client">infra/</span>                      <span class="comment">← client IaC</span>
+├── <span class="gen">craftar.yaml</span>
+└── <span class="gen">craftar.lock</span></pre>
+            </div>
+
+            <div class="sync-legend">
+              <span><span class="dot gen"></span> generated by Craftar</span>
+              <span><span class="dot client"></span> client-owned (untouched)</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Client-specific note -->
+      <!-- What syncs where -->
       <div class="client-note">
-        <h5>Client-specific definitions stay in the workspace</h5>
-        <p>Each workspace may also contain <strong>client-specific architecture docs</strong> and decisions — for example, <code>docs/architecture/</code> or <code>docs/adr/</code>. These files <strong>are not managed by the Forge</strong>: the Forge only writes and updates files it generates. Client docs coexist with the generated harness but remain under the client's control, and <code>craftar sync</code> will never touch them.</p>
+        <h5>What syncs where</h5>
+        <p>Craftar generates files <strong>inside</strong> the AI coder folder (<code>.claude/</code>, <code>.kiro/</code>, <code>.cursor/</code>) and <strong>outside</strong> it (<code>docs/</code>, <code>local-stack/</code>, <code>AGENTS.md</code>). Files outside are <strong>tool-agnostic</strong> — the same <code>docs/architecture/</code> structure serves Claude Code, Kiro and Cursor users alike. Client-owned folders like <code>src/</code> or <code>infra/</code> are <strong>never touched</strong> by <code>craftar sync</code>.</p>
       </div>
     </div>
   </section>
@@ -1197,6 +1438,24 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         document.querySelectorAll('.forge-panel').forEach(function (p) {
           var show = p.id === panelId;
           p.setAttribute('aria-hidden', show ? 'false' : 'true');
+        });
+      });
+    });
+    // Target tabs within each forge panel
+    document.querySelectorAll('.target-tabs').forEach(function (tabGroup) {
+      var panelName = tabGroup.dataset.panel;
+      tabGroup.querySelectorAll('.target-tab').forEach(function (t) {
+        t.addEventListener('click', function () {
+          var target = t.dataset.target;
+          // Update tab states
+          tabGroup.querySelectorAll('.target-tab').forEach(function (o) {
+            o.setAttribute('aria-selected', o === t ? 'true' : 'false');
+          });
+          // Update panel visibility
+          document.querySelectorAll('.target-panel[data-panel="' + panelName + '"]').forEach(function (p) {
+            var show = p.dataset.target === target;
+            p.setAttribute('aria-hidden', show ? 'false' : 'true');
+          });
         });
       });
     });
