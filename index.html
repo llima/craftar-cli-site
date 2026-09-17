@@ -729,8 +729,9 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 <span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
     </div>
 
-    <h3 style="margin-top:72px">Layer resolution</h3>
-    <p class="prose" style="margin-top:10px">A workspace is the result of layers applied in a fixed order, weakest first. Ingredients with the same name resolve to the strongest layer; stack recipes that declare the same <code>slot</code> are mutually exclusive; <code>{{params}}</code> are substituted from the winning layer. <code>craftar explain &lt;file&gt;</code> prints the layer that decided each output.</p>
+    <div class="eyebrow" style="margin-top:72px">Layer resolution</div>
+    <h2>From layers to files — how sync works.</h2>
+    <p class="prose" style="margin-top:14px">A workspace is the result of layers applied in a fixed order, weakest first. Ingredients with the same name resolve to the strongest layer; stack recipes that declare the same <code>slot</code> are mutually exclusive; <code>{{params}}</code> are substituted from the winning layer. <code>craftar explain &lt;file&gt;</code> prints the layer that decided each output.</p>
 
     <div class="flow">
       <div>
