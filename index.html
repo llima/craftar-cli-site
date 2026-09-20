@@ -421,7 +421,7 @@
   .forge-panel h4 { font-family: var(--display); font-size: 18px; font-weight: 700; margin: 0 0 6px; color: var(--text); letter-spacing: -.02em; }
   .forge-panel .desc { font-size: 15px; color: var(--muted); margin-bottom: 24px; }
   .forge-flow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 16px; align-items: start; }
-  @media (max-width: 960px) { .forge-flow { grid-template-columns: 1fr; } .forge-flow .forge-arrow { transform: rotate(90deg); justify-self: center; margin: 8px 0; } }
+  @media (max-width: 960px) { .forge-flow { grid-template-columns: minmax(0, 1fr); } .forge-flow .forge-arrow { transform: rotate(90deg); justify-self: center; margin: 8px 0; } }
   .forge-col h5 { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin: 0 0 10px; display: flex; justify-content: space-between; align-items: center; }
   .forge-col h5 .tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; letter-spacing: .06em; }
   .forge-col h5 .tag.ember { color: var(--ember); border: 1px solid rgba(233,145,90,.4); }
@@ -781,7 +781,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     <!-- Example Forges - connects to Layer resolution above -->
     <div class="forge-examples" id="forge-examples">
       <h3 style="margin-bottom: 8px;">In practice — Forge → Workspace by stack</h3>
-      <p class="prose" style="margin-bottom: 20px;">The diagram above shows the <strong>logical flow</strong> — layers resolving into targets. Below is the <strong>physical mapping</strong>: how a real Forge for a given stack becomes actual files in the workspace. Select a stack, then a target to see exactly what <code>craftar sync</code> produces.</p>
+      <p class="prose" style="margin-bottom: 20px;">The diagram above shows the <strong>logical flow</strong> — layers resolving into targets. Below is the <strong>physical mapping</strong>: how a real Forge for a given stack becomes actual files in the workspace. Select a stack, then a target to see what <code>craftar sync</code> writes today.</p>
 
       <div class="forge-tabs" role="tablist" aria-label="Example Forges">
         <button class="forge-tab" role="tab" id="tab-dotnet" aria-selected="true" aria-controls="panel-dotnet">.NET Enterprise</button>
@@ -1080,7 +1080,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <!-- What syncs where -->
       <div class="client-note">
         <h5>What syncs where</h5>
-        <p>Craftar generates files <strong>inside</strong> the AI coder folder (<code>.claude/</code>, <code>.kiro/</code>, <code>.cursor/</code>) and <strong>outside</strong> it (<code>docs/</code>, <code>local-stack/</code>, <code>AGENTS.md</code>). Files outside are <strong>tool-agnostic</strong> — the same <code>docs/architecture/</code> structure serves Claude Code, Kiro and Cursor users alike. Client-owned folders like <code>src/</code> or <code>infra/</code> are <strong>never touched</strong> by <code>craftar sync</code>.</p>
+        <p>Craftar writes the AI coder's own files — <code>.claude/</code> plus <code>.mcp.json</code> for Claude Code, <code>.kiro/</code> for Kiro — and a root <code>AGENTS.md</code> for the tools that read the open standard: Codex, Cursor, Kimi and Copilot consume that file today, while native emitters for their own formats are planned, as is generating tool-agnostic output outside the AI coder folder such as <code>docs/</code> or <code>local-stack/</code>. Client-owned folders like <code>src/</code> or <code>infra/</code> are <strong>never touched</strong> — only paths recorded in <code>craftar.lock</code> are ever written or removed.</p>
       </div>
     </div>
 
