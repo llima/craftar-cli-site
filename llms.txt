@@ -1,6 +1,6 @@
 # Craftar
 
-> Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients, and emits it in the native format of each AI coder (Claude Code, Kiro, Kimi, Codex, Cursor, Warp, AGENTS.md) into every workspace, with a lockfile for drift detection and a registry of workspaces.
+> Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients, and emits it in the native format of each AI coder (Claude Code, Kiro and AGENTS.md today; Kimi, Codex, Cursor and Warp planned) into every workspace, with a lockfile for drift detection and a planned registry of workspaces.
 
 This file is the plain-text companion of the Craftar page (index.html), written for language models and other automated readers. Same content, no layout; diagrams are described in prose — verbatim from the accessible description of each figure — and the two whose topology carries the argument are also given as Mermaid graphs.
 
@@ -8,11 +8,11 @@ This file is the plain-text companion of the Craftar page (index.html), written 
 
 - Harness: everything that shapes how coding agents behave in a repository — rules, agents, commands, skills, hooks, MCP servers.
 - Forge: one Git repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned. It is never a Git remote of any team repository.
-- Ingredient: smallest reusable unit — a rule, agent, command, skill, hook, MCP server, local service or template. A folder with an `ingredient.yaml` declaring type, targets, inclusion mode and globs.
+- Ingredient: smallest reusable unit — a rule, agent, command, skill, hook, MCP server, script or steering file. A folder with an `ingredient.yaml` declaring type, targets, inclusion mode and globs. Local services and project templates are planned types.
 - Recipe: named set of ingredients with parameters. Recipes `extend` others; stack recipes declare a `slot` so two stacks for the same role (e.g. two front-end frameworks) cannot coexist.
 - Profile: one team — its recipes, repositories, template feeds, project-management tool, internal platform, and which AI coders that team uses.
 - Workspace: a local folder (one repo or a folder of repos) with a `craftar.yaml` declaring profile, recipe add/remove and targets, plus a git-ignored `craftar.local.yaml` for per-developer overrides.
-- Target: an AI coder to emit for — `claude-code`, `kiro`, `kimi`, `codex`, `cursor`, `warp`, `agents-md`. A per-target `capabilities.yaml` is planned; today the Kiro emitter warns and skips what it cannot express — a fallback is planned.
+- Target: an AI coder to emit for — `claude-code`, `kiro` and `agents-md` exist today; `kimi`, `codex`, `cursor` and `warp` are planned and read the emitted `AGENTS.md` meanwhile. A per-target `capabilities.yaml` is planned; today the Kiro emitter warns and skips what it cannot express — a fallback is planned.
 - Lockfile (`craftar.lock`): Forge SHA, the resolved profile name, and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.
 - Registry (`~/.craftar/registry.json`): every workspace on the machine with path, profile, last sync and status. Will back `craftar ls` and the local dashboard — planned.
 
