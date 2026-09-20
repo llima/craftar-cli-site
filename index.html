@@ -810,14 +810,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   │   ├── dotnet-api-reviewer/
 │   │   ├── dotnet-ef-reviewer/
 │   │   └── dotnet-security-reviewer/
-│   ├── <span class="dir">commands/</span>
-│   │   └── create-api-endpoint/
-│   ├── <span class="dir">docs/</span>
-│   │   ├── architecture-template/
-│   │   ├── adr-template/
-│   │   └── tech-debt-template/
-│   └── <span class="dir">services/</span>
-│       └── localstack-sqs/
+│   └── <span class="dir">commands/</span>
+│       └── create-api-endpoint/
 ├── <span class="dir">recipes/</span>
 │   └── dotnet-clean-arch.yaml
 └── <span class="dir">profiles/</span>
@@ -834,7 +828,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
             <div class="target-tabs" role="tablist" aria-label="Target selection" data-panel="dotnet">
               <button class="target-tab" role="tab" aria-selected="true" data-target="claude">Claude Code</button>
               <button class="target-tab" role="tab" aria-selected="false" data-target="kiro">Kiro</button>
-              <button class="target-tab" role="tab" aria-selected="false" data-target="cursor">Cursor</button>
+              <button class="target-tab" role="tab" aria-selected="false" data-target="agents-md">AGENTS.md</button>
             </div>
             
             <div class="target-panel" data-panel="dotnet" data-target="claude" aria-hidden="false">
@@ -853,18 +847,9 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   │   └── <span class="gen">dotnet-security-reviewer.md</span>
 │   └── <span class="dir gen">commands/</span>
 │       └── <span class="gen">create-api-endpoint.md</span>
-├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
-│   ├── <span class="dir gen">architecture/</span>
-│   │   └── <span class="gen">README.md</span>
-│   ├── <span class="dir gen">adr/</span>
-│   │   └── <span class="gen">README.md</span>
-│   └── <span class="dir gen">tech-debt/</span>
-│       └── <span class="gen">README.md</span>
-├── <span class="dir gen">local-stack/</span>               <span class="comment">← generated</span>
-│   └── <span class="gen">docker-compose.yaml</span>
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code (untouched)</span>
-├── <span class="gen">craftar.yaml</span>
-└── <span class="gen">craftar.lock</span></pre>
+├── craftar.yaml                <span class="comment">← workspace input</span>
+└── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
             </div>
 
             <div class="target-panel" data-panel="dotnet" data-target="kiro" aria-hidden="true">
@@ -875,50 +860,25 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   │   ├── <span class="gen">dotnet-clean-code.md</span>
 │   │   ├── <span class="gen">dotnet-minimal-api.md</span>
 │   │   ├── <span class="gen">dotnet-entity-framework.md</span>
-│   │   └── <span class="gen">dotnet-security.md</span>
-│   ├── <span class="dir gen">agents/</span>
-│   │   ├── <span class="gen">dotnet-arch-reviewer.json</span>
-│   │   ├── <span class="gen">dotnet-api-reviewer.json</span>
-│   │   ├── <span class="gen">dotnet-ef-reviewer.json</span>
-│   │   └── <span class="gen">dotnet-security-reviewer.json</span>
-│   └── <span class="dir gen">commands/</span>
-│       └── <span class="gen">create-api-endpoint.md</span>
-├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
-│   ├── <span class="dir gen">architecture/</span>
-│   │   └── <span class="gen">README.md</span>
-│   ├── <span class="dir gen">adr/</span>
-│   │   └── <span class="gen">README.md</span>
-│   └── <span class="dir gen">tech-debt/</span>
-│       └── <span class="gen">README.md</span>
-├── <span class="dir gen">local-stack/</span>               <span class="comment">← generated</span>
-│   └── <span class="gen">docker-compose.yaml</span>
+│   │   ├── <span class="gen">dotnet-security.md</span>
+│   │   └── <span class="dir gen">commands/</span>
+│   │       └── <span class="gen">create-api-endpoint.md</span>
+│   └── <span class="dir gen">agents/</span>
+│       ├── <span class="gen">dotnet-arch-reviewer.json</span>
+│       ├── <span class="gen">dotnet-api-reviewer.json</span>
+│       ├── <span class="gen">dotnet-ef-reviewer.json</span>
+│       └── <span class="gen">dotnet-security-reviewer.json</span>
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code (untouched)</span>
-├── <span class="gen">craftar.yaml</span>
-└── <span class="gen">craftar.lock</span></pre>
+├── craftar.yaml                <span class="comment">← workspace input</span>
+└── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
             </div>
 
-            <div class="target-panel" data-panel="dotnet" data-target="cursor" aria-hidden="true">
+            <div class="target-panel" data-panel="dotnet" data-target="agents-md" aria-hidden="true">
               <pre class="forge-tree"><span class="dir">workspace/</span>
-├── <span class="dir gen">.cursor/</span>                    <span class="comment">← generated</span>
-│   └── <span class="dir gen">rules/</span>
-│       ├── <span class="gen">dotnet-clean-architecture.mdc</span>
-│       ├── <span class="gen">dotnet-clean-code.mdc</span>
-│       ├── <span class="gen">dotnet-minimal-api.mdc</span>
-│       ├── <span class="gen">dotnet-entity-framework.mdc</span>
-│       └── <span class="gen">dotnet-security.mdc</span>
-├── <span class="gen">AGENTS.md</span>                   <span class="comment">← agents as markdown</span>
-├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
-│   ├── <span class="dir gen">architecture/</span>
-│   │   └── <span class="gen">README.md</span>
-│   ├── <span class="dir gen">adr/</span>
-│   │   └── <span class="gen">README.md</span>
-│   └── <span class="dir gen">tech-debt/</span>
-│       └── <span class="gen">README.md</span>
-├── <span class="dir gen">local-stack/</span>               <span class="comment">← generated</span>
-│   └── <span class="gen">docker-compose.yaml</span>
+├── <span class="gen">AGENTS.md</span>                   <span class="comment">← always-on + scoped rules</span>
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code (untouched)</span>
-├── <span class="gen">craftar.yaml</span>
-└── <span class="gen">craftar.lock</span></pre>
+├── craftar.yaml                <span class="comment">← workspace input</span>
+└── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
             </div>
 
             <div class="sync-legend">
