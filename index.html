@@ -912,9 +912,6 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   │   └── node-deps-reviewer/
 │   ├── <span class="dir">commands/</span>
 │   │   └── create-express-route/
-│   ├── <span class="dir">docs/</span>
-│   │   ├── architecture-template/
-│   │   └── runbook-template/
 │   └── <span class="dir">mcp/</span>
 │       └── npm-audit/
 ├── <span class="dir">recipes/</span>
@@ -933,7 +930,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
             <div class="target-tabs" role="tablist" aria-label="Target selection" data-panel="node">
               <button class="target-tab" role="tab" aria-selected="true" data-target="claude">Claude Code</button>
               <button class="target-tab" role="tab" aria-selected="false" data-target="kiro">Kiro</button>
-              <button class="target-tab" role="tab" aria-selected="false" data-target="kimi">Kimi</button>
+              <button class="target-tab" role="tab" aria-selected="false" data-target="agents-md">AGENTS.md</button>
             </div>
             
             <div class="target-panel" data-panel="node" data-target="claude" aria-hidden="false">
@@ -949,43 +946,34 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   │   └── <span class="gen">*.md</span>
 │   └── <span class="dir gen">commands/</span>
 │       └── <span class="gen">create-express-route.md</span>
-├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
-│   ├── <span class="dir gen">architecture/</span>
-│   └── <span class="dir gen">runbooks/</span>
 ├── <span class="gen">.mcp.json</span>                   <span class="comment">← npm-audit MCP</span>
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code</span>
-├── <span class="gen">craftar.yaml</span>
-└── <span class="gen">craftar.lock</span></pre>
+├── craftar.yaml                <span class="comment">← workspace input</span>
+└── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
             </div>
 
             <div class="target-panel" data-panel="node" data-target="kiro" aria-hidden="true">
               <pre class="forge-tree"><span class="dir">workspace/</span>
 ├── <span class="dir gen">.kiro/</span>                      <span class="comment">← generated</span>
 │   ├── <span class="dir gen">steering/</span>
-│   │   └── <span class="gen">*.md</span>
+│   │   ├── <span class="gen">*.md</span>
+│   │   └── <span class="dir gen">commands/</span>
+│   │       └── <span class="gen">create-express-route.md</span>
 │   ├── <span class="dir gen">agents/</span>
 │   │   └── <span class="gen">*.json</span>
-│   └── <span class="dir gen">commands/</span>
-│       └── <span class="gen">create-express-route.md</span>
-├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
-│   ├── <span class="dir gen">architecture/</span>
-│   └── <span class="dir gen">runbooks/</span>
-├── <span class="gen">.mcp.json</span>                   <span class="comment">← npm-audit MCP</span>
+│   └── <span class="dir gen">settings/</span>
+│       └── <span class="gen">mcp.json</span>            <span class="comment">← npm-audit MCP</span>
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code</span>
-├── <span class="gen">craftar.yaml</span>
-└── <span class="gen">craftar.lock</span></pre>
+├── craftar.yaml                <span class="comment">← workspace input</span>
+└── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
             </div>
 
-            <div class="target-panel" data-panel="node" data-target="kimi" aria-hidden="true">
+            <div class="target-panel" data-panel="node" data-target="agents-md" aria-hidden="true">
               <pre class="forge-tree"><span class="dir">workspace/</span>
-├── <span class="gen">AGENTS.md</span>                   <span class="comment">← rules + agents</span>
-├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
-│   ├── <span class="dir gen">architecture/</span>
-│   └── <span class="dir gen">runbooks/</span>
-├── <span class="gen">mcp.json</span>                    <span class="comment">← npm-audit MCP</span>
+├── <span class="gen">AGENTS.md</span>                   <span class="comment">← always-on + scoped rules</span>
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code</span>
-├── <span class="gen">craftar.yaml</span>
-└── <span class="gen">craftar.lock</span></pre>
+├── craftar.yaml                <span class="comment">← workspace input</span>
+└── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
             </div>
 
             <div class="sync-legend">
