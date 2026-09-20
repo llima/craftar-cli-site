@@ -89,9 +89,9 @@ graph LR
 
 P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the pinned one). The registry at `~/.craftar/registry.json` lists all four, and `craftar ls` will report per workspace: up to date, behind, or drift.
 
-## Forge → Workspace by stack
+## In practice — Forge → Workspace by stack
 
-A Forge is shaped by the technology stack it serves. Below are three examples showing how ingredients in the Forge become files in the workspace — both inside the AI coder folder (`.claude/`, `.kiro/`) and outside it (`docs/`, `local-stack/`).
+The layer resolution above is the logical flow — layers resolving into targets. This is the physical mapping: how a real Forge for a given stack becomes actual files in the workspace. Select a stack, then a target to see what `craftar sync` writes today. Every stack lists the same three targets the CLI emits: Claude Code, Kiro and AGENTS.md. In each workspace, `craftar.yaml` is the input the workspace owns and `craftar.lock` is generated.
 
 ### dotnet-enterprise — .NET backend teams following Clean Architecture
 
@@ -99,8 +99,6 @@ Forge structure:
 - ingredients/rules/: dotnet-clean-architecture, dotnet-clean-code, dotnet-minimal-api, dotnet-entity-framework, dotnet-security
 - ingredients/agents/: dotnet-arch-reviewer, dotnet-api-reviewer, dotnet-ef-reviewer, dotnet-security-reviewer
 - ingredients/commands/: create-api-endpoint
-- ingredients/docs/: architecture-template, adr-template, tech-debt-template
-- ingredients/services/: localstack-sqs
 - recipes/: dotnet-clean-arch.yaml
 - profiles/: team-dotnet/
 
@@ -108,15 +106,15 @@ Workspace output (Claude Code target):
 - .claude/rules/: dotnet-clean-architecture.md, dotnet-clean-code.md, dotnet-minimal-api.md, dotnet-entity-framework.md, dotnet-security.md
 - .claude/agents/: dotnet-arch-reviewer.md, dotnet-api-reviewer.md, dotnet-ef-reviewer.md, dotnet-security-reviewer.md
 - .claude/commands/: create-api-endpoint.md
-- docs/: architecture/, adr/, tech-debt/ (generated structure)
-- local-stack/: docker-compose.yaml
 - src/ (client code, untouched)
 
 Workspace output (Kiro target):
 - .kiro/steering/: *.md (same rules)
+- .kiro/steering/commands/: create-api-endpoint.md
 - .kiro/agents/: *.json (agents as JSON)
-- .kiro/commands/: *.md
-- docs/, local-stack/ (same as Claude Code — tool-agnostic)
+
+Workspace output (AGENTS.md target):
+- AGENTS.md (always-on rules concatenated, scoped rules listed)
 
 ### node-fullstack — Node.js teams using TypeScript
 
@@ -124,20 +122,21 @@ Forge structure:
 - ingredients/rules/: node-typescript-strict, node-express-patterns, node-testing-jest, node-eslint-prettier, node-security-headers
 - ingredients/agents/: node-arch-reviewer, node-api-reviewer, node-test-reviewer, node-deps-reviewer
 - ingredients/commands/: create-express-route
-- ingredients/docs/: architecture-template, runbook-template
 - ingredients/mcp/: npm-audit
 - recipes/: node-express-ts.yaml
 - profiles/: team-node/
 
 Workspace output (Claude Code target):
 - .claude/rules/, .claude/agents/, .claude/commands/
-- docs/: architecture/, runbooks/
 - .mcp.json (npm-audit MCP)
 
-Workspace output (Kimi target):
-- AGENTS.md (rules + agents combined)
-- docs/ (same structure)
-- mcp.json
+Workspace output (Kiro target):
+- .kiro/steering/: *.md, with .kiro/steering/commands/create-express-route.md
+- .kiro/agents/: *.json
+- .kiro/settings/mcp.json (npm-audit MCP)
+
+Workspace output (AGENTS.md target):
+- AGENTS.md (always-on rules concatenated, scoped rules listed)
 
 ### iac-multicloud — Platform teams managing infrastructure as code
 
@@ -145,24 +144,24 @@ Forge structure:
 - ingredients/rules/: aws-cloudformation, aws-cdk-typescript, azure-arm-bicep, kubernetes-helm, terraform-modules
 - ingredients/agents/: aws-yaml-reviewer, azure-iac-reviewer, k8s-manifest-reviewer, terraform-reviewer
 - ingredients/commands/: create-aws-stack, create-helm-chart
-- ingredients/docs/: runbook-template
-- ingredients/services/: localstack-aws
 - recipes/: iac-aws.yaml, iac-kubernetes.yaml
 - profiles/: team-platform/
 
 Workspace output (Claude Code target):
-- .claude/rules/, .claude/agents/, .claude/commands/
-- docs/runbooks/
-- local-stack/docker-compose.yaml (LocalStack)
+- .claude/rules/: aws-cloudformation.md, aws-cdk-typescript.md, azure-arm-bicep.md, kubernetes-helm.md, terraform-modules.md
+- .claude/agents/, .claude/commands/
+- infra/ (client IaC, untouched)
 
-Workspace output (Codex target):
-- AGENTS.md (rules + agents)
-- codex.toml (hooks block)
-- docs/, local-stack/ (same)
+Workspace output (Kiro target):
+- .kiro/steering/: *.md, with .kiro/steering/commands/: *.md
+- .kiro/agents/: *.json
+
+Workspace output (AGENTS.md target):
+- AGENTS.md (always-on rules concatenated, scoped rules listed)
 
 ### What syncs where
 
-Craftar generates files inside the AI coder folder (`.claude/`, `.kiro/`, `.cursor/`) and outside it (`docs/`, `local-stack/`, `AGENTS.md`). Files outside are tool-agnostic — the same `docs/architecture/` structure serves Claude Code, Kiro and Cursor users alike. Client-owned folders like `src/` or `infra/` are never touched by `craftar sync`.
+Craftar writes the AI coder's own files — `.claude/` plus `.mcp.json` for Claude Code, `.kiro/` for Kiro — and a root `AGENTS.md` for the tools that read the open standard: Codex, Cursor, Kimi and Copilot consume that file today, while native emitters for their own formats are planned, as is generating tool-agnostic output outside the AI coder folder such as `docs/` or `local-stack/`. Client-owned folders like `src/` or `infra/` are never touched — only paths recorded in `craftar.lock` are ever written or removed.
 
 ## Capabilities (F1–F12; "working" = runs today and is covered by tests; "mvp" = first release; "planned" = designed, not built)
 
