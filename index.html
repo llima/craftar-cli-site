@@ -1005,13 +1005,9 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   │   ├── azure-iac-reviewer/
 │   │   ├── k8s-manifest-reviewer/
 │   │   └── terraform-reviewer/
-│   ├── <span class="dir">commands/</span>
-│   │   ├── create-aws-stack/
-│   │   └── create-helm-chart/
-│   ├── <span class="dir">docs/</span>
-│   │   └── runbook-template/
-│   └── <span class="dir">services/</span>
-│       └── localstack-aws/
+│   └── <span class="dir">commands/</span>
+│       ├── create-aws-stack/
+│       └── create-helm-chart/
 ├── <span class="dir">recipes/</span>
 │   ├── iac-aws.yaml
 │   └── iac-kubernetes.yaml
@@ -1029,7 +1025,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
             <div class="target-tabs" role="tablist" aria-label="Target selection" data-panel="iac">
               <button class="target-tab" role="tab" aria-selected="true" data-target="claude">Claude Code</button>
               <button class="target-tab" role="tab" aria-selected="false" data-target="kiro">Kiro</button>
-              <button class="target-tab" role="tab" aria-selected="false" data-target="codex">Codex</button>
+              <button class="target-tab" role="tab" aria-selected="false" data-target="agents-md">AGENTS.md</button>
             </div>
             
             <div class="target-panel" data-panel="iac" data-target="claude" aria-hidden="false">
@@ -1038,6 +1034,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   ├── <span class="dir gen">rules/</span>
 │   │   ├── <span class="gen">aws-cloudformation.md</span>
 │   │   ├── <span class="gen">aws-cdk-typescript.md</span>
+│   │   ├── <span class="gen">azure-arm-bicep.md</span>
 │   │   ├── <span class="gen">kubernetes-helm.md</span>
 │   │   └── <span class="gen">terraform-modules.md</span>
 │   ├── <span class="dir gen">agents/</span>
@@ -1045,44 +1042,31 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 │   └── <span class="dir gen">commands/</span>
 │       ├── <span class="gen">create-aws-stack.md</span>
 │       └── <span class="gen">create-helm-chart.md</span>
-├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
-│   └── <span class="dir gen">runbooks/</span>
-├── <span class="dir gen">local-stack/</span>               <span class="comment">← LocalStack</span>
-│   └── <span class="gen">docker-compose.yaml</span>
 ├── <span class="dir client">infra/</span>                      <span class="comment">← client IaC</span>
-├── <span class="gen">craftar.yaml</span>
-└── <span class="gen">craftar.lock</span></pre>
+├── craftar.yaml                <span class="comment">← workspace input</span>
+└── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
             </div>
 
             <div class="target-panel" data-panel="iac" data-target="kiro" aria-hidden="true">
               <pre class="forge-tree"><span class="dir">workspace/</span>
 ├── <span class="dir gen">.kiro/</span>                      <span class="comment">← generated</span>
 │   ├── <span class="dir gen">steering/</span>
-│   │   └── <span class="gen">*.md</span>
-│   ├── <span class="dir gen">agents/</span>
-│   │   └── <span class="gen">*.json</span>
-│   └── <span class="dir gen">commands/</span>
-│       └── <span class="gen">*.md</span>
-├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
-│   └── <span class="dir gen">runbooks/</span>
-├── <span class="dir gen">local-stack/</span>               <span class="comment">← LocalStack</span>
-│   └── <span class="gen">docker-compose.yaml</span>
+│   │   ├── <span class="gen">*.md</span>
+│   │   └── <span class="dir gen">commands/</span>
+│   │       └── <span class="gen">*.md</span>
+│   └── <span class="dir gen">agents/</span>
+│       └── <span class="gen">*.json</span>
 ├── <span class="dir client">infra/</span>                      <span class="comment">← client IaC</span>
-├── <span class="gen">craftar.yaml</span>
-└── <span class="gen">craftar.lock</span></pre>
+├── craftar.yaml                <span class="comment">← workspace input</span>
+└── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
             </div>
 
-            <div class="target-panel" data-panel="iac" data-target="codex" aria-hidden="true">
+            <div class="target-panel" data-panel="iac" data-target="agents-md" aria-hidden="true">
               <pre class="forge-tree"><span class="dir">workspace/</span>
-├── <span class="gen">AGENTS.md</span>                   <span class="comment">← rules + agents</span>
-├── <span class="gen">codex.toml</span>                  <span class="comment">← hooks block</span>
-├── <span class="dir gen">docs/</span>                       <span class="comment">← generated structure</span>
-│   └── <span class="dir gen">runbooks/</span>
-├── <span class="dir gen">local-stack/</span>               <span class="comment">← LocalStack</span>
-│   └── <span class="gen">docker-compose.yaml</span>
+├── <span class="gen">AGENTS.md</span>                   <span class="comment">← always-on + scoped rules</span>
 ├── <span class="dir client">infra/</span>                      <span class="comment">← client IaC</span>
-├── <span class="gen">craftar.yaml</span>
-└── <span class="gen">craftar.lock</span></pre>
+├── craftar.yaml                <span class="comment">← workspace input</span>
+└── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
             </div>
 
             <div class="sync-legend">
