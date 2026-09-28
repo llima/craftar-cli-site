@@ -1106,7 +1106,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       </div>
     </div>
 
-    <h3 style="margin-top:72px">Growing the Forge — a second client, one base</h3>
+    <h3 id="unify" style="margin-top:72px">Growing the Forge — a second client, one base</h3>
     <p class="prose" style="margin-top:10px">Importing a second client into an existing Forge keeps every ingredient that already matches and turns the ones that differ into variants named after the profile, so both workspaces still reproduce byte for byte. The <code>forge</code> commands then close the gap: <code>forge variants</code> lists them nearest first, <code>forge diff</code> shows each hunk with a suggested class, and <code>forge unify</code> resolves one — keeping the base or the variant, or turning the differing value into a parameter the profile carries.</p>
     <div class="fig-inner narrow" style="margin-top:28px">
     <svg class="diagram" style="margin-top:0" viewBox="9.5 0 621 452" role="img" aria-labelledby="d4t" aria-describedby="d4d">
@@ -1200,9 +1200,12 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar import --from claude-code <span class="c"># existing .claude/ → ingredients + recipes + profile</span></code>
+            <code><span class="p">$</span> craftar forge variants <span class="c"># where clients differ, nearest first</span></code>
+            <code><span class="p">$</span> craftar forge diff rule/deploy <span class="c"># hunks, each with a suggested class</span></code>
+            <code><span class="p">$</span> craftar forge unify rule/deploy --profile acme --plan plan.yaml <span class="c"># base, variant or param</span></code>
             <code><span class="p">$</span> craftar targets <span class="c"># targets and capability coverage — planned</span></code>
           </div>
-          <p class="mech">Three layers: open standards emitted verbatim (AGENTS.md, Agent Skills, Agent Plugins <code>mcp.json</code>); tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned.</p>
+          <p class="mech">Three layers: open standards emitted verbatim (AGENTS.md, Agent Skills, Agent Plugins <code>mcp.json</code>); tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned. Importing a second client into an existing Forge reuses every ingredient whose render for that profile equals the workspace file, infers declared <code>{{key}}</code> values into the profile, and makes the rest variants; <code>forge unify</code> resolves each one back into its base (see <a href="#unify">Growing the Forge</a>).</p>
         </div>
       </article>
 
