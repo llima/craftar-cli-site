@@ -296,6 +296,8 @@
   .diagram .edge.manual { stroke-dasharray: 4 4; stroke: #B07A7A; }
   .diagram .edge.gen { stroke: var(--steel); }
   .diagram .edge.src { stroke: var(--ember); }
+  /* JetBrains Mono ligatures turn <!-- and --> into arrows; a literal marker must read as typed */
+  code.nolig { font-variant-ligatures: none; font-feature-settings: "calt" 0, "liga" 0; }
   .diagram-cap { margin-top: 12px; font-size: 13.5px; color: var(--faint); font-family: var(--mono); }
   .fail-wrap { margin-top: 48px; overflow-x: auto; border: 1px solid var(--seam); border-radius: 6px; }
   .fail-wrap table { min-width: 640px; }
@@ -1218,7 +1220,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
             <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular <span class="c"># planned</span></code>
             <code><span class="p">$</span> craftar explain .kiro/steering/workflow.md <span class="c"># which layer decided this file</span></code>
           </div>
-          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's. An ingredient body can also mark a client-specific block as a <em>section</em> (<code>&lt;!-- craftar:section flavors --&gt;</code> … <code>&lt;!-- /craftar:section --&gt;</code>): the block is the default, a profile's <code>sections</code> or the workspace's <code>overrides.sections</code> replace or empty it, the rendered file never holds the markers, and <code>explain</code> names the layer each section came from. A Forge that uses sections declares <code>schema: 2</code>, so an older CLI refuses it rather than leak the markers.</p>
+          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's. An ingredient body can also mark a client-specific block as a <em>section</em> (<code class="nolig">&lt;!-- craftar:section flavors --&gt;</code> … <code class="nolig">&lt;!-- /craftar:section --&gt;</code>): the block is the default, a profile's <code>sections</code> or the workspace's <code>overrides.sections</code> replace or empty it, the rendered file never holds the markers, and <code>explain</code> names the layer each section came from. A Forge that uses sections declares <code>schema: 2</code>, so an older CLI refuses it rather than leak the markers.</p>
         </div>
       </article>
 
