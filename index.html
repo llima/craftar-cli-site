@@ -1366,7 +1366,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
           <li>Forge schema: ingredients, recipes, profiles</li>
           <li>Layer resolver with exclusive slots and params</li>
           <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
-          <li><code>import --from claude-code</code></li>
+          <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
+          <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant or <code>take: param</code>)</li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
@@ -1397,7 +1398,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     <div class="status-grid">
       <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
       <div><h3>Open questions</h3><ul><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
-      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>.</p></div>
+      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ.</p></div>
     </div>
   </section>
 
