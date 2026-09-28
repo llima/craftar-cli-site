@@ -67,6 +67,8 @@
   a { color: inherit; }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--steel); outline-offset: 3px; }
   code, pre, kbd, .mono { font-family: var(--mono); }
+  /* JetBrains Mono ligatures turn <!-- and --> into arrows; a literal marker must read as typed */
+  code.nolig { font-variant-ligatures: none; font-feature-settings: "calt" 0, "liga" 0; }
   .wrap { max-width: var(--w); margin-inline: auto; }
   h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; letter-spacing: -.03em; }
   h1 { font-size: clamp(34px, 4.6vw, 58px); line-height: 1.04; font-weight: 800; letter-spacing: -.045em; }
@@ -296,8 +298,6 @@
   .diagram .edge.manual { stroke-dasharray: 4 4; stroke: #B07A7A; }
   .diagram .edge.gen { stroke: var(--steel); }
   .diagram .edge.src { stroke: var(--ember); }
-  /* JetBrains Mono ligatures turn <!-- and --> into arrows; a literal marker must read as typed */
-  code.nolig { font-variant-ligatures: none; font-feature-settings: "calt" 0, "liga" 0; }
   .diagram-cap { margin-top: 12px; font-size: 13.5px; color: var(--faint); font-family: var(--mono); }
   .fail-wrap { margin-top: 48px; overflow-x: auto; border: 1px solid var(--seam); border-radius: 6px; }
   .fail-wrap table { min-width: 640px; }
@@ -1160,7 +1160,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <g aria-hidden="true"><path class="comet em u1" d="M300 105 H 340"/><path class="comet em u2" d="M485 200 C 485 216, 155 216, 155 232"/><path class="comet em u3" d="M300 327 H 340"/><rect class="glow em ug1" x="10" y="10" width="290" height="190" rx="4"/><rect class="glow st ug2" x="340" y="10" width="290" height="190" rx="4"/><rect class="glow em ug3" x="10" y="232" width="290" height="190" rx="4"/><rect class="glow st ug4" x="340" y="232" width="290" height="190" rx="4"/><text class="s cap ucap1" x="12" y="446">a differing copy becomes a variant — nothing is lost</text><text class="s cap ucap2" x="12" y="446" fill="var(--steel)">the value moves to the profile; the base is shared again</text></g>
     </svg>
     </div>
-    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key. Sections themselves ship (marked by hand, or inferred on re-import); extracting one from a diff, the interactive walk and <code>forge promote</code> are planned.</p>
+    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key. Sections themselves ship (markers placed by hand; each client's content inferred by import); extracting one from a diff, the interactive walk and <code>forge promote</code> are planned.</p>
 
     <div class="concepts" aria-label="Core concepts">
       <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
@@ -1220,7 +1220,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
             <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular <span class="c"># planned</span></code>
             <code><span class="p">$</span> craftar explain .kiro/steering/workflow.md <span class="c"># which layer decided this file</span></code>
           </div>
-          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's. An ingredient body can also mark a client-specific block as a <em>section</em> (<code class="nolig">&lt;!-- craftar:section flavors --&gt;</code> … <code class="nolig">&lt;!-- /craftar:section --&gt;</code>): the block is the default, a profile's <code>sections</code> or the workspace's <code>overrides.sections</code> replace or empty it, the rendered file never holds the markers, and <code>explain</code> names the layer each section came from. A Forge that uses sections declares <code>schema: 2</code>, so an older CLI refuses it rather than leak the markers.</p>
+          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's. An ingredient body can also mark a client-specific block as a <em>section</em> (<code class="nolig">&lt;!-- craftar:section flavors --&gt;</code> … <code class="nolig">&lt;!-- /craftar:section --&gt;</code>): the block is the default, a profile's <code>sections</code> or the workspace's <code>overrides.sections</code> replace or empty it, no rendered body holds the markers, and <code>explain</code> names the layer each section came from. A Forge that uses sections declares <code>schema: 2</code>, so an older CLI refuses it rather than leak the markers.</p>
         </div>
       </article>
 
@@ -1370,7 +1370,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
           <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
           <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
           <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant or <code>take: param</code>)</li>
-          <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, inferred on re-import</li>
+          <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import</li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
