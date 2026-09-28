@@ -403,6 +403,24 @@
   @keyframes k-rcap1 { 0%, 2.78% { opacity: 0; } 6.11%, 37.78% { opacity: 1; } 41.11%, 100% { opacity: 0; } }
   .diagram .rcap2 { animation-name: k-rcap2; }
   @keyframes k-rcap2 { 0%, 45.56% { opacity: 0; } 48.89%, 81.11% { opacity: 1; } 84.44%, 100% { opacity: 0; } }
+  .diagram .u1 { stroke-dasharray: 14 80; animation-name: k-u1; }
+  @keyframes k-u1 { 0%, 10% { stroke-dashoffset: 14; } 16%, 100% { stroke-dashoffset: -40; } }
+  .diagram .u2 { stroke-dasharray: 16 380; animation-name: k-u2; }
+  @keyframes k-u2 { 0%, 30% { stroke-dashoffset: 16; } 42%, 100% { stroke-dashoffset: -350; } }
+  .diagram .u3 { stroke-dasharray: 14 80; animation-name: k-u3; }
+  @keyframes k-u3 { 0%, 58% { stroke-dashoffset: 14; } 64%, 100% { stroke-dashoffset: -40; } }
+  .diagram .ug1 { animation-name: k-ug1; }
+  @keyframes k-ug1 { 0%, 2% { opacity: 0; } 4% { opacity: .75; } 10%, 100% { opacity: 0; } }
+  .diagram .ug2 { animation-name: k-ug2; }
+  @keyframes k-ug2 { 0%, 16% { opacity: 0; } 18% { opacity: .75; } 28%, 100% { opacity: 0; } }
+  .diagram .ug3 { animation-name: k-ug3; }
+  @keyframes k-ug3 { 0%, 42% { opacity: 0; } 44% { opacity: .75; } 56%, 100% { opacity: 0; } }
+  .diagram .ug4 { animation-name: k-ug4; }
+  @keyframes k-ug4 { 0%, 64% { opacity: 0; } 66% { opacity: .75; } 78%, 100% { opacity: 0; } }
+  .diagram .ucap1 { animation-name: k-ucap1; }
+  @keyframes k-ucap1 { 0%, 3% { opacity: 0; } 6%, 36% { opacity: 1; } 40%, 100% { opacity: 0; } }
+  .diagram .ucap2 { animation-name: k-ucap2; }
+  @keyframes k-ucap2 { 0%, 50% { opacity: 0; } 54%, 86% { opacity: 1; } 90%, 100% { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) {
     .diagram .comet, .diagram .glow, .diagram .cap { display: none; }
   }
@@ -880,7 +898,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code (untouched)</span>
 ├── craftar.yaml                <span class="comment">← workspace input</span>
 └── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
-              <p class="stack-cap">One file: the emitter composes the rules only. The four agents and the command have no <code>AGENTS.md</code> expression; the emitter skips them rather than inventing a format — reporting that skip is planned.</p>
+              <p class="stack-cap">One file: the emitter composes the rules only. The four agents and the command have no <code>AGENTS.md</code> expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.</p>
             </div>
 
             <div class="sync-legend">
@@ -976,7 +994,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code</span>
 ├── craftar.yaml                <span class="comment">← workspace input</span>
 └── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
-              <p class="stack-cap">One file: the emitter composes the rules only. The four agents, the command and the npm-audit MCP have no <code>AGENTS.md</code> expression; the emitter skips them rather than inventing a format — reporting that skip is planned.</p>
+              <p class="stack-cap">One file: the emitter composes the rules only. The four agents, the command and the npm-audit MCP have no <code>AGENTS.md</code> expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.</p>
             </div>
 
             <div class="sync-legend">
@@ -1070,7 +1088,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
 ├── <span class="dir client">infra/</span>                      <span class="comment">← client IaC</span>
 ├── craftar.yaml                <span class="comment">← workspace input</span>
 └── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
-              <p class="stack-cap">One file: the emitter composes the rules only. The four agents and the two commands have no <code>AGENTS.md</code> expression; the emitter skips them rather than inventing a format — reporting that skip is planned.</p>
+              <p class="stack-cap">One file: the emitter composes the rules only. The four agents and the two commands have no <code>AGENTS.md</code> expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.</p>
             </div>
 
             <div class="sync-legend">
@@ -1088,13 +1106,67 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       </div>
     </div>
 
+    <h3 id="unify" style="margin-top:72px">Growing the Forge — a second client, one base</h3>
+    <p class="prose" style="margin-top:10px">Importing a second client into an existing Forge keeps every ingredient that already matches and turns the ones that differ into variants named after the profile, so both workspaces still reproduce byte for byte. The <code>forge</code> commands then close the gap: <code>forge variants</code> lists them nearest first, <code>forge diff</code> shows each hunk with a suggested class, and <code>forge unify</code> resolves one — keeping the base or the variant, or turning the differing value into a parameter the profile carries.</p>
+    <div class="fig-inner narrow" style="margin-top:28px">
+    <svg class="diagram" style="margin-top:0" viewBox="9.5 0 621 452" role="img" aria-labelledby="d4t" aria-describedby="d4d">
+      <title id="d4t">A second client's differing rule becomes a variant, and forge unify turns the difference into a parameter so both clients share one base</title>
+      <desc id="d4d">Mechanism: the Forge already holds rule/deploy, whose text reads "use globex-api here". Importing a second client, acme, whose copy reads "use acme-api here", keeps the base and adds a variant, rule/deploy--acme, that emits under the original name. craftar forge diff rule/deploy shows one hunk, globex-api against acme-api, and suggests the class value. craftar forge unify rule/deploy --profile acme --plan plan.yaml, with that hunk set to take: param and the key deploy.api, rewrites the base to "use {{deploy.api}} here", declares globex-api as the key's default in the base's ingredient.yaml, writes deploy.api: acme-api into profiles/acme/profile.yaml and removes the variant. Every path it overwrites or deletes must be held by git. Re-importing acme afterwards compares its file with the base as sync renders it for acme, finds them equal and reuses the base: no variant, no change to the profile.</desc>
+      <!-- 1 · import -->
+      <rect class="box src" x="10" y="10" width="290" height="190" rx="4"/>
+      <text class="t" x="24" y="34">1 · craftar import · acme</text>
+      <rect class="chip" x="24" y="50" width="262" height="58" rx="3"/>
+      <text class="em" x="34" y="70">rule/deploy</text><text class="s" x="276" y="70" text-anchor="end">base</text>
+      <text class="s" x="34" y="94">use globex-api here</text>
+      <rect class="chip" x="24" y="118" width="262" height="58" rx="3"/>
+      <text class="em" x="34" y="138">rule/deploy--acme</text><text class="s" x="276" y="138" text-anchor="end">variant</text>
+      <text class="s" x="34" y="162">use acme-api here</text>
+      <text class="s" x="24" y="192">the variant emits as rule/deploy</text>
+      <!-- 2 · diff -->
+      <rect class="box" x="340" y="10" width="290" height="190" rx="4"/>
+      <text class="t" x="354" y="34">2 · craftar forge diff rule/deploy</text>
+      <text class="s" x="354" y="54">--against acme · 1 hunk</text>
+      <rect class="chip" x="354" y="68" width="262" height="58" rx="3"/>
+      <text class="bad" x="364" y="90">- use globex-api here</text>
+      <text x="364" y="112" fill="var(--ok)">+ use acme-api here</text>
+      <rect class="chip" x="354" y="140" width="126" height="22" rx="3"/>
+      <text class="st s" x="364" y="155">suggested: value</text>
+      <text class="s" x="354" y="192">the rest of the file is identical</text>
+      <!-- 3 · unify -->
+      <rect class="box" x="10" y="232" width="290" height="190" rx="4"/>
+      <text class="t" x="24" y="256">3 · craftar forge unify --plan</text>
+      <text class="s" x="24" y="276">take: param · key deploy.api</text>
+      <rect class="chip" x="24" y="290" width="262" height="58" rx="3"/>
+      <text class="em" x="34" y="310">rule/deploy</text><text class="s" x="276" y="310" text-anchor="end">default globex-api</text>
+      <text class="s" x="34" y="334">use {{deploy.api}} here</text>
+      <rect class="chip" x="24" y="358" width="262" height="36" rx="3"/>
+      <text class="em s" x="34" y="380">profiles/acme · deploy.api: acme-api</text>
+      <text class="s" x="24" y="414">variant removed · paths held by git</text>
+      <!-- 4 · re-import -->
+      <rect class="box src" x="340" y="232" width="290" height="190" rx="4"/>
+      <text class="t" x="354" y="256">4 · craftar import · acme again</text>
+      <text class="s" x="354" y="276">compared with its render for acme</text>
+      <rect class="chip" x="354" y="290" width="262" height="58" rx="3"/>
+      <text class="em" x="364" y="310">rule/deploy</text><text class="s" x="606" y="310" text-anchor="end">reused</text>
+      <text class="s" x="364" y="334">use acme-api here = render</text>
+      <text class="s" x="354" y="380">no variant · profile unchanged</text>
+      <text class="s" x="354" y="414">one base, two clients</text>
+      <!-- edges -->
+      <path class="edge src" d="M300 105 H 340"/>
+      <path class="edge src" d="M485 200 C 485 216, 155 216, 155 232"/>
+      <path class="edge src" d="M300 327 H 340"/>
+      <g aria-hidden="true"><path class="comet em u1" d="M300 105 H 340"/><path class="comet em u2" d="M485 200 C 485 216, 155 216, 155 232"/><path class="comet em u3" d="M300 327 H 340"/><rect class="glow em ug1" x="10" y="10" width="290" height="190" rx="4"/><rect class="glow st ug2" x="340" y="10" width="290" height="190" rx="4"/><rect class="glow em ug3" x="10" y="232" width="290" height="190" rx="4"/><rect class="glow st ug4" x="340" y="232" width="290" height="190" rx="4"/><text class="s cap ucap1" x="12" y="446">a differing copy becomes a variant — nothing is lost</text><text class="s cap ucap2" x="12" y="446" fill="var(--steel)">the value moves to the profile; the base is shared again</text></g>
+    </svg>
+    </div>
+    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key; section extraction, the interactive walk and <code>forge promote</code> are planned.</p>
+
     <div class="concepts" aria-label="Core concepts">
       <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
       <div class="concept"><h3>Ingredient</h3><code>ingredients/rules/frontend-angular/</code><p>Smallest reusable unit: a rule, agent, command, skill, hook, MCP server, script or steering file. A folder with an <code>ingredient.yaml</code> declaring type, targets, inclusion mode and globs. Local services and project templates are planned types.</p></div>
       <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
       <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
-      <div class="concept"><h3>Target</h3><code>claude-code · kiro · agents-md</code><p>An AI coder to emit for. These three exist today; <code>kimi</code>, <code>codex</code>, <code>cursor</code> and <code>warp</code> are planned, and read the emitted <code>AGENTS.md</code> meanwhile. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today the Kiro emitter warns and skips what it cannot express — a fallback is planned.</p></div>
+      <div class="concept"><h3>Target</h3><code>claude-code · kiro · agents-md</code><p>An AI coder to emit for. These three exist today; <code>kimi</code>, <code>codex</code>, <code>cursor</code> and <code>warp</code> are planned, and read the emitted <code>AGENTS.md</code> meanwhile. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today each emitter warns about what it cannot express and skips it — a fallback is planned.</p></div>
       <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
       <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar ls</code> and the local dashboard — planned.</p></div>
     </div>
@@ -1128,9 +1200,12 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar import --from claude-code <span class="c"># existing .claude/ → ingredients + recipes + profile</span></code>
+            <code><span class="p">$</span> craftar forge variants <span class="c"># where clients differ, nearest first</span></code>
+            <code><span class="p">$</span> craftar forge diff rule/deploy <span class="c"># hunks, each with a suggested class</span></code>
+            <code><span class="p">$</span> craftar forge unify rule/deploy --profile acme --plan plan.yaml <span class="c"># base, variant or param</span></code>
             <code><span class="p">$</span> craftar targets <span class="c"># targets and capability coverage — planned</span></code>
           </div>
-          <p class="mech">Three layers: open standards emitted verbatim (AGENTS.md, Agent Skills, Agent Plugins <code>mcp.json</code>); tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned.</p>
+          <p class="mech">Three layers: open standards emitted verbatim (AGENTS.md, Agent Skills, Agent Plugins <code>mcp.json</code>); tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned. Importing a second client into an existing Forge reuses every ingredient whose render for that profile equals the workspace file, infers declared <code>{{key}}</code> values into the profile, and makes the rest variants; <code>forge unify</code> resolves each one back into its base (see <a href="#unify">Growing the Forge</a>).</p>
         </div>
       </article>
 
@@ -1258,7 +1333,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="targets">
     <div class="eyebrow steel">Targets</div>
     <h2>Capability matrix.</h2>
-    <p class="lede" style="margin-top:22px">This table is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target <code>capabilities.yaml</code> is planned. Nothing may be dropped silently: today the Kiro emitter warns and skips what it cannot express; closing the remaining gaps is planned.</p>
+    <p class="lede" style="margin-top:22px">This table is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target <code>capabilities.yaml</code> is planned. Nothing may be dropped silently: today each emitter warns about what it cannot express and skips it; closing the remaining gaps is planned.</p>
 
     <div class="matrix-wrap">
       <table>
@@ -1291,7 +1366,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
           <li>Forge schema: ingredients, recipes, profiles</li>
           <li>Layer resolver with exclusive slots and params</li>
           <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
-          <li><code>import --from claude-code</code></li>
+          <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
+          <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant or <code>take: param</code>)</li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
@@ -1322,7 +1398,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     <div class="status-grid">
       <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
       <div><h3>Open questions</h3><ul><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
-      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>.</p></div>
+      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ.</p></div>
     </div>
   </section>
 
