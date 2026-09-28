@@ -1158,13 +1158,13 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <g aria-hidden="true"><path class="comet em u1" d="M300 105 H 340"/><path class="comet em u2" d="M485 200 C 485 216, 155 216, 155 232"/><path class="comet em u3" d="M300 327 H 340"/><rect class="glow em ug1" x="10" y="10" width="290" height="190" rx="4"/><rect class="glow st ug2" x="340" y="10" width="290" height="190" rx="4"/><rect class="glow em ug3" x="10" y="232" width="290" height="190" rx="4"/><rect class="glow st ug4" x="340" y="232" width="290" height="190" rx="4"/><text class="s cap ucap1" x="12" y="446">a differing copy becomes a variant — nothing is lost</text><text class="s cap ucap2" x="12" y="446" fill="var(--steel)">the value moves to the profile; the base is shared again</text></g>
     </svg>
     </div>
-    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key; section extraction, the interactive walk and <code>forge promote</code> are planned.</p>
+    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key. Sections themselves ship (marked by hand, or inferred on re-import); extracting one from a diff, the interactive walk and <code>forge promote</code> are planned.</p>
 
     <div class="concepts" aria-label="Core concepts">
       <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
       <div class="concept"><h3>Ingredient</h3><code>ingredients/rules/frontend-angular/</code><p>Smallest reusable unit: a rule, agent, command, skill, hook, MCP server, script or steering file. A folder with an <code>ingredient.yaml</code> declaring type, targets, inclusion mode and globs. Local services and project templates are planned types.</p></div>
       <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
-      <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
+      <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters and section overrides for the whole stack live here.</p></div>
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
       <div class="concept"><h3>Target</h3><code>claude-code · kiro · agents-md</code><p>An AI coder to emit for. These three exist today; <code>kimi</code>, <code>codex</code>, <code>cursor</code> and <code>warp</code> are planned, and read the emitted <code>AGENTS.md</code> meanwhile. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today each emitter warns about what it cannot express and skips it — a fallback is planned.</p></div>
       <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
@@ -1218,7 +1218,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
             <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular <span class="c"># planned</span></code>
             <code><span class="p">$</span> craftar explain .kiro/steering/workflow.md <span class="c"># which layer decided this file</span></code>
           </div>
-          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's.</p>
+          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's. An ingredient body can also mark a client-specific block as a <em>section</em> (<code>&lt;!-- craftar:section flavors --&gt;</code> … <code>&lt;!-- /craftar:section --&gt;</code>): the block is the default, a profile's <code>sections</code> or the workspace's <code>overrides.sections</code> replace or empty it, the rendered file never holds the markers, and <code>explain</code> names the layer each section came from. A Forge that uses sections declares <code>schema: 2</code>, so an older CLI refuses it rather than leak the markers.</p>
         </div>
       </article>
 
@@ -1368,6 +1368,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
           <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
           <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
           <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant or <code>take: param</code>)</li>
+          <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, inferred on re-import</li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
