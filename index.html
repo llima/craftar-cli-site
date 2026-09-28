@@ -403,6 +403,24 @@
   @keyframes k-rcap1 { 0%, 2.78% { opacity: 0; } 6.11%, 37.78% { opacity: 1; } 41.11%, 100% { opacity: 0; } }
   .diagram .rcap2 { animation-name: k-rcap2; }
   @keyframes k-rcap2 { 0%, 45.56% { opacity: 0; } 48.89%, 81.11% { opacity: 1; } 84.44%, 100% { opacity: 0; } }
+  .diagram .u1 { stroke-dasharray: 14 80; animation-name: k-u1; }
+  @keyframes k-u1 { 0%, 10% { stroke-dashoffset: 14; } 16%, 100% { stroke-dashoffset: -40; } }
+  .diagram .u2 { stroke-dasharray: 16 380; animation-name: k-u2; }
+  @keyframes k-u2 { 0%, 30% { stroke-dashoffset: 16; } 42%, 100% { stroke-dashoffset: -350; } }
+  .diagram .u3 { stroke-dasharray: 14 80; animation-name: k-u3; }
+  @keyframes k-u3 { 0%, 58% { stroke-dashoffset: 14; } 64%, 100% { stroke-dashoffset: -40; } }
+  .diagram .ug1 { animation-name: k-ug1; }
+  @keyframes k-ug1 { 0%, 2% { opacity: 0; } 4% { opacity: .75; } 10%, 100% { opacity: 0; } }
+  .diagram .ug2 { animation-name: k-ug2; }
+  @keyframes k-ug2 { 0%, 16% { opacity: 0; } 18% { opacity: .75; } 28%, 100% { opacity: 0; } }
+  .diagram .ug3 { animation-name: k-ug3; }
+  @keyframes k-ug3 { 0%, 42% { opacity: 0; } 44% { opacity: .75; } 56%, 100% { opacity: 0; } }
+  .diagram .ug4 { animation-name: k-ug4; }
+  @keyframes k-ug4 { 0%, 64% { opacity: 0; } 66% { opacity: .75; } 78%, 100% { opacity: 0; } }
+  .diagram .ucap1 { animation-name: k-ucap1; }
+  @keyframes k-ucap1 { 0%, 3% { opacity: 0; } 6%, 36% { opacity: 1; } 40%, 100% { opacity: 0; } }
+  .diagram .ucap2 { animation-name: k-ucap2; }
+  @keyframes k-ucap2 { 0%, 50% { opacity: 0; } 54%, 86% { opacity: 1; } 90%, 100% { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) {
     .diagram .comet, .diagram .glow, .diagram .cap { display: none; }
   }
@@ -1087,6 +1105,60 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <p>Craftar writes the AI coder's own files — <code>.claude/</code> plus <code>.mcp.json</code> for Claude Code, <code>.kiro/</code> for Kiro — and a root <code>AGENTS.md</code> for the tools that read the open standard: Codex, Cursor, Kimi and Copilot consume that file today, while native emitters for their own formats are planned, as is generating tool-agnostic output outside the AI coder folder such as <code>docs/</code> or <code>local-stack/</code>. Client-owned folders like <code>src/</code> or <code>infra/</code> are <strong>never touched</strong> — only paths recorded in <code>craftar.lock</code> are ever written or removed.</p>
       </div>
     </div>
+
+    <h3 style="margin-top:72px">Growing the Forge — a second client, one base</h3>
+    <p class="prose" style="margin-top:10px">Importing a second client into an existing Forge keeps every ingredient that already matches and turns the ones that differ into variants named after the profile, so both workspaces still reproduce byte for byte. The <code>forge</code> commands then close the gap: <code>forge variants</code> lists them nearest first, <code>forge diff</code> shows each hunk with a suggested class, and <code>forge unify</code> resolves one — keeping the base or the variant, or turning the differing value into a parameter the profile carries.</p>
+    <div class="fig-inner narrow" style="margin-top:28px">
+    <svg class="diagram" style="margin-top:0" viewBox="9.5 0 621 452" role="img" aria-labelledby="d4t" aria-describedby="d4d">
+      <title id="d4t">A second client's differing rule becomes a variant, and forge unify turns the difference into a parameter so both clients share one base</title>
+      <desc id="d4d">Mechanism: the Forge already holds rule/deploy, whose text reads "use globex-api here". Importing a second client, acme, whose copy reads "use acme-api here", keeps the base and adds a variant, rule/deploy--acme, that emits under the original name. craftar forge diff rule/deploy shows one hunk, globex-api against acme-api, and suggests the class value. craftar forge unify rule/deploy --profile acme --plan, with that hunk set to take: param and the key deploy.api, rewrites the base to "use {{deploy.api}} here", declares globex-api as the key's default in the base's ingredient.yaml, writes deploy.api: acme-api into profiles/acme/profile.yaml and removes the variant. Every path it overwrites or deletes must be held by git. Re-importing acme afterwards compares its file with the base as sync renders it for acme, finds them equal and reuses the base: no variant, no change to the profile.</desc>
+      <!-- 1 · import -->
+      <rect class="box src" x="10" y="10" width="290" height="190" rx="4"/>
+      <text class="t" x="24" y="34">1 · craftar import · acme</text>
+      <rect class="chip" x="24" y="50" width="262" height="58" rx="3"/>
+      <text class="em" x="34" y="70">rule/deploy</text><text class="s" x="276" y="70" text-anchor="end">base</text>
+      <text class="s" x="34" y="94">use globex-api here</text>
+      <rect class="chip" x="24" y="118" width="262" height="58" rx="3"/>
+      <text class="em" x="34" y="138">rule/deploy--acme</text><text class="s" x="276" y="138" text-anchor="end">variant · as: deploy</text>
+      <text class="s" x="34" y="162">use acme-api here</text>
+      <text class="s" x="24" y="192">both workspaces still byte for byte</text>
+      <!-- 2 · diff -->
+      <rect class="box" x="340" y="10" width="290" height="190" rx="4"/>
+      <text class="t" x="354" y="34">2 · craftar forge diff rule/deploy</text>
+      <text class="s" x="354" y="54">--against acme · 1 hunk</text>
+      <rect class="chip" x="354" y="68" width="262" height="58" rx="3"/>
+      <text class="bad" x="364" y="90">- use globex-api here</text>
+      <text x="364" y="112" fill="var(--ok)">+ use acme-api here</text>
+      <rect class="chip" x="354" y="140" width="126" height="22" rx="3"/>
+      <text class="st s" x="364" y="155">suggested: value</text>
+      <text class="s" x="354" y="192">the rest of the file is identical</text>
+      <!-- 3 · unify -->
+      <rect class="box" x="10" y="232" width="290" height="190" rx="4"/>
+      <text class="t" x="24" y="256">3 · craftar forge unify --plan</text>
+      <text class="s" x="24" y="276">take: param · key deploy.api</text>
+      <rect class="chip" x="24" y="290" width="262" height="58" rx="3"/>
+      <text class="em" x="34" y="310">rule/deploy</text><text class="s" x="276" y="310" text-anchor="end">default globex-api</text>
+      <text class="s" x="34" y="334">use {{deploy.api}} here</text>
+      <rect class="chip" x="24" y="358" width="262" height="36" rx="3"/>
+      <text class="st s" x="34" y="380">profiles/acme · deploy.api: acme-api</text>
+      <text class="s" x="24" y="414">variant removed · paths held by git</text>
+      <!-- 4 · re-import -->
+      <rect class="box src" x="340" y="232" width="290" height="190" rx="4"/>
+      <text class="t" x="354" y="256">4 · craftar import · acme again</text>
+      <text class="s" x="354" y="276">compares with the base as rendered for acme</text>
+      <rect class="chip" x="354" y="290" width="262" height="58" rx="3"/>
+      <text class="em" x="364" y="310">rule/deploy</text><text class="s" x="606" y="310" text-anchor="end">reused</text>
+      <text class="s" x="364" y="334">use acme-api here = render</text>
+      <text class="s" x="354" y="380">no variant · profile unchanged</text>
+      <text class="s" x="354" y="414">one base, two clients</text>
+      <!-- edges -->
+      <path class="edge src" d="M300 105 H 340"/>
+      <path class="edge src" d="M485 200 C 485 216, 155 216, 155 232"/>
+      <path class="edge src" d="M300 327 H 340"/>
+      <g aria-hidden="true"><path class="comet em u1" d="M300 105 H 340"/><path class="comet em u2" d="M485 200 C 485 216, 155 216, 155 232"/><path class="comet em u3" d="M300 327 H 340"/><rect class="glow em ug1" x="10" y="10" width="290" height="190" rx="4"/><rect class="glow st ug2" x="340" y="10" width="290" height="190" rx="4"/><rect class="glow em ug3" x="10" y="232" width="290" height="190" rx="4"/><rect class="glow st ug4" x="340" y="232" width="290" height="190" rx="4"/><text class="s cap ucap1" x="12" y="446">a differing copy becomes a variant — nothing is lost</text><text class="s cap ucap2" x="12" y="446" fill="var(--steel)">the value moves to the profile; the base is shared again</text></g>
+    </svg>
+    </div>
+    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key; <code>s</code> (sections), the interactive walk and <code>forge promote</code> are planned.</p>
 
     <div class="concepts" aria-label="Core concepts">
       <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
