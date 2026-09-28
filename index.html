@@ -1111,7 +1111,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
     <div class="fig-inner narrow" style="margin-top:28px">
     <svg class="diagram" style="margin-top:0" viewBox="9.5 0 621 452" role="img" aria-labelledby="d4t" aria-describedby="d4d">
       <title id="d4t">A second client's differing rule becomes a variant, and forge unify turns the difference into a parameter so both clients share one base</title>
-      <desc id="d4d">Mechanism: the Forge already holds rule/deploy, whose text reads "use globex-api here". Importing a second client, acme, whose copy reads "use acme-api here", keeps the base and adds a variant, rule/deploy--acme, that emits under the original name. craftar forge diff rule/deploy shows one hunk, globex-api against acme-api, and suggests the class value. craftar forge unify rule/deploy --profile acme --plan, with that hunk set to take: param and the key deploy.api, rewrites the base to "use {{deploy.api}} here", declares globex-api as the key's default in the base's ingredient.yaml, writes deploy.api: acme-api into profiles/acme/profile.yaml and removes the variant. Every path it overwrites or deletes must be held by git. Re-importing acme afterwards compares its file with the base as sync renders it for acme, finds them equal and reuses the base: no variant, no change to the profile.</desc>
+      <desc id="d4d">Mechanism: the Forge already holds rule/deploy, whose text reads "use globex-api here". Importing a second client, acme, whose copy reads "use acme-api here", keeps the base and adds a variant, rule/deploy--acme, that emits under the original name. craftar forge diff rule/deploy shows one hunk, globex-api against acme-api, and suggests the class value. craftar forge unify rule/deploy --profile acme --plan plan.yaml, with that hunk set to take: param and the key deploy.api, rewrites the base to "use {{deploy.api}} here", declares globex-api as the key's default in the base's ingredient.yaml, writes deploy.api: acme-api into profiles/acme/profile.yaml and removes the variant. Every path it overwrites or deletes must be held by git. Re-importing acme afterwards compares its file with the base as sync renders it for acme, finds them equal and reuses the base: no variant, no change to the profile.</desc>
       <!-- 1 · import -->
       <rect class="box src" x="10" y="10" width="290" height="190" rx="4"/>
       <text class="t" x="24" y="34">1 · craftar import · acme</text>
@@ -1140,7 +1140,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <text class="em" x="34" y="310">rule/deploy</text><text class="s" x="276" y="310" text-anchor="end">default globex-api</text>
       <text class="s" x="34" y="334">use {{deploy.api}} here</text>
       <rect class="chip" x="24" y="358" width="262" height="36" rx="3"/>
-      <text class="st s" x="34" y="380">profiles/acme · deploy.api: acme-api</text>
+      <text class="em s" x="34" y="380">profiles/acme · deploy.api: acme-api</text>
       <text class="s" x="24" y="414">variant removed · paths held by git</text>
       <!-- 4 · re-import -->
       <rect class="box src" x="340" y="232" width="290" height="190" rx="4"/>
@@ -1158,7 +1158,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <g aria-hidden="true"><path class="comet em u1" d="M300 105 H 340"/><path class="comet em u2" d="M485 200 C 485 216, 155 216, 155 232"/><path class="comet em u3" d="M300 327 H 340"/><rect class="glow em ug1" x="10" y="10" width="290" height="190" rx="4"/><rect class="glow st ug2" x="340" y="10" width="290" height="190" rx="4"/><rect class="glow em ug3" x="10" y="232" width="290" height="190" rx="4"/><rect class="glow st ug4" x="340" y="232" width="290" height="190" rx="4"/><text class="s cap ucap1" x="12" y="446">a differing copy becomes a variant — nothing is lost</text><text class="s cap ucap2" x="12" y="446" fill="var(--steel)">the value moves to the profile; the base is shared again</text></g>
     </svg>
     </div>
-    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key; <code>s</code> (sections), the interactive walk and <code>forge promote</code> are planned.</p>
+    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key; section extraction, the interactive walk and <code>forge promote</code> are planned.</p>
 
     <div class="concepts" aria-label="Core concepts">
       <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
@@ -1166,7 +1166,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
       <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
       <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters for the whole stack live here.</p></div>
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
-      <div class="concept"><h3>Target</h3><code>claude-code · kiro · agents-md</code><p>An AI coder to emit for. These three exist today; <code>kimi</code>, <code>codex</code>, <code>cursor</code> and <code>warp</code> are planned, and read the emitted <code>AGENTS.md</code> meanwhile. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today the Kiro emitter warns and skips what it cannot express — a fallback is planned.</p></div>
+      <div class="concept"><h3>Target</h3><code>claude-code · kiro · agents-md</code><p>An AI coder to emit for. These three exist today; <code>kimi</code>, <code>codex</code>, <code>cursor</code> and <code>warp</code> are planned, and read the emitted <code>AGENTS.md</code> meanwhile. Each will declare its coverage in a <code>capabilities.yaml</code> (planned); today each emitter warns about what it cannot express and skips it — a fallback is planned.</p></div>
       <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>Forge SHA, the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
       <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar ls</code> and the local dashboard — planned.</p></div>
     </div>
@@ -1333,7 +1333,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="targets">
     <div class="eyebrow steel">Targets</div>
     <h2>Capability matrix.</h2>
-    <p class="lede" style="margin-top:22px">This table is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target <code>capabilities.yaml</code> is planned. Nothing may be dropped silently: today the Kiro emitter warns and skips what it cannot express; closing the remaining gaps is planned.</p>
+    <p class="lede" style="margin-top:22px">This table is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target <code>capabilities.yaml</code> is planned. Nothing may be dropped silently: today each emitter warns about what it cannot express and skips it; closing the remaining gaps is planned.</p>
 
     <div class="matrix-wrap">
       <table>
