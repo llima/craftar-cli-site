@@ -77,7 +77,7 @@ P1 resolved (diagram): the Forge is one Git repository containing ingredients (r
 
 ```mermaid
 graph LR
-  F["Forge · one Git repository · ingredients, recipes, profiles"] --> CR["craftar · will read the Forge at the ref pinned in each craftar.yaml, emits per target"]
+  F["Forge · one Git repository · ingredients, recipes, profiles"] --> CR["craftar · reads the Forge, emits per target · reading a pinned ref is planned"]
   CR --> W1["workspace-1 · .claude/ · craftar.lock 7c1e9a2 · up to date"]
   CR --> W2["workspace-2 · AGENTS.md · craftar.lock 7c1e9a2 · up to date"]
   CR --> W3["workspace-3 · .kiro/ · craftar.lock 5b0d3f1 · behind, pinned at tag v2.3"]
