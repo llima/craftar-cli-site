@@ -317,7 +317,7 @@
   .status-grid ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
   .status-grid li::before { content: "— "; color: var(--faint); }
 
-  /* fluxo do sync: import sobe (ember), sync desce (steel) */
+  /* sync flow: import goes up (ember), sync comes down (steel) */
   .diagram .comet { fill: none; stroke-width: 2.8; stroke-linecap: round; }
   .diagram .comet, .diagram .glow, .diagram .cap {
     animation-duration: 9.0s; animation-timing-function: linear;
@@ -356,7 +356,7 @@
   @keyframes k-cap1 { 0%, 2.78% { opacity: 0; } 6.11%, 37.78% { opacity: 1; } 41.11%, 100% { opacity: 0; } }
   .diagram .cap2 { animation-name: k-cap2; }
   @keyframes k-cap2 { 0%, 45.56% { opacity: 0; } 48.89%, 80.56% { opacity: 1; } 83.89%, 100% { opacity: 0; } }
-  /* problema 2: copia a mao, um workspace por vez */
+  /* problem 2: copied by hand, one workspace at a time */
   .diagram .comet.bad, .diagram .glow.bad { stroke: #E6A3A3; }
   .diagram .c9 { stroke-dasharray: 14 100; animation-name: k-c9; }
   @keyframes k-c9 { 0%, 13.33% { stroke-dashoffset: 14; } 21.11%, 100% { stroke-dashoffset: -60; } }
@@ -374,7 +374,7 @@
   @keyframes k-g12 { 0%, 56.67% { opacity: 0; } 58.67% { opacity: .75; } 67.78%, 100% { opacity: 0; } }
   .diagram .cap3 { animation-name: k-cap3; }
   @keyframes k-cap3 { 0%, 2.22% { opacity: 0; } 5.56%, 67.78% { opacity: 1; } 71.11%, 100% { opacity: 0; } }
-  /* registry: mesma animacao do modelo, import sobe e sync desce */
+  /* registry: same animation as the model, import goes up and sync comes down */
   .diagram .r1 { stroke-dasharray: 16 392.9; animation-name: k-r1; }
   @keyframes k-r1 { 0%, 5.44% { stroke-dashoffset: -352.9; } 27.22%, 100% { stroke-dashoffset: 16; } }
   .diagram .r2 { stroke-dasharray: 16 169.3; animation-name: k-r2; }
