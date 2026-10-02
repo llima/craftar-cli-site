@@ -740,7 +740,7 @@
 
     <div class="term" style="margin-top:28px" aria-label="craftar ls output">
       <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~</div>
-<pre><span class="p">$</span> craftar ls  <span class="c"># planned</span>
+<pre><span class="p">$</span> craftar ls  <span class="c">#&nbsp;planned</span>
 <span class="c">WORKSPACE            PROFILE   STACK             TARGETS             FORGE     STATUS</span>
 team-a-workspace     team-a    angular · dotnet  claude-code, kiro   7c1e9a2   <span class="add">up to date</span>
 team-b-workspace     team-b    react · dotnet    kimi                7c1e9a2   <span class="add">up to date</span>
@@ -1178,7 +1178,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
   <section id="features">
     <div class="eyebrow">Capabilities</div>
     <h2>Twelve capabilities, each tied to the problem it addresses.</h2>
-    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code># planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+    <p class="lede" style="margin-top:22px">Ordered by roadmap phase. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code>#&nbsp;planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
 
     <div class="features">
 
@@ -1190,7 +1190,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
             <code><span class="p">$</span> craftar sync <span class="c">[--dry-run] [--check] [--overwrite-drift]</span></code>
             <code><span class="p">$</span> craftar diff <span class="c"># what sync would change, writes nothing</span></code>
             <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan · orphan-drift</span></code>
-            <code><span class="p">$</span> craftar sync --forge-ref v2.3 --targets kiro · craftar update <span class="c"># planned</span></code>
+            <code><span class="p">$</span> craftar sync --forge-ref v2.3 --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
           </div>
           <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. Following a Forge branch or pinning a tag is planned.</p>
         </div>
@@ -1216,8 +1216,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <p class="why"><b>problem · P1</b>Teams differ in stack. Without composition, a React team inherits Angular reviewers, or every team gets a hand-pruned fork of the harness.</p>
         <div class="how">
           <div class="cmds">
-            <code><span class="p">$</span> craftar add recipe frontend-react · craftar remove recipe frontend-angular <span class="c"># planned</span></code>
-            <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular <span class="c"># planned</span></code>
+            <code><span class="p">$</span> craftar add recipe frontend-react · craftar remove recipe frontend-angular <span class="c">#&nbsp;planned</span></code>
+            <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular <span class="c">#&nbsp;planned</span></code>
             <code><span class="p">$</span> craftar explain .kiro/steering/workflow.md <span class="c"># which layer decided this file</span></code>
           </div>
           <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's. An ingredient body can also mark a client-specific block as a <em>section</em> (<code class="nolig">&lt;!-- craftar:section flavors --&gt;</code> … <code class="nolig">&lt;!-- /craftar:section --&gt;</code>): the block is the default, a profile's <code>sections</code> or the workspace's <code>overrides.sections</code> replace or empty it, no rendered body holds the markers, and <code>explain</code> names the layer each section came from. A Forge that uses sections declares <code>schema: 2</code>, so an older CLI refuses it rather than leak the markers.</p>
@@ -1229,8 +1229,8 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <p class="why"><b>problem · P2</b>Starting with a new team means reassembling repos, harness, templates and local services from memory.</p>
         <div class="how">
           <div class="cmds">
-            <code><span class="p">$</span> craftar init <span class="c"># planned — Forge → profile → recipes/targets → clone repos? → templates/services? → sync</span></code>
-            <code><span class="p">$</span> craftar init --profile team-a --targets claude-code,kiro --yes <span class="c"># planned</span></code>
+            <code><span class="p">$</span> craftar init <span class="c">#&nbsp;planned — Forge → profile → recipes/targets → clone repos? → templates/services? → sync</span></code>
+            <code><span class="p">$</span> craftar init --profile team-a --targets claude-code,kiro --yes <span class="c">#&nbsp;planned</span></code>
           </div>
           <p class="mech">Reads the profile's <code>repos</code>, templates and services; registers the workspace in the registry.</p>
         </div>
@@ -1248,7 +1248,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F6</div><h3>Local services per workspace</h3></div>
         <p class="why"><b>problem · P1</b>Cloud dependencies (queues, buckets) need a local stand-in, and the agent has to know its endpoints and fake credentials.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar services up | down | status <span class="c"># planned</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar services up | down | status <span class="c">#&nbsp;planned</span></code></div>
           <p class="mech">A <code>service</code> ingredient carries a <code>docker-compose</code> fragment, default variables and a rule for the agent. Fragments merge into <code>.craftar/compose.yaml</code>. First ingredient: LocalStack-style SQS/S3.</p>
         </div>
       </article>
@@ -1257,7 +1257,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F7</div><h3>Project templates</h3></div>
         <p class="why"><b>problem · P1</b>New projects should use the team's own <code>dotnet new</code> (or <code>npm create</code>, <code>nx</code>, <code>cookiecutter</code>) templates; agents need to know which.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar templates install · /create-project <span class="c"># planned</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar templates install · /create-project <span class="c">#&nbsp;planned</span></code></div>
           <p class="mech">The profile declares feeds and packages; Craftar installs them and generates a rule mapping archetype → template plus a wrapping command.</p>
         </div>
       </article>
@@ -1268,7 +1268,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar status <span class="c"># drifted files listed; never overwritten without --overwrite-drift</span></code>
-            <code><span class="p">$</span> craftar drift show &lt;file&gt; · drift discard · drift promote <span class="c"># planned</span></code>
+            <code><span class="p">$</span> craftar drift show &lt;file&gt; · drift discard · drift promote <span class="c">#&nbsp;planned</span></code>
           </div>
           <p class="mech">Normalized hashes from the lock are compared with disk. Planned: <code>promote</code> will convert the edit back into an ingredient via <code>import</code> and open a Forge branch. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
         </div>
@@ -1287,7 +1287,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F10</div><h3>Registry and dashboard</h3></div>
         <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui <span class="c"># planned — today's ls lists the recipes and ingredients resolved for one workspace</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui <span class="c">#&nbsp;planned — today's ls lists the recipes and ingredients resolved for one workspace</span></code></div>
           <p class="mech">Table or local web page: workspace, profile, stack, targets, Forge SHA, status; actions <code>sync</code> / <code>diff</code> / <code>explain</code>; Forge view of recipes, ingredients and who uses what.</p>
         </div>
       </article>
@@ -1296,7 +1296,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F11</div><h3>Craftar as an MCP server</h3></div>
         <p class="why"><b>problem · P1 · P2</b>The agent itself should be able to check status, sync, or add a recipe without leaving the session.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar mcp <span class="c"># planned</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar mcp <span class="c">#&nbsp;planned</span></code></div>
           <p class="mech">Exposes <code>status</code>, <code>sync</code>, <code>diff</code>, <code>explain</code>, <code>recipes</code>, <code>add recipe</code>, <code>services up</code>. Packaged as a Claude Code plugin, an Agent Plugin, and Warp workflows — thin shells over the CLI.</p>
         </div>
       </article>
@@ -1305,7 +1305,7 @@ team-d-workspace     team-d    angular · dotnet  cursor              7c1e9a2   
         <div><div class="id">F12</div><h3>Diagnostics</h3></div>
         <p class="why"><b>problem · P2</b>Sync failures usually come from the environment: missing env vars, wrong Node, no Docker, unreachable Forge.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar doctor <span class="c"># planned</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar doctor <span class="c">#&nbsp;planned</span></code></div>
           <p class="mech">Checks Node and rulesync versions, Git access to the Forge, every <code>authEnv</code> required by MCP ingredients, Docker when services exist, <code>dotnet</code> when templates exist, and lockfile consistency.</p>
         </div>
       </article>
