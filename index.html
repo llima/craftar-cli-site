@@ -661,7 +661,7 @@
 
     <svg id="flow" class="diagram" viewBox="9.5 0 881 400" role="img" aria-labelledby="d2t" aria-describedby="d2d">
       <title id="d2t">With Craftar: one Forge resolved per workspace and emitted to each team's AI coders</title>
-      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace loads the Forge (a pinned ref is planned), resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one AI coder each — .opencode/, .kimi/ and .aider/; team C pins the Forge at tag v2.3, emits .kiro/ and is two commits behind; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.</desc>
+      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, services), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace loads the Forge (a pinned ref is planned), resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one AI coder each — .opencode/, .kimi/ and .aider/; team C emits .kiro/; pinning the Forge at tag v2.3, which leaves it two commits behind, is planned; team D adds Cursor through its local file and has one drifted file. Every edge is generated and recorded in the lock.</desc>
       <!-- forge -->
       <rect class="box src" x="10" y="90" width="240" height="220" rx="4"/>
       <text class="t" x="24" y="114">Forge <tspan class="s">· git repo</tspan></text>
@@ -707,7 +707,7 @@
       </g>
       <g>
         <rect class="box tgt" x="520" y="234" width="370" height="66" rx="4"/>
-        <text class="t" x="534" y="256">team C</text><text class="s" x="534" y="274">forge pinned @ v2.3</text>
+        <text class="t" x="534" y="256">team C</text><text class="s" x="534" y="274">forge pinned @ v2.3 · planned</text>
         <rect class="chip" x="786" y="244" width="56" height="18" rx="3"/><text class="st" x="794" y="257">.kiro/</text>
         <text class="s" x="878" y="288" text-anchor="end">5 agents · kiro · behind 2</text>
       </g>
