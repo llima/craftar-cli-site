@@ -86,7 +86,7 @@ graph LR
   R2["team 2 Git remote"] -->|git clone| W2
   R3["team 3 Git remote"] -->|git clone| W3
   R4["team 4 Git remote"] -->|git clone| W4
-  REG["~/.craftar/registry.json · read by craftar ls"] -.-> W1 & W2 & W3 & W4
+  REG["~/.craftar/registry.json · read by craftar ls · planned"] -.-> W1 & W2 & W3 & W4
 ```
 
 P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the one two commits behind). The registry at `~/.craftar/registry.json` lists all four, and `craftar ls` will report per workspace: up to date, behind, or drift.
