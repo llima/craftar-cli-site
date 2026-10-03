@@ -80,7 +80,7 @@ graph LR
   F["Forge · one Git repository · ingredients, recipes, profiles"] --> CR["craftar · reads the Forge, emits per target · reading a pinned ref is planned"]
   CR --> W1["workspace-1 · .claude/ · craftar.lock 7c1e9a2 · up to date"]
   CR --> W2["workspace-2 · AGENTS.md · craftar.lock 7c1e9a2 · up to date"]
-  CR --> W3["workspace-3 · .kiro/ · craftar.lock 5b0d3f1 · behind"]
+  CR --> W3["workspace-3 · .kiro/ · craftar.lock 5b0d3f1 · behind · planned"]
   CR --> W4["workspace-4 · AGENTS.md · craftar.lock 7c1e9a2 · drift"]
   R1["team 1 Git remote"] -->|git clone| W1
   R2["team 2 Git remote"] -->|git clone| W2
