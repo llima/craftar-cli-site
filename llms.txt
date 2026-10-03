@@ -80,7 +80,7 @@ graph LR
   F["Forge · one Git repository · ingredients, recipes, profiles"] --> CR["craftar · reads the Forge, emits per target · reading a pinned ref is planned"]
   CR --> W1["workspace-1 · .claude/ · craftar.lock 7c1e9a2 · up to date"]
   CR --> W2["workspace-2 · AGENTS.md · craftar.lock 7c1e9a2 · up to date"]
-  CR --> W3["workspace-3 · .kiro/ · craftar.lock 5b0d3f1 · behind, pinned at tag v2.3"]
+  CR --> W3["workspace-3 · .kiro/ · craftar.lock 5b0d3f1 · behind"]
   CR --> W4["workspace-4 · AGENTS.md · craftar.lock 7c1e9a2 · drift"]
   R1["team 1 Git remote"] -->|git clone| W1
   R2["team 2 Git remote"] -->|git clone| W2
@@ -89,7 +89,7 @@ graph LR
   REG["~/.craftar/registry.json · read by craftar ls"] -.-> W1 & W2 & W3 & W4
 ```
 
-P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the pinned one). The registry at `~/.craftar/registry.json` lists all four, and `craftar ls` will report per workspace: up to date, behind, or drift.
+P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the one two commits behind). The registry at `~/.craftar/registry.json` lists all four, and `craftar ls` will report per workspace: up to date, behind, or drift.
 
 ## In practice — Forge → Workspace by stack
 
