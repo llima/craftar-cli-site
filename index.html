@@ -661,7 +661,7 @@
 
     <svg id="flow" class="diagram" viewBox="9.5 0 881 400" role="img" aria-labelledby="d2t" aria-describedby="d2d">
       <title id="d2t">With Craftar: one Forge resolved per workspace and emitted to each team's AI coders</title>
-      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, scripts, steering files), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace loads the Forge (a pinned ref is planned), resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one target each — .claude/, .kiro/ and AGENTS.md; team C emits .kiro/; pinning the Forge at tag v2.3, which leaves it two commits behind, is planned; team D sets its targets to agents-md in its local file, so Cursor reads the emitted AGENTS.md, which carries the rules only, and has one drifted file. Every edge is generated and recorded in the lock.</desc>
+      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, scripts, steering files), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace loads the Forge (a pinned ref is planned), resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one target each — .claude/, .kiro/ and AGENTS.md, which carries the rules only; team C emits .kiro/; pinning the Forge at tag v2.3, which leaves it two commits behind, is planned; team D sets its targets to agents-md in its local file, so Cursor reads the emitted AGENTS.md, which carries the rules only, and has one drifted file. Every edge is generated and recorded in the lock.</desc>
       <!-- forge -->
       <rect class="box src" x="10" y="90" width="240" height="220" rx="4"/>
       <text class="t" x="24" y="114">Forge <tspan class="s">· git repo</tspan></text>
@@ -703,7 +703,7 @@
         <text class="s" x="648" y="166">ws-2</text><text class="st" x="648" y="180">.kiro/</text>
         <rect class="chip" x="746" y="152" width="96" height="34" rx="3"/>
         <text class="s" x="754" y="166">ws-3</text><text class="st" x="754" y="180">AGENTS.md</text>
-        <text class="s" x="878" y="202" text-anchor="end">6 agents · 3 workspaces · lock ok</text>
+        <text class="s" x="878" y="202" text-anchor="end">6 agents · 3 workspaces · ws-3 rules only · lock ok</text>
       </g>
       <g>
         <rect class="box tgt" x="520" y="234" width="370" height="66" rx="4"/>
