@@ -116,7 +116,7 @@ Workspace output (Kiro target):
 - .kiro/agents/: *.json (agents as JSON)
 
 Workspace output (AGENTS.md target):
-- AGENTS.md (always-on rules concatenated, scoped rules listed)
+- AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
 - One file: the emitter composes the rules only. The four agents and the command have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
 
 ### node-fullstack — Node.js teams using TypeScript
@@ -139,7 +139,7 @@ Workspace output (Kiro target):
 - .kiro/settings/mcp.json (npm-audit MCP)
 
 Workspace output (AGENTS.md target):
-- AGENTS.md (always-on rules concatenated, scoped rules listed)
+- AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
 - One file: the emitter composes the rules only. The four agents, the command and the npm-audit MCP have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
 
 ### iac-multicloud — Platform teams managing infrastructure as code
@@ -161,7 +161,7 @@ Workspace output (Kiro target):
 - .kiro/agents/: *.json
 
 Workspace output (AGENTS.md target):
-- AGENTS.md (always-on rules concatenated, scoped rules listed)
+- AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
 - One file: the emitter composes the rules only. The four agents and the two commands have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
 
 ### What syncs where
