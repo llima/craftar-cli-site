@@ -775,7 +775,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
           <ol>
             <li>Read <code>craftar.yaml</code>; load the Forge (a local path today; a pinned git ref is planned).</li>
             <li>Resolve layers, exclusive slots and params into the final ingredient set.</li>
-            <li>Emit the open standards: <code>AGENTS.md</code> composed from the always-on rules, Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> through the target emitters.</li>
+            <li>Emit the open standards: <code>AGENTS.md</code> — the always-on rules, then each scoped rule listed at the file a target writes for it, or embedded in full when none does — Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> through the target emitters.</li>
             <li>Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.</li>
             <li>Diff against <code>craftar.lock</code>; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.</li>
           </ol>

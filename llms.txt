@@ -67,7 +67,7 @@ Layer resolution, weakest to strongest: `base` recipe → stack recipes → team
 Pipeline of `craftar sync`:
 1. Read `craftar.yaml`; load the Forge (a local path today; a pinned git ref is planned).
 2. Resolve layers, exclusive slots and params into the final ingredient set.
-3. Emit the open standards: `AGENTS.md` composed from the always-on rules, Agent Skills (`SKILL.md`) and `mcp.json` through the target emitters.
+3. Emit the open standards: `AGENTS.md` — the always-on rules, then each scoped rule listed at the file a target writes for it, or embedded in full when none does — Agent Skills (`SKILL.md`) and `mcp.json` through the target emitters.
 4. Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.
 5. Diff against `craftar.lock`; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.
 
