@@ -1,7 +1,7 @@
 # Craftar — site
 
-Landing page do Craftar, um build system para harnesses de AI coding.
+Landing page for Craftar, a build system for AI-coding harnesses.
 
-Site estático de um arquivo: `index.html` (sem build, sem dependências) e `llms.txt`.
+Single-file static site: `index.html` (no build, no dependencies) and `llms.txt`. `og.html` is the source of `og.png` (rendered at 1200×630, `noindex`).
 
-Publicado com GitHub Pages a partir da branch `main` (raiz).
+Published by GitHub Pages from the `main` branch (root).
