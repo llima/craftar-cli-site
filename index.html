@@ -1109,7 +1109,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
     </div>
 
     <h3 id="unify" style="margin-top:72px">Growing the Forge — a second client, one base</h3>
-    <p class="prose" style="margin-top:10px">Importing a second client into an existing Forge keeps every ingredient that already matches and turns the ones that differ into variants named after the profile, so both workspaces still reproduce byte for byte. The <code>forge</code> commands then close the gap: <code>forge variants</code> lists them nearest first, <code>forge diff</code> shows each hunk with a suggested class, and <code>forge unify</code> resolves one — keeping the base or the variant, or turning the differing value into a parameter the profile carries.</p>
+    <p class="prose" style="margin-top:10px">Importing a second client into an existing Forge keeps every ingredient that already matches and turns the ones that differ into variants named after the profile, so both workspaces still reproduce byte for byte. The <code>forge</code> commands then close the gap: <code>forge variants</code> lists them nearest first, <code>forge diff</code> shows each hunk with a suggested class, and <code>forge unify</code> resolves one — keeping the base or the variant, turning the differing value into a parameter the profile carries, or turning a differing block into a section whose content the profile carries.</p>
     <div class="fig-inner narrow" style="margin-top:28px">
     <svg class="diagram" style="margin-top:0" viewBox="9.5 0 621 452" role="img" aria-labelledby="d4t" aria-describedby="d4d">
       <title id="d4t">A second client's differing rule becomes a variant, and forge unify turns the difference into a parameter so both clients share one base</title>
@@ -1160,7 +1160,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <g aria-hidden="true"><path class="comet em u1" d="M300 105 H 340"/><path class="comet em u2" d="M485 200 C 485 216, 155 216, 155 232"/><path class="comet em u3" d="M300 327 H 340"/><rect class="glow em ug1" x="10" y="10" width="290" height="190" rx="4"/><rect class="glow st ug2" x="340" y="10" width="290" height="190" rx="4"/><rect class="glow em ug3" x="10" y="232" width="290" height="190" rx="4"/><rect class="glow st ug4" x="340" y="232" width="290" height="190" rx="4"/><text class="s cap ucap1" x="12" y="446">a differing copy becomes a variant — nothing is lost</text><text class="s cap ucap2" x="12" y="446" fill="var(--steel)">the value moves to the profile; the base is shared again</text></g>
     </svg>
     </div>
-    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key. Sections themselves ship (markers placed by hand; each client's content inferred by import); extracting one from a diff, the interactive walk and <code>forge promote</code> are planned.</p>
+    <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key. Sections ship too — markers placed by hand (each client's content inferred by import) or extracted from a variant by <code>forge unify</code> with <code>take: section</code>; the interactive walk and <code>forge promote</code> are planned.</p>
 
     <div class="concepts" aria-label="Core concepts">
       <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
@@ -1204,7 +1204,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
             <code><span class="p">$</span> craftar import --from claude-code <span class="c"># existing .claude/ → ingredients + recipes + profile</span></code>
             <code><span class="p">$</span> craftar forge variants <span class="c"># where clients differ, nearest first</span></code>
             <code><span class="p">$</span> craftar forge diff rule/deploy <span class="c"># hunks, each with a suggested class</span></code>
-            <code><span class="p">$</span> craftar forge unify rule/deploy --profile acme --plan plan.yaml <span class="c"># base, variant or param</span></code>
+            <code><span class="p">$</span> craftar forge unify rule/deploy --profile acme --plan plan.yaml <span class="c"># base, variant, param or section</span></code>
             <code><span class="p">$</span> craftar targets <span class="c"># targets and capability coverage — planned</span></code>
           </div>
           <p class="mech">Three layers: the open standards — <code>AGENTS.md</code> composed from the always-on rules, Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> — written by the target emitters; tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned. Importing a second client into an existing Forge reuses every ingredient whose render for that profile equals the workspace file, infers declared <code>{{key}}</code> values into the profile, and makes the rest variants; <code>forge unify</code> resolves each one back into its base (see <a href="#unify">Growing the Forge</a>).</p>
@@ -1220,7 +1220,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
             <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular <span class="c">#&nbsp;planned</span></code>
             <code><span class="p">$</span> craftar explain .kiro/steering/workflow.md <span class="c"># which layer decided this file</span></code>
           </div>
-          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's. An ingredient body can also mark a client-specific block as a <em>section</em> (<code class="nolig">&lt;!-- craftar:section flavors --&gt;</code> … <code class="nolig">&lt;!-- /craftar:section --&gt;</code>): the block is the default, a profile's <code>sections</code> or the workspace's <code>overrides.sections</code> replace or empty it, no rendered body holds the markers, and <code>explain</code> names the layer each section came from. A Forge that uses sections declares <code>schema: 2</code>, so an older CLI refuses it rather than leak the markers.</p>
+          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's. An ingredient body can also mark a client-specific block as a <em>section</em> (<code class="nolig">&lt;!-- craftar:section flavors --&gt;</code> … <code class="nolig">&lt;!-- /craftar:section --&gt;</code>): the block is the default, a profile's <code>sections</code> or the workspace's <code>overrides.sections</code> replace or empty it, no rendered body holds the markers, <code>explain</code> names the layer each section came from, and <code>forge unify</code> can extract a section from a variant (<code>take: section</code>). A Forge that uses sections declares <code>schema: 2</code>, so an older CLI refuses it rather than leak the markers.</p>
         </div>
       </article>
 
@@ -1369,8 +1369,8 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
           <li>Layer resolver with exclusive slots and params</li>
           <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
           <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
-          <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant or <code>take: param</code>)</li>
-          <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import</li>
+          <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant, <code>take: param</code> or <code>take: section</code>)</li>
+          <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by <code>forge unify</code></li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
