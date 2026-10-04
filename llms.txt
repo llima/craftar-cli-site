@@ -67,7 +67,7 @@ Layer resolution, weakest to strongest: `base` recipe → stack recipes → team
 Pipeline of `craftar sync`:
 1. Read `craftar.yaml`; load the Forge (a local path today; a pinned git ref is planned).
 2. Resolve layers, exclusive slots and params into the final ingredient set.
-3. Emit the open standards: `AGENTS.md` composed from the always-on rules, Agent Skills (`SKILL.md`) and `mcp.json` through the target emitters.
+3. Emit the open standards: `AGENTS.md` — the always-on rules, then each scoped rule listed at the file a target writes for it, or embedded in full when none does — Agent Skills (`SKILL.md`) and `mcp.json` through the target emitters.
 4. Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.
 5. Diff against `craftar.lock`; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.
 
@@ -116,7 +116,7 @@ Workspace output (Kiro target):
 - .kiro/agents/: *.json (agents as JSON)
 
 Workspace output (AGENTS.md target):
-- AGENTS.md (always-on rules concatenated, scoped rules listed)
+- AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
 - One file: the emitter composes the rules only. The four agents and the command have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
 
 ### node-fullstack — Node.js teams using TypeScript
@@ -139,7 +139,7 @@ Workspace output (Kiro target):
 - .kiro/settings/mcp.json (npm-audit MCP)
 
 Workspace output (AGENTS.md target):
-- AGENTS.md (always-on rules concatenated, scoped rules listed)
+- AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
 - One file: the emitter composes the rules only. The four agents, the command and the npm-audit MCP have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
 
 ### iac-multicloud — Platform teams managing infrastructure as code
@@ -161,7 +161,7 @@ Workspace output (Kiro target):
 - .kiro/agents/: *.json
 
 Workspace output (AGENTS.md target):
-- AGENTS.md (always-on rules concatenated, scoped rules listed)
+- AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
 - One file: the emitter composes the rules only. The four agents and the two commands have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
 
 ### What syncs where

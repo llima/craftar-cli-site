@@ -775,7 +775,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
           <ol>
             <li>Read <code>craftar.yaml</code>; load the Forge (a local path today; a pinned git ref is planned).</li>
             <li>Resolve layers, exclusive slots and params into the final ingredient set.</li>
-            <li>Emit the open standards: <code>AGENTS.md</code> composed from the always-on rules, Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> through the target emitters.</li>
+            <li>Emit the open standards: <code>AGENTS.md</code> — the always-on rules, then each scoped rule listed at the file a target writes for it, or embedded in full when none does — Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> through the target emitters.</li>
             <li>Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.</li>
             <li>Diff against <code>craftar.lock</code>; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.</li>
           </ol>
@@ -896,7 +896,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
 
             <div class="target-panel" data-panel="dotnet" data-target="agents-md" aria-hidden="true">
               <pre class="forge-tree"><span class="dir">workspace/</span>
-├── <span class="gen">AGENTS.md</span>                   <span class="comment">← always-on + scoped rules</span>
+├── <span class="gen">AGENTS.md</span>                   <span class="comment">← always-on + scoped rules, embedded</span>
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code (untouched)</span>
 ├── craftar.yaml                <span class="comment">← workspace input</span>
 └── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
@@ -992,7 +992,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
 
             <div class="target-panel" data-panel="node" data-target="agents-md" aria-hidden="true">
               <pre class="forge-tree"><span class="dir">workspace/</span>
-├── <span class="gen">AGENTS.md</span>                   <span class="comment">← always-on + scoped rules</span>
+├── <span class="gen">AGENTS.md</span>                   <span class="comment">← always-on + scoped rules, embedded</span>
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code</span>
 ├── craftar.yaml                <span class="comment">← workspace input</span>
 └── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
@@ -1086,7 +1086,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
 
             <div class="target-panel" data-panel="iac" data-target="agents-md" aria-hidden="true">
               <pre class="forge-tree"><span class="dir">workspace/</span>
-├── <span class="gen">AGENTS.md</span>                   <span class="comment">← always-on + scoped rules</span>
+├── <span class="gen">AGENTS.md</span>                   <span class="comment">← always-on + scoped rules, embedded</span>
 ├── <span class="dir client">infra/</span>                      <span class="comment">← client IaC</span>
 ├── craftar.yaml                <span class="comment">← workspace input</span>
 └── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
@@ -1207,7 +1207,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
             <code><span class="p">$</span> craftar forge unify rule/deploy --profile acme --plan plan.yaml <span class="c"># base, variant, param or section</span></code>
             <code><span class="p">$</span> craftar targets <span class="c"># targets and capability coverage — planned</span></code>
           </div>
-          <p class="mech">Three layers: the open standards — <code>AGENTS.md</code> composed from the always-on rules, Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> — written by the target emitters; tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned. Importing a second client into an existing Forge reuses every ingredient whose render for that profile equals the workspace file, infers declared <code>{{key}}</code> values into the profile, and makes the rest variants; <code>forge unify</code> resolves each one back into its base (see <a href="#unify">Growing the Forge</a>).</p>
+          <p class="mech">Three layers: the open standards — <code>AGENTS.md</code> (the always-on rules, then each scoped rule listed at the file a target writes for it or embedded when none does), Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> — written by the target emitters; tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned. Importing a second client into an existing Forge reuses every ingredient whose render for that profile equals the workspace file, infers declared <code>{{key}}</code> values into the profile, and makes the rest variants; <code>forge unify</code> resolves each one back into its base (see <a href="#unify">Growing the Forge</a>).</p>
         </div>
       </article>
 
