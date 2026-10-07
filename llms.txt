@@ -1,6 +1,6 @@
 # Craftar
 
-> Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients, and emits it in the native format of each AI coder (Claude Code, Kiro and AGENTS.md today; Kimi, Codex, Cursor and Warp planned) into every workspace, with a lockfile for drift detection and a planned registry of workspaces.
+> Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients, and emits it in the native format of each AI coder (Claude Code, Kiro and AGENTS.md today; Kimi, Codex, Cursor and Warp planned) into every workspace, with a lockfile for drift detection and a per-machine registry of workspaces.
 
 This file is the plain-text companion of the Craftar page (index.html), written for language models and other automated readers. Same content, no layout; diagrams are described in prose — verbatim from the accessible description of each figure — and the two whose topology carries the argument are also given as Mermaid graphs.
 
@@ -14,7 +14,7 @@ This file is the plain-text companion of the Craftar page (index.html), written 
 - Workspace: a local folder (one repo or a folder of repos) with a `craftar.yaml` declaring profile, recipe add/remove and targets, plus a git-ignored `craftar.local.yaml` for per-developer overrides.
 - Target: an AI coder to emit for — `claude-code`, `kiro` and `agents-md` exist today; `kimi`, `codex`, `cursor` and `warp` are planned and read the emitted `AGENTS.md` meanwhile. Coverage is a table in the CLI — `craftar targets` prints it, per ingredient type: native, converted or unsupported. Sync skips an ingredient aimed at a target that the table marks unsupported, and warns, naming it — a fallback is planned.
 - Lockfile (`craftar.lock`): the Forge's source, requested ref and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile, recipes and targets, and a normalized content hash for every generated file; the lock is rewritten only when its own content changes. The only authority on what Craftar owns in a workspace.
-- Registry (`~/.craftar/registry.json`): every workspace on the machine with path, profile, last sync and status. Will back `craftar workspaces` and the local dashboard — planned. `craftar ls` stays the view of one workspace's resolved recipes and ingredients.
+- Registry (`~/.craftar/registry.json`): every workspace a writing `sync` ran in on this machine, with path, profile, Forge, recipes, targets and last sync. `craftar workspaces` lists them with a status computed on the spot; `forget` and `prune` remove entries, and `CRAFTAR_NO_REGISTRY` turns the registry off. The local dashboard is planned. `craftar ls` stays the view of one workspace's resolved recipes and ingredients.
 
 ## Problem statement
 
@@ -82,16 +82,16 @@ graph LR
   F["Forge · one Git repository · ingredients, recipes, profiles"] --> CR["craftar · reads the Forge at its ref, emits per target"]
   CR --> W1["workspace-1 · .claude/ · craftar.lock 7c1e9a2 · up to date"]
   CR --> W2["workspace-2 · AGENTS.md · craftar.lock 7c1e9a2 · up to date"]
-  CR --> W3["workspace-3 · .kiro/ · craftar.lock 5b0d3f1 · behind · planned"]
+  CR --> W3["workspace-3 · .kiro/ · craftar.lock 5b0d3f1 · outdated, forge moved"]
   CR --> W4["workspace-4 · AGENTS.md · craftar.lock 7c1e9a2 · drift"]
   R1["team 1 Git remote"] -->|git clone| W1
   R2["team 2 Git remote"] -->|git clone| W2
   R3["team 3 Git remote"] -->|git clone| W3
   R4["team 4 Git remote"] -->|git clone| W4
-  REG["~/.craftar/registry.json · read by craftar workspaces · planned"] -.-> W1 & W2 & W3 & W4
+  REG["~/.craftar/registry.json · read by craftar workspaces"] -.-> W1 & W2 & W3 & W4
 ```
 
-P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the one two commits behind). The registry at `~/.craftar/registry.json` lists all four, and a planned `craftar workspaces` will report per workspace: up to date, behind, or drift.
+P2 resolved (diagram): same developer machine and same four workspaces as the problem statement, `workspace-1` to `workspace-4`, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's `craftar.yaml` and is not a remote of any team repository. Between them sits `craftar` itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a `craftar.lock` naming the Forge commit that produced it (`7c1e9a2` for three of them, `5b0d3f1` for the one synced before the Forge moved). Every writing sync records its workspace in the registry at `~/.craftar/registry.json`, and `craftar workspaces` reports per workspace: up to date, outdated with forge moved, or drift.
 
 ## In practice — Forge → Workspace by stack
 
@@ -168,7 +168,7 @@ Workspace output (AGENTS.md target):
 
 ### What syncs where
 
-Craftar writes the AI coder's own files — `.claude/` plus `.mcp.json` for Claude Code, `.kiro/` for Kiro — and a root `AGENTS.md` for the tools that read the open standard: Codex, Cursor, Kimi and Copilot consume that file today, while native emitters for their own formats are planned, as is generating tool-agnostic output outside the AI coder folder such as `docs/` or `local-stack/`. Client-owned folders like `src/` or `infra/` are never touched — only paths recorded in `craftar.lock` are ever written or removed.
+Craftar writes the AI coder's own files — `.claude/` plus `.mcp.json` for Claude Code, `.kiro/` for Kiro — and a root `AGENTS.md` for the tools that read the open standard: Codex, Cursor, Kimi and Copilot consume that file today, while native emitters for their own formats are planned, as is generating tool-agnostic output outside the AI coder folder such as `docs/` or `local-stack/`. Client-owned folders like `src/` or `infra/` are never touched — only paths recorded in `craftar.lock` are ever written or removed. Outside a workspace and a Forge, Craftar writes on its own only under `~/.craftar` (by default): the Forge cache and the registry.
 
 ### Growing the Forge — a second client, one base
 
@@ -189,7 +189,7 @@ One rule, two clients. `forge unify` never merges `ingredient.yaml` and refuses 
 - F7 Project templates (P1): planned: `craftar templates install`; generated `/create-project` command.
 - F8 Drift and reverse contribution [detection working] (P2): `status` reports drift; never overwritten without `--overwrite-drift`. Planned: `drift show|discard|promote`.
 - F9 CI [--check working] (P2): `craftar sync --check`; `craftar diff --exit-code` gives the same verdict with the diff that explains it. Planned: GitHub Action / Azure Pipelines task; pre-commit hook.
-- F10 Registry and dashboard (P2): `craftar workspaces` over the registry, `craftar ui` — planned; `craftar ls` stays the view of the recipes and ingredients resolved for one workspace.
+- F10 Registry and dashboard [registry working] (P2): a writing `sync` records its workspace in `~/.craftar/registry.json`; `craftar workspaces [--fetch]` prints each one — profile, stack, targets, Forge, last sync — with a status computed on the spot (`up to date`, `outdated`, `drift`, `no lock`, `missing` or `error`, plus `forge moved` when the Forge's commit is no longer the lock's), reading a remote Forge from the cache unless `--fetch` is given; `craftar workspaces forget <dir>` and `prune` remove entries; `CRAFTAR_NO_REGISTRY` turns the registry off, for CI runners and throwaway checkouts. Planned: `craftar ui`, the same view as a local web page with actions and a Forge view of who uses what. `craftar ls` stays the view of the recipes and ingredients resolved for one workspace.
 - F11 Craftar as an MCP server (P1, P2): planned: `craftar mcp`; Claude Code plugin, Agent Plugin, Warp workflows as thin shells.
 - F12 Diagnostics (P2): planned: `craftar doctor`.
 
@@ -225,9 +225,9 @@ Design target — planned targets. Kimi, Codex, Cursor and Warp have no emitter 
 
 ## Status
 
-Phase 0 (in progress): Forge schema; layer resolver with exclusive slots and params; `sync`, `diff`, `status`, `explain`, `ls`, lockfile; the read-only catalogue — `recipes`, `ingredients` and `targets` with the capability matrix; `import --from claude-code`, reusing a base whose render matches when a second client joins the Forge; `forge variants`, `forge diff`, `forge unify` (base, variant, `take: param` or `take: section`); sections — client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by `forge unify`; a remote Forge — a git URL and `ref`, a per-machine cache, the schema 2 lock; emitters for Claude Code, Kiro and AGENTS.md; an oracle suite against a private hand-built workspace plus a synthetic suite in CI on Linux and Windows (byte-identical reproduction of a hand-built Claude Code + Kiro workspace; second sync is a no-op; Forge edits reach both targets; manual edits surface as drift and survive; removed ingredients disappear; unmanaged files untouched).
+Phase 0 (in progress): Forge schema; layer resolver with exclusive slots and params; `sync`, `diff`, `status`, `explain`, `ls`, lockfile; the read-only catalogue — `recipes`, `ingredients` and `targets` with the capability matrix; `import --from claude-code`, reusing a base whose render matches when a second client joins the Forge; `forge variants`, `forge diff`, `forge unify` (base, variant, `take: param` or `take: section`); sections — client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by `forge unify`; a remote Forge — a git URL and `ref`, a per-machine cache, the schema 2 lock; the workspace registry and `craftar workspaces`; emitters for Claude Code, Kiro and AGENTS.md; an oracle suite against a private hand-built workspace plus a synthetic suite in CI on Linux and Windows (byte-identical reproduction of a hand-built Claude Code + Kiro workspace; second sync is a no-op; Forge edits reach both targets; manual edits surface as drift and survive; removed ingredients disappear; unmanaged files untouched).
 
-Later phases: team profiles and `init`, PM/platform MCP, `doctor`, registry (1); local services, templates, drift promote, `docs validate` (2); CI actions, `craftar ui` (3); `craftar mcp`, plugins, Warp, Kimi/Codex/Cursor emitters, documentation (4).
+Later phases: team profiles and `init`, PM/platform MCP, `doctor` (1); local services, templates, drift promote, `docs validate` (2); CI actions, `craftar ui` (3); `craftar mcp`, plugins, Warp, Kimi/Codex/Cursor emitters, documentation (4).
 
 Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync planned as the conversion dependency for further formats. License: MIT. Open questions: Forge as separate repo vs monorepo; what Kimi and Codex read beyond AGENTS.md; multiple Forges per workspace.
 
