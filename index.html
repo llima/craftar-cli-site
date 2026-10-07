@@ -718,7 +718,7 @@
         <text class="s" x="878" y="376" text-anchor="end">rules only · agents-md · drift 1</text>
       </g>
     <g aria-hidden="true"><rect class="glow em gf" x="10" y="90" width="240" height="220" rx="4"/><rect class="glow st g7" x="772" y="22" width="70" height="18" rx="3"/><rect class="glow st g5" x="534" y="152" width="96" height="34" rx="3"/><rect class="glow st g5" x="640" y="152" width="96" height="34" rx="3"/><rect class="glow st g5" x="746" y="152" width="96" height="34" rx="3"/><rect class="glow st g6" x="786" y="244" width="56" height="18" rx="3"/><rect class="glow st g8" x="762" y="332" width="80" height="18" rx="3"/><text class="s cap cap1" x="12" y="44" fill="var(--ember)">craftar import · team-a, team-b → Forge</text><text class="s cap cap2" x="12" y="44" fill="var(--steel)">craftar sync · Forge → every workspace</text></g></svg>
-    <p class="diagram-cap">P1 resolved — solid edges are generated and recorded in each workspace's lockfile; <code>status</code> reads the lock to report drift per workspace, and names the Forge commit next to the lock's when the Forge has moved; counting how far behind is planned.</p>
+    <p class="diagram-cap">P1 resolved — solid edges are generated and recorded in each workspace's lockfile; <code>status</code> reads the lock to report drift per workspace, and, with a remote Forge, names the Forge commit next to the lock's when it has moved; counting how far behind is planned.</p>
 
 
     <h3 style="margin-top:72px">P2 resolved — one Forge, one lock per workspace, one registry</h3>
@@ -773,7 +773,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
         <div class="engine">
           <div class="cmd"><span class="p">$</span> craftar sync</div>
           <ol>
-            <li>Read <code>craftar.yaml</code>; load the Forge (a local path, or a git URL at a branch, tag or SHA, fetched into a per-machine cache).</li>
+            <li>Read <code>craftar.yaml</code>; load the Forge (a local path, or a git URL at a branch, tag or full SHA, fetched into a per-machine cache).</li>
             <li>Resolve layers, exclusive slots and params into the final ingredient set.</li>
             <li>Emit the open standards: <code>AGENTS.md</code> — the always-on rules, then each scoped rule listed at the file a target writes for it, or embedded in full when none does — Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> through the target emitters.</li>
             <li>Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.</li>
@@ -1169,7 +1169,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters and section overrides for the whole stack live here.</p></div>
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
       <div class="concept"><h3>Target</h3><code>claude-code · kiro · agents-md</code><p>An AI coder to emit for. These three exist today; <code>kimi</code>, <code>codex</code>, <code>cursor</code> and <code>warp</code> are planned, and read the emitted <code>AGENTS.md</code> meanwhile. Coverage is a table in the CLI — <code>craftar targets</code> prints it, per ingredient type: native, converted or unsupported. Sync skips an ingredient aimed at a target that the table marks unsupported, and warns, naming it — a fallback is planned.</p></div>
-      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>The Forge's source, requested ref and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile, recipes and targets, and a normalized content hash for every generated file — rewritten only when that content changes. The only authority on what Craftar owns in a workspace.</p></div>
+      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>The Forge's source, requested ref and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile, recipes and targets, and a normalized content hash for every generated file; the lock is rewritten only when its own content changes. The only authority on what Craftar owns in a workspace.</p></div>
       <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar workspaces</code> and the local dashboard — planned. <code>craftar ls</code> stays the view of one workspace's resolved recipes and ingredients.</p></div>
     </div>
   </section>
@@ -1193,7 +1193,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
             <code><span class="p">$</span> craftar sync --offline <span class="c"># remote Forge: fetched first; --offline reads the cached copy</span></code>
             <code><span class="p">$</span> craftar sync --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
           </div>
-          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. With a git-URL Forge, <code>ref</code> follows a branch or pins a tag or SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy.</p>
+          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. With a git-URL Forge, <code>ref</code> follows a branch or pins a tag or full SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy unless it passes <code>--offline</code>.</p>
         </div>
       </article>
 
