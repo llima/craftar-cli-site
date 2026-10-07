@@ -1188,7 +1188,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar sync <span class="c">[--dry-run] [--check] [--overwrite-drift]</span></code>
-            <code><span class="p">$</span> craftar diff <span class="c"># what sync would change, writes nothing</span></code>
+            <code><span class="p">$</span> craftar diff <span class="c">[--exit-code] # what sync would change, orphans included; writes nothing</span></code>
             <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan · orphan-drift</span></code>
             <code><span class="p">$</span> craftar sync --forge-ref v2.3 --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
           </div>
@@ -1278,7 +1278,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
         <div><div class="id">F9 <span class="pill now">--check working</span></div><h3>CI</h3></div>
         <p class="why"><b>problem · P2</b>Sync that depends on someone remembering will lag by workspace.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar sync --check <span class="c"># exit ≠ 0 when behind or drifted</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar sync --check <span class="c"># exit ≠ 0 when behind or drifted</span></code><code><span class="p">$</span> craftar diff --exit-code <span class="c"># the same verdict as --check, with the diff that explains it</span></code></div>
           <p class="mech">Planned: a GitHub Action and an Azure Pipelines task that open a PR with the change summary when the Forge moves; optional Forge-side dispatch to registered workspaces; a pre-commit hook running <code>--check</code>.</p>
         </div>
       </article>
@@ -1322,7 +1322,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
     <div class="rules">
       <div class="rule"><div class="never">never</div><h3>Touch a file not in the lockfile</h3><p>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved and never removed; one at a path the Forge would write is reported by <code>status</code> as a collision and never touched. Regeneration is per file.</p><p class="ref">← FM-1</p></div>
       <div class="rule"><div class="never">never</div><h3>Hash raw bytes</h3><p>Content hashes are computed after normalization: LF line endings, UTF-8, BOM stripped; JSON compared structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output is always CRLF without BOM.</p><p class="ref">← FM-2</p></div>
-      <div class="rule"><div class="never">never</div><h3>Leave an orphan on disk</h3><p>An output whose ingredient left the resolved set is removed on the next sync and named in the summary, in every target. <code>--check</code> fails on orphans.</p><p class="ref">← FM-3</p></div>
+      <div class="rule"><div class="never">never</div><h3>Leave an orphan on disk</h3><p>An output whose ingredient left the resolved set is removed on the next sync and named in the summary, in every target. <code>--check</code> fails on orphans, and <code>diff</code> shows each one as the removal of the whole file.</p><p class="ref">← FM-3</p></div>
       <div class="rule"><div class="never">never</div><h3>Require a manual mirror</h3><p>Everything a second target needs — steering, agent JSON, command copies — is emitted from the same ingredient. If two files must say the same thing, both are generated.</p><p class="ref">← FM-4</p></div>
       <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today the rule and its reviewer are separate ingredients (<code>rule/&lt;name&gt;</code>, <code>agent/&lt;name&gt;-reviewer</code>) grouped by a stack recipe.</p><p class="ref">← FM-5</p></div>
       <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited.</p><p class="ref">← FM-6</p></div>
