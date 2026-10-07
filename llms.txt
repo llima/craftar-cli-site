@@ -12,7 +12,7 @@ This file is the plain-text companion of the Craftar page (index.html), written 
 - Recipe: named set of ingredients with parameters. Recipes `extend` others; stack recipes declare a `slot` so two stacks for the same role (e.g. two front-end frameworks) cannot coexist.
 - Profile: one team — its recipes, repositories, template feeds, project-management tool, internal platform, and which AI coders that team uses; parameters and section overrides for the whole stack live here.
 - Workspace: a local folder (one repo or a folder of repos) with a `craftar.yaml` declaring profile, recipe add/remove and targets, plus a git-ignored `craftar.local.yaml` for per-developer overrides.
-- Target: an AI coder to emit for — `claude-code`, `kiro` and `agents-md` exist today; `kimi`, `codex`, `cursor` and `warp` are planned and read the emitted `AGENTS.md` meanwhile. Coverage is a table in the CLI — `craftar targets` prints it, per ingredient type: native, converted or unsupported. Each emitter warns about what it cannot express and skips it — a fallback is planned.
+- Target: an AI coder to emit for — `claude-code`, `kiro` and `agents-md` exist today; `kimi`, `codex`, `cursor` and `warp` are planned and read the emitted `AGENTS.md` meanwhile. Coverage is a table in the CLI — `craftar targets` prints it, per ingredient type: native, converted or unsupported. Sync skips an ingredient aimed at a target that the table marks unsupported, and warns, naming it — a fallback is planned.
 - Lockfile (`craftar.lock`): the Forge's source and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.
 - Registry (`~/.craftar/registry.json`): every workspace on the machine with path, profile, last sync and status. Will back `craftar workspaces` and the local dashboard — planned. `craftar ls` stays the view of one workspace's resolved recipes and ingredients.
 
@@ -178,7 +178,7 @@ One rule, two clients. `forge unify` never merges `ingredient.yaml` and refuses 
 
 ## Capabilities (F1–F12; "working" = runs today and is covered by tests; "mvp" = first release; "planned" = designed, not built)
 
-- F1 Forge → workspace sync [working, mvp] (P1, P2): `craftar sync [--dry-run] [--check] [--overwrite-drift]`, `diff`, `status` (per file: new, update, unchanged, adopt, drift, collision, orphan, orphan-drift); sync prints what it wrote, removed and skipped, file by file. Planned: `--forge-ref`, `--targets`, `update`, following a Forge branch or pinning a tag.
+- F1 Forge → workspace sync [working, mvp] (P1, P2): `craftar sync [--dry-run] [--check] [--overwrite-drift]`, `diff [--exit-code]` (what sync would change, an orphan shown as the removal of the whole file, a hand-edited one as a header; with `--exit-code`, exit 1 exactly when `sync --check` would fail), `status` (per file: new, update, unchanged, adopt, drift, collision, orphan, orphan-drift); sync prints what it wrote, removed and skipped, file by file. Planned: `--forge-ref`, `--targets`, `update`, following a Forge branch or pinning a tag.
 - F2 Multi-target emission [working, mvp] (P1): `craftar import --from claude-code`; Craftar's own emitters for Claude Code, Kiro (byte-identical to a hand-built workspace, including agent JSON and command mirrors) and AGENTS.md; post-processors for gaps (e.g. Kiro agent `resources`). Importing a second client into an existing Forge reuses every ingredient whose render for that profile equals the workspace file, infers declared `{{key}}` values into the profile, and makes the rest variants; `craftar forge variants` (where clients differ, nearest first), `craftar forge diff <type/name>` (hunks, each with a suggested class) and `craftar forge unify <type/name> --profile <p> --plan <file>` (base, variant, param or section) resolve each one back into its base (see Growing the Forge); `craftar targets` prints the capability matrix — what each target does with each ingredient type. Planned: rulesync for further tool-specific formats.
 - F3 Layers and stack slots [resolution working] (P1): layer resolution, exclusive slots, params, `explain`; `craftar.local.yaml` (git-ignored) overrides the workspace for one developer, its arrays replacing the workspace's; sections — a client-specific block in an ingredient body marked `<!-- craftar:section flavors -->` … `<!-- /craftar:section -->`, whose content is the default and which a profile's `sections` or the workspace's `overrides.sections` replace or empty, with no rendered body holding the markers and `explain` naming the layer each came from; `forge unify` can extract one from a variant (`take: section`); a Forge that uses sections declares `schema: 2`, so an older CLI refuses it rather than leak the markers; `craftar recipes` and `craftar ingredients` list the whole Forge read-only, mark what the workspace uses (and, for recipes, why), and `--recipe` shows what choosing one would bring. Planned: `add recipe`, `remove recipe`.
 - F4 Workspace bootstrap (P2): planned: `craftar init [--profile --targets --yes]`.
@@ -186,7 +186,7 @@ One rule, two clients. `forge unify` never merges `ingredient.yaml` and refuses 
 - F6 Local services per workspace (P1): `service` ingredient with docker-compose fragment; planned: `craftar services up|down|status`.
 - F7 Project templates (P1): planned: `craftar templates install`; generated `/create-project` command.
 - F8 Drift and reverse contribution [detection working] (P2): `status` reports drift; never overwritten without `--overwrite-drift`. Planned: `drift show|discard|promote`.
-- F9 CI [--check working] (P2): `craftar sync --check`. Planned: GitHub Action / Azure Pipelines task; pre-commit hook.
+- F9 CI [--check working] (P2): `craftar sync --check`; `craftar diff --exit-code` gives the same verdict with the diff that explains it. Planned: GitHub Action / Azure Pipelines task; pre-commit hook.
 - F10 Registry and dashboard (P2): `craftar workspaces` over the registry, `craftar ui` — planned; `craftar ls` stays the view of the recipes and ingredients resolved for one workspace.
 - F11 Craftar as an MCP server (P1, P2): planned: `craftar mcp`; Claude Code plugin, Agent Plugin, Warp workflows as thin shells.
 - F12 Diagnostics (P2): planned: `craftar doctor`.
@@ -195,7 +195,7 @@ One rule, two clients. `forge unify` never merges `ingredient.yaml` and refuses 
 
 - Never touch a file not in the lockfile — unknown files are preserved; one at a path the Forge would write is reported as a collision (FM-1).
 - Never hash raw bytes — normalize LF, UTF-8, strip BOM; compare JSON structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output is always CRLF without BOM (FM-2).
-- Never leave an orphan on disk (FM-3).
+- Never leave an orphan on disk — `--check` fails on it and `diff` shows it as the removal of the whole file (a hand-edited one as a header, since sync keeps it) (FM-3).
 - Never require a manual mirror — everything a second target needs is generated (FM-4).
 - Never split a rule from its reviewer — one ingredient, two outputs (FM-5) (planned; today the rule and its reviewer are separate ingredients (rule/<name>, agent/<name>-reviewer) grouped by a stack recipe).
 - Never inline a volatile value — declared once in the profile, injected as params (FM-6).
@@ -204,7 +204,7 @@ One rule, two clients. `forge unify` never merges `ingredient.yaml` and refuses 
 
 ## Targets and capability coverage
 
-`craftar targets` prints the capability matrix from the CLI's own table, and a test fails when a cell and its emitter disagree. Nothing is dropped silently: an ingredient aimed at a target that cannot express it is skipped with a warning that names it; a fallback is planned. Three words: native — written in the tool's own place for that type, as the Forge holds it; converted — written in another form (frontmatter or a banner added, references rewritten, another container format, or folded into a shared file); unsupported — not written, sync warns and names the ingredient.
+`craftar targets` prints the capability matrix from the CLI's own table; `sync` decides from the same table which ingredients a target does not write, and a test fails when a cell and its emitter disagree. Nothing is dropped silently: an ingredient aimed at a target that cannot express it is skipped with a warning that names it; a fallback is planned. Three words: native — written in the tool's own place for that type, as the Forge holds it; converted — written in another form (frontmatter or a banner added, references rewritten, another container format, or folded into a shared file); unsupported — not written, sync warns and names the ingredient.
 
 | ingredient type | claude-code | kiro | agents-md |
 |---|---|---|---|
