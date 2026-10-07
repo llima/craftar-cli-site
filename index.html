@@ -722,10 +722,10 @@
 
 
     <h3 style="margin-top:72px">P2 resolved — one Forge, one lock per workspace, one registry</h3>
-    <p class="prose" style="margin-top:10px">Same machine, same four workspaces, same four remotes. The Forge is a fifth repository that none of the team repositories reference; each workspace's <code>craftar.yaml</code> points to it. What the workspaces now share is the harness: every workspace is generated from the same Forge, so <code>base</code> rules, commands and agents are identical across all of them, and the lockfile in each records exactly which Forge commit produced it. <code>craftar ls</code> will read the registry and report, per workspace, whether it is at the Forge head, behind, or drifted.</p>
+    <p class="prose" style="margin-top:10px">Same machine, same four workspaces, same four remotes. The Forge is a fifth repository that none of the team repositories reference; each workspace's <code>craftar.yaml</code> points to it. What the workspaces now share is the harness: every workspace is generated from the same Forge, so <code>base</code> rules, commands and agents are identical across all of them, and the lockfile in each records exactly which Forge commit produced it. A planned <code>craftar workspaces</code> will read the registry and report, per workspace, whether it is at the Forge head, behind, or drifted.</p>
     <svg class="diagram" viewBox="9.5 0 901 534" role="img" aria-labelledby="d3t" aria-describedby="d3d">
       <title id="d3t">One developer machine with four team workspaces, each with its own repositories on separate Git remotes, all generated from a single Forge</title>
-      <desc id="d3d">Mechanism: same developer machine and same four workspaces as the problem statement, workspace-1 to workspace-4, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's craftar.yaml and is not a remote of any team repository. Between them sits craftar itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a craftar.lock naming the Forge commit that produced it (7c1e9a2 for three of them, 5b0d3f1 for the one two commits behind). The registry at ~/.craftar/registry.json lists all four, and craftar ls will report per workspace: up to date, behind, or drift.</desc>
+      <desc id="d3d">Mechanism: same developer machine and same four workspaces as the problem statement, workspace-1 to workspace-4, each still cloning its team's repositories from that team's own remote. Now a fifth repository, the Forge, is referenced by each workspace's craftar.yaml and is not a remote of any team repository. Between them sits craftar itself: it reads the Forge and emits each workspace's harness, so nothing flows from the Forge to a workspace except through it. Each workspace carries a generated harness with the same base ingredients and a craftar.lock naming the Forge commit that produced it (7c1e9a2 for three of them, 5b0d3f1 for the one two commits behind). The registry at ~/.craftar/registry.json lists all four, and craftar workspaces (planned) will report per workspace: up to date, behind, or drift.</desc>
       <rect class="box src" x="310" y="10" width="300" height="82" rx="4"/>
       <text class="t" x="324" y="34">forge</text>
       <text class="s" x="324" y="70" fill="var(--steel)">sync → workspaces · recorded in each lock</text>
@@ -734,13 +734,13 @@
       <rect class="box" x="10" y="400" width="900" height="50" rx="4"/>
       <text class="t" x="24" y="422">developer machine</text>
       <text class="s" x="24" y="440">~/.craftar/registry.json · 4 workspaces · 10 repositories · 4 remotes · 1 Forge</text>
-      <text class="s" x="896" y="430" text-anchor="end">$ craftar ls  # planned</text>
+      <text class="s" x="896" y="430" text-anchor="end">$ craftar workspaces  # planned</text>
     </g><g aria-hidden="true"><rect class="glow em rgf" x="310" y="10" width="300" height="82" rx="4"/><rect class="glow st rg1" x="22" y="298" width="186" height="20" rx="3"/><rect class="glow st rg2" x="252" y="298" width="186" height="20" rx="3"/><rect class="glow st rg3" x="482" y="298" width="186" height="20" rx="3"/><rect class="glow st rg4" x="712" y="298" width="186" height="20" rx="3"/><text class="s cap rcap1" x="12" y="40" fill="var(--ember)">craftar import · workspace-1, 2 → Forge</text><text class="s cap rcap2" x="12" y="40" fill="var(--steel)">craftar sync · Forge → every workspace</text></g></svg>
     <p class="diagram-cap">the Forge is never a remote of any team repository; generated files are committed inside each workspace, so a team's own clone of its repo already contains the harness in its tool's format.</p>
 
-    <div class="term" style="margin-top:28px" aria-label="craftar ls output">
+    <div class="term" style="margin-top:28px" aria-label="craftar workspaces output">
       <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~</div>
-<pre><span class="p">$</span> craftar ls  <span class="c">#&nbsp;planned</span>
+<pre><span class="p">$</span> craftar workspaces  <span class="c">#&nbsp;planned</span>
 <span class="c">WORKSPACE            PROFILE   STACK             TARGETS             FORGE     STATUS</span>
 team-a-workspace     team-a    angular · dotnet  claude-code         7c1e9a2   <span class="add">up to date</span>
 team-b-workspace     team-b    react · dotnet    agents-md           7c1e9a2   <span class="add">up to date</span>
@@ -1170,7 +1170,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
       <div class="concept"><h3>Target</h3><code>claude-code · kiro · agents-md</code><p>An AI coder to emit for. These three exist today; <code>kimi</code>, <code>codex</code>, <code>cursor</code> and <code>warp</code> are planned, and read the emitted <code>AGENTS.md</code> meanwhile. Coverage is a table in the CLI — <code>craftar targets</code> prints it, per ingredient type: native, converted or unsupported. Each emitter warns about what it cannot express and skips it — a fallback is planned.</p></div>
       <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>The Forge's source and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
-      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar ls</code> and the local dashboard — planned.</p></div>
+      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar workspaces</code> and the local dashboard — planned. <code>craftar ls</code> stays the view of one workspace's resolved recipes and ingredients.</p></div>
     </div>
   </section>
 
@@ -1287,8 +1287,8 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
         <div><div class="id">F10</div><h3>Registry and dashboard</h3></div>
         <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar ls · craftar ui <span class="c">#&nbsp;planned — today's ls lists the recipes and ingredients resolved for one workspace</span></code></div>
-          <p class="mech">Table or local web page: workspace, profile, stack, targets, Forge SHA, status; actions <code>sync</code> / <code>diff</code> / <code>explain</code>; Forge view of recipes, ingredients and who uses what.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar workspaces · craftar ui <span class="c">#&nbsp;planned</span></code></div>
+          <p class="mech">Table or local web page: workspace, profile, stack, targets, Forge SHA, status; actions <code>sync</code> / <code>diff</code> / <code>explain</code>; Forge view of recipes, ingredients and who uses what. <code>craftar ls</code> stays the view of one workspace's resolution.</p>
         </div>
       </article>
 
