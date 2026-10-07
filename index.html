@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Keep rules, agents, commands, skills, hooks and MCPs in one Forge in Git. Craftar emits them natively into every workspace, for every AI coder your team uses.">
 <meta name="twitter:image" content="https://craftar.dev/og.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Craftar","description":"Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients and recipes, and emits it in the native format of each AI coder (Claude Code, Kiro and AGENTS.md today; Kimi, Codex, Cursor and Warp planned) into every workspace, with a lockfile for drift detection and a planned registry of workspaces.","programmingLanguage":"TypeScript","runtimePlatform":"Node.js","applicationCategory":"DeveloperApplication","keywords":["AI coding agents","harness","Claude Code","Kiro","Cursor","Codex","AGENTS.md","MCP","rulesync","developer tooling","monorepo","workspace sync"]}
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Craftar","description":"Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients and recipes, and emits it in the native format of each AI coder (Claude Code, Kiro and AGENTS.md today; Kimi, Codex, Cursor and Warp planned) into every workspace, with a lockfile for drift detection and a per-machine registry of workspaces.","programmingLanguage":"TypeScript","runtimePlatform":"Node.js","applicationCategory":"DeveloperApplication","keywords":["AI coding agents","harness","Claude Code","Kiro","Cursor","Codex","AGENTS.md","MCP","rulesync","developer tooling","monorepo","workspace sync"]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -1104,7 +1104,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <!-- What syncs where -->
       <div class="client-note">
         <h5>What syncs where</h5>
-        <p>Craftar writes the AI coder's own files — <code>.claude/</code> plus <code>.mcp.json</code> for Claude Code, <code>.kiro/</code> for Kiro — and a root <code>AGENTS.md</code> for the tools that read the open standard: Codex, Cursor, Kimi and Copilot consume that file today, while native emitters for their own formats are planned, as is generating tool-agnostic output outside the AI coder folder such as <code>docs/</code> or <code>local-stack/</code>. Client-owned folders like <code>src/</code> or <code>infra/</code> are <strong>never touched</strong> — only paths recorded in <code>craftar.lock</code> are ever written or removed.</p>
+        <p>Craftar writes the AI coder's own files — <code>.claude/</code> plus <code>.mcp.json</code> for Claude Code, <code>.kiro/</code> for Kiro — and a root <code>AGENTS.md</code> for the tools that read the open standard: Codex, Cursor, Kimi and Copilot consume that file today, while native emitters for their own formats are planned, as is generating tool-agnostic output outside the AI coder folder such as <code>docs/</code> or <code>local-stack/</code>. Client-owned folders like <code>src/</code> or <code>infra/</code> are <strong>never touched</strong> — only paths recorded in <code>craftar.lock</code> are ever written or removed. Outside a workspace and a Forge, Craftar writes on its own only under <code>~/.craftar</code> (by default): the Forge cache and the registry.</p>
       </div>
     </div>
 
@@ -1170,7 +1170,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
       <div class="concept"><h3>Target</h3><code>claude-code · kiro · agents-md</code><p>An AI coder to emit for. These three exist today; <code>kimi</code>, <code>codex</code>, <code>cursor</code> and <code>warp</code> are planned, and read the emitted <code>AGENTS.md</code> meanwhile. Coverage is a table in the CLI — <code>craftar targets</code> prints it, per ingredient type: native, converted or unsupported. Sync skips an ingredient aimed at a target that the table marks unsupported, and warns, naming it — a fallback is planned.</p></div>
       <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>The Forge's source, requested ref and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile, recipes and targets, and a normalized content hash for every generated file; the lock is rewritten only when its own content changes. The only authority on what Craftar owns in a workspace.</p></div>
-      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar workspaces</code> and the local dashboard — planned. <code>craftar ls</code> stays the view of one workspace's resolved recipes and ingredients.</p></div>
+      <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace a writing <code>sync</code> ran in on this machine: path, profile, Forge, recipes, targets, last sync. <code>craftar workspaces</code> lists them with a status computed on the spot; <code>forget</code> and <code>prune</code> remove entries, and <code>CRAFTAR_NO_REGISTRY</code> turns the registry off. The local dashboard is planned. <code>craftar ls</code> stays the view of one workspace's resolved recipes and ingredients.</p></div>
     </div>
   </section>
 
@@ -1285,11 +1285,11 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       </article>
 
       <article class="feature">
-        <div><div class="id">F10</div><h3>Registry and dashboard</h3></div>
+        <div><div class="id">F10 <span class="pill now">registry working</span></div><h3>Registry and dashboard</h3></div>
         <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar workspaces · craftar ui <span class="c">#&nbsp;planned</span></code></div>
-          <p class="mech">Table or local web page: workspace, profile, stack, targets, Forge SHA, status; actions <code>sync</code> / <code>diff</code> / <code>explain</code>; Forge view of recipes, ingredients and who uses what. <code>craftar ls</code> stays the view of one workspace's resolution.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar workspaces <span class="c">[--fetch] # every registered workspace, its status computed now</span></code><code><span class="p">$</span> craftar workspaces forget &lt;dir&gt; · craftar workspaces prune</code><code><span class="p">$</span> craftar ui <span class="c">#&nbsp;planned</span></code></div>
+          <p class="mech">A writing <code>sync</code> records its workspace in <code>~/.craftar/registry.json</code>. <code>craftar workspaces</code> prints each one — profile, stack, targets, Forge, last sync — with a status computed on the spot: <code>up to date</code>, <code>outdated</code>, <code>drift</code>, <code>no lock</code>, <code>missing</code> or <code>error</code>, plus <code>forge moved</code> when the Forge's commit is no longer the lock's; it reads a remote Forge from the cache unless <code>--fetch</code> is given. <code>CRAFTAR_NO_REGISTRY</code> turns the registry off, for CI runners and throwaway checkouts. Planned: the same view as a local web page, with actions <code>sync</code> / <code>diff</code> / <code>explain</code> and a Forge view of who uses what. <code>craftar ls</code> stays the view of one workspace's resolution.</p>
         </div>
       </article>
 
@@ -1391,6 +1391,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
           <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant, <code>take: param</code> or <code>take: section</code>)</li>
           <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by <code>forge unify</code></li>
           <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache, the schema 2 lock</li>
+          <li>Workspace registry and <code>craftar workspaces</code></li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
@@ -1399,7 +1400,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <div class="phase">
         <div class="n0"><span>Phase 1</span></div>
         <h3>Team profile</h3>
-        <ul><li>Profiles and <code>craftar init</code></li><li>PM tool → MCP, platform → MCP</li><li><code>doctor</code>, registry</li></ul>
+        <ul><li>Profiles and <code>craftar init</code></li><li>PM tool → MCP, platform → MCP</li><li><code>doctor</code></li></ul>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 2</span></div>
