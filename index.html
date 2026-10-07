@@ -1335,23 +1335,40 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
   <section id="targets">
     <div class="eyebrow steel">Targets</div>
     <h2>Capability matrix.</h2>
-    <p class="lede" style="margin-top:22px">This table is the design target, not current coverage: today only the Claude Code, Kiro and AGENTS.md emitters exist. A per-target <code>capabilities.yaml</code> is planned. Nothing may be dropped silently: today each emitter warns about what it cannot express and skips it; closing the remaining gaps is planned.</p>
+    <p class="lede" style="margin-top:22px"><code>craftar targets</code> prints this matrix from the CLI's own table, and a test fails when a cell and its emitter disagree. Nothing is dropped silently: an ingredient aimed at a target that cannot express it is skipped with a warning that names it; a fallback is planned.</p>
 
     <div class="matrix-wrap">
       <table>
+        <thead><tr><th>Ingredient type</th><th>claude-code</th><th>kiro</th><th>agents-md</th></tr></thead>
+        <tbody>
+          <tr><td>rule</td><td class="y">native<br><code>.claude/rules/&lt;name&gt;.md</code></td><td class="part">converted<br><code>.kiro/steering/&lt;name&gt;.md</code></td><td class="part">converted<br><code>AGENTS.md</code></td></tr>
+          <tr><td>agent</td><td class="y">native<br><code>.claude/agents/&lt;name&gt;.md</code></td><td class="part">converted<br><code>.kiro/agents/&lt;name&gt;.json</code></td><td class="n">unsupported</td></tr>
+          <tr><td>command</td><td class="y">native<br><code>.claude/commands/&lt;name&gt;.md</code></td><td class="part">converted<br><code>.kiro/steering/commands/&lt;name&gt;.md</code></td><td class="n">unsupported</td></tr>
+          <tr><td>skill</td><td class="y">native<br><code>.claude/skills/&lt;name&gt;/ · &lt;name&gt;.md</code></td><td class="part">converted<br><code>.kiro/skills/&lt;name&gt;/</code></td><td class="n">unsupported</td></tr>
+          <tr><td>mcp</td><td class="y">native<br><code>.mcp.json</code></td><td class="y">native<br><code>.kiro/settings/mcp.json</code></td><td class="n">unsupported</td></tr>
+          <tr><td>script</td><td class="y">native<br><code>.claude/scripts/&lt;file&gt;</code></td><td class="n">unsupported</td><td class="n">unsupported</td></tr>
+          <tr><td>steering</td><td class="n">unsupported</td><td class="y">native<br><code>.kiro/steering/&lt;name&gt;.md</code></td><td class="n">unsupported</td></tr>
+          <tr><td>hook</td><td class="y">native<br><code>.claude/hooks/&lt;file&gt;</code></td><td class="n">unsupported</td><td class="n">unsupported</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend"><span class="y">native — written in the tool's own place for that type, as the Forge holds it</span><span class="part">converted — written in another form: frontmatter or a banner added, references rewritten, another container format, or folded into a shared file</span><span class="n">unsupported — not written; sync warns and names the ingredient</span><span><code>craftar targets</code> also prints what each converted cell changes.</span></div>
+
+    <h3 style="margin-top:72px">Design target — planned targets</h3>
+    <p class="prose" style="margin-top:10px">The four targets below have no emitter yet; they read the emitted <code>AGENTS.md</code> meanwhile. The rows are the design, not coverage. The design also plans, for the open standards, <code>AGENTS.md</code> per subfolder, skills as Agent Skills and MCP servers in <code>mcp.json</code> — today <code>agents-md</code> writes rules only, at the root — and hooks and other tool-specific formats through a rulesync layer.</p>
+
+    <div class="matrix-wrap" style="margin-top:28px">
+      <table>
         <thead><tr><th>Target</th><th>Emits to</th><th>Rules &amp; inclusion modes</th><th>Commands</th><th>Subagents</th><th>Hooks</th><th>Skills</th><th>MCP</th></tr></thead>
         <tbody>
-          <tr><td>Claude Code</td><td><code>.claude/ · .mcp.json</code></td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td><td class="y">yes</td></tr>
-          <tr><td>Kiro</td><td><code>.kiro/steering · .kiro/agents/*.json</code></td><td class="y">always · fileMatch · manual</td><td class="y">yes</td><td class="y">custom agents</td><td class="part">partial</td><td class="y">yes</td><td class="y">yes</td></tr>
           <tr><td>Kimi</td><td><code>AGENTS.md · SKILL.md</code></td><td class="part">AGENTS.md only</td><td class="part">fallback</td><td class="part">as commands</td><td class="n">—</td><td class="y">yes</td><td class="y">yes</td></tr>
           <tr><td>Codex</td><td><code>AGENTS.md · config</code></td><td class="part">AGENTS.md only</td><td class="part">fallback</td><td class="n">—</td><td class="y">[hooks] block</td><td class="y">yes</td><td class="y">yes</td></tr>
           <tr><td>Cursor</td><td><code>.cursor/rules/*.mdc</code></td><td class="y">globs · always</td><td class="part">fallback</td><td class="n">—</td><td class="n">—</td><td class="y">Agent Plugin</td><td class="y">yes</td></tr>
           <tr><td>Warp</td><td><code>workflows · mcp</code></td><td class="part">AGENTS.md</td><td class="y">workflows</td><td class="n">—</td><td class="n">—</td><td class="part">partial</td><td class="y">yes</td></tr>
-          <tr><td>AGENTS.md</td><td><code>root and per-folder</code></td><td class="y">plain</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="y">yes</td><td class="y">mcp.json</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="legend"><span class="y">yes — native</span><span class="part">partial / fallback — emitted with a warning</span><span class="n">— unsupported; reported and skipped</span><span>Kimi and Codex rows pending verification against the tools.</span></div>
+    <div class="legend"><span class="y">yes — native</span><span class="part">partial / fallback — planned to be emitted with a warning</span><span class="n">— unsupported; to be reported and skipped</span><span>Kimi and Codex rows pending verification against the tools.</span></div>
   </section>
 
   <!-- ================= STATUS ================= -->
