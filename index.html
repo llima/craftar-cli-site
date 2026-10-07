@@ -1190,9 +1190,10 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
             <code><span class="p">$</span> craftar sync <span class="c">[--dry-run] [--check] [--overwrite-drift]</span></code>
             <code><span class="p">$</span> craftar diff <span class="c">[--exit-code] # what sync would change, orphans included; writes nothing</span></code>
             <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan · orphan-drift</span></code>
-            <code><span class="p">$</span> craftar sync --forge-ref v2.3 --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
+            <code><span class="p">$</span> craftar sync --offline <span class="c"># remote Forge: fetched first; --offline reads the cached copy</span></code>
+            <code><span class="p">$</span> craftar sync --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
           </div>
-          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. Following a Forge branch or pinning a tag is planned.</p>
+          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. With a git-URL Forge, <code>ref</code> follows a branch or pins a tag or SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy.</p>
         </div>
       </article>
 
@@ -1327,7 +1328,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today the rule and its reviewer are separate ingredients (<code>rule/&lt;name&gt;</code>, <code>agent/&lt;name&gt;-reviewer</code>) grouped by a stack recipe.</p><p class="ref">← FM-5</p></div>
       <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited.</p><p class="ref">← FM-6</p></div>
       <div class="rule"><div class="never">never</div><h3>Translate</h3><p>Language is an attribute of the ingredient. The Forge may hold rules in one language and docs in another; Craftar emits text as written.</p><p class="ref">← FM-7</p></div>
-      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Store a secret</h3><p>Ingredients are meant to declare <code>authEnv</code>; settings would be emitted as <code>settings.example.json</code>; <code>doctor</code> would verify the variables exist on the machine. Planned: not built yet, though <code>craftar import</code> already refuses ingredients holding secret-like values.</p><p class="ref">← FM-8</p></div>
+      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Store a secret</h3><p>Ingredients are meant to declare <code>authEnv</code>; settings would be emitted as <code>settings.example.json</code>; <code>doctor</code> would verify the variables exist on the machine. Planned: not built yet, though <code>craftar import</code> already refuses ingredients holding secret-like values, and a <code>forge:</code> URL holding credentials is refused.</p><p class="ref">← FM-8</p></div>
     </div>
   </section>
 
