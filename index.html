@@ -661,7 +661,7 @@
 
     <svg id="flow" class="diagram" viewBox="9.5 0 881 400" role="img" aria-labelledby="d2t" aria-describedby="d2d">
       <title id="d2t">With Craftar: one Forge resolved per workspace and emitted to each team's AI coders</title>
-      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, scripts, steering files), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace loads the Forge (a pinned ref is planned), resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one target each — .claude/, .kiro/ and AGENTS.md, which carries the rules only; team C emits .kiro/; pinning the Forge at tag v2.3, which leaves it two commits behind, is planned; team D sets its targets to agents-md in its local file, so Cursor reads the emitted AGENTS.md, which carries the rules only, and has one drifted file. Every edge is generated and recorded in the lock.</desc>
+      <desc id="d2d">Mechanism: the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, scripts, steering files), recipes (base, backend-*, frontend-*, aws-local, pm-*) and one profile per team. Running craftar sync in a workspace loads the Forge (by path, or by git URL at a ref), resolves layers, emits files for each of the workspace's targets and writes craftar.lock. Team A emits to .claude/ with 7 agents; team B swaps the frontend recipe and has three workspaces, one target each — .claude/, .kiro/ and AGENTS.md, which carries the rules only; team C emits .kiro/ and pins the Forge at tag v2.3, which leaves it two commits behind — reporting how far behind is planned; team D sets its targets to agents-md in its local file, so Cursor reads the emitted AGENTS.md, which carries the rules only, and has one drifted file. Every edge is generated and recorded in the lock.</desc>
       <!-- forge -->
       <rect class="box src" x="10" y="90" width="240" height="220" rx="4"/>
       <text class="t" x="24" y="114">Forge <tspan class="s">· git repo</tspan></text>
@@ -707,7 +707,7 @@
       </g>
       <g>
         <rect class="box tgt" x="520" y="234" width="370" height="66" rx="4"/>
-        <text class="t" x="534" y="256">team C</text><text class="s" x="534" y="274">forge pinned @ v2.3 · planned</text>
+        <text class="t" x="534" y="256">team C</text><text class="s" x="534" y="274">forge pinned @ v2.3</text>
         <rect class="chip" x="786" y="244" width="56" height="18" rx="3"/><text class="st" x="794" y="257">.kiro/</text>
         <text class="s" x="878" y="288" text-anchor="end">5 agents · kiro · behind 2 · planned</text>
       </g>
@@ -718,7 +718,7 @@
         <text class="s" x="878" y="376" text-anchor="end">rules only · agents-md · drift 1</text>
       </g>
     <g aria-hidden="true"><rect class="glow em gf" x="10" y="90" width="240" height="220" rx="4"/><rect class="glow st g7" x="772" y="22" width="70" height="18" rx="3"/><rect class="glow st g5" x="534" y="152" width="96" height="34" rx="3"/><rect class="glow st g5" x="640" y="152" width="96" height="34" rx="3"/><rect class="glow st g5" x="746" y="152" width="96" height="34" rx="3"/><rect class="glow st g6" x="786" y="244" width="56" height="18" rx="3"/><rect class="glow st g8" x="762" y="332" width="80" height="18" rx="3"/><text class="s cap cap1" x="12" y="44" fill="var(--ember)">craftar import · team-a, team-b → Forge</text><text class="s cap cap2" x="12" y="44" fill="var(--steel)">craftar sync · Forge → every workspace</text></g></svg>
-    <p class="diagram-cap">P1 resolved — solid edges are generated and recorded in each workspace's lockfile; <code>status</code> reads the lock to report drift per workspace; reporting behind is planned.</p>
+    <p class="diagram-cap">P1 resolved — solid edges are generated and recorded in each workspace's lockfile; <code>status</code> reads the lock to report drift per workspace, and, with a remote Forge, names the Forge commit next to the lock's when it has moved; counting how far behind is planned.</p>
 
 
     <h3 style="margin-top:72px">P2 resolved — one Forge, one lock per workspace, one registry</h3>
@@ -773,7 +773,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
         <div class="engine">
           <div class="cmd"><span class="p">$</span> craftar sync</div>
           <ol>
-            <li>Read <code>craftar.yaml</code>; load the Forge (a local path today; a pinned git ref is planned).</li>
+            <li>Read <code>craftar.yaml</code>; load the Forge (a local path, or a git URL at a branch, tag or full SHA, fetched into a per-machine cache).</li>
             <li>Resolve layers, exclusive slots and params into the final ingredient set.</li>
             <li>Emit the open standards: <code>AGENTS.md</code> — the always-on rules, then each scoped rule listed at the file a target writes for it, or embedded in full when none does — Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> through the target emitters.</li>
             <li>Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters and post-processors; delegating further formats to rulesync is planned.</li>
@@ -1163,13 +1163,13 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
     <p class="diagram-cap">one rule, two clients. <code>forge unify</code> never merges <code>ingredient.yaml</code> and refuses when another layer, profile or ingredient already uses the key. Sections ship too — markers placed by hand (each client's content inferred by import) or extracted from a variant by <code>forge unify</code> with <code>take: section</code>; the interactive walk and <code>forge promote</code> are planned.</p>
 
     <div class="concepts" aria-label="Core concepts">
-      <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path today — referencing a branch, tag or SHA is planned.</p></div>
+      <div class="concept"><h3>Forge</h3><code>forge/ · one Git repo</code><p>Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path or by git URL, with an optional branch, tag or full SHA; a remote Forge is read from a per-machine cache.</p></div>
       <div class="concept"><h3>Ingredient</h3><code>ingredients/rules/frontend-angular/</code><p>Smallest reusable unit: a rule, agent, command, skill, hook, MCP server, script or steering file. A folder with an <code>ingredient.yaml</code> declaring type, targets, inclusion mode and globs. Local services and project templates are planned types.</p></div>
       <div class="concept"><h3>Recipe</h3><code>recipes/frontend-angular.yaml</code><p>Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</p></div>
       <div class="concept"><h3>Profile</h3><code>profiles/team-a/profile.yaml</code><p>One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses. Parameters and section overrides for the whole stack live here.</p></div>
       <div class="concept"><h3>Workspace</h3><code>craftar.yaml</code><p>Local folder — one repo or a folder of repos — declaring profile, recipe add/remove and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</p></div>
       <div class="concept"><h3>Target</h3><code>claude-code · kiro · agents-md</code><p>An AI coder to emit for. These three exist today; <code>kimi</code>, <code>codex</code>, <code>cursor</code> and <code>warp</code> are planned, and read the emitted <code>AGENTS.md</code> meanwhile. Coverage is a table in the CLI — <code>craftar targets</code> prints it, per ingredient type: native, converted or unsupported. Sync skips an ingredient aimed at a target that the table marks unsupported, and warns, naming it — a fallback is planned.</p></div>
-      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>The Forge's source and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile name and a normalized content hash for every generated file. The only authority on what Craftar owns in a workspace.</p></div>
+      <div class="concept"><h3>Lockfile</h3><code>craftar.lock</code><p>The Forge's source, requested ref and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile, recipes and targets, and a normalized content hash for every generated file; the lock is rewritten only when its own content changes. The only authority on what Craftar owns in a workspace.</p></div>
       <div class="concept"><h3>Registry</h3><code>~/.craftar/registry.json</code><p>Every workspace on the machine: path, profile, last sync, status. Will back <code>craftar workspaces</code> and the local dashboard — planned. <code>craftar ls</code> stays the view of one workspace's resolved recipes and ingredients.</p></div>
     </div>
   </section>
@@ -1190,9 +1190,10 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
             <code><span class="p">$</span> craftar sync <span class="c">[--dry-run] [--check] [--overwrite-drift]</span></code>
             <code><span class="p">$</span> craftar diff <span class="c">[--exit-code] # what sync would change, orphans included; writes nothing</span></code>
             <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan · orphan-drift</span></code>
-            <code><span class="p">$</span> craftar sync --forge-ref v2.3 --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
+            <code><span class="p">$</span> craftar sync --offline <span class="c"># remote Forge: fetched first; --offline reads the cached copy</span></code>
+            <code><span class="p">$</span> craftar sync --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
           </div>
-          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. Following a Forge branch or pinning a tag is planned.</p>
+          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. With a git-URL Forge, <code>ref</code> follows a branch or pins a tag or full SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy unless it passes <code>--offline</code>.</p>
         </div>
       </article>
 
@@ -1327,7 +1328,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today the rule and its reviewer are separate ingredients (<code>rule/&lt;name&gt;</code>, <code>agent/&lt;name&gt;-reviewer</code>) grouped by a stack recipe.</p><p class="ref">← FM-5</p></div>
       <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited.</p><p class="ref">← FM-6</p></div>
       <div class="rule"><div class="never">never</div><h3>Translate</h3><p>Language is an attribute of the ingredient. The Forge may hold rules in one language and docs in another; Craftar emits text as written.</p><p class="ref">← FM-7</p></div>
-      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Store a secret</h3><p>Ingredients are meant to declare <code>authEnv</code>; settings would be emitted as <code>settings.example.json</code>; <code>doctor</code> would verify the variables exist on the machine. Planned: not built yet, though <code>craftar import</code> already refuses ingredients holding secret-like values.</p><p class="ref">← FM-8</p></div>
+      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Store a secret</h3><p>Ingredients are meant to declare <code>authEnv</code>; settings would be emitted as <code>settings.example.json</code>; <code>doctor</code> would verify the variables exist on the machine. Planned: not built yet, though <code>craftar import</code> already refuses ingredients holding secret-like values, and a <code>forge:</code> URL holding credentials is refused.</p><p class="ref">← FM-8</p></div>
     </div>
   </section>
 
@@ -1389,6 +1390,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
           <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
           <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant, <code>take: param</code> or <code>take: section</code>)</li>
           <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by <code>forge unify</code></li>
+          <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache, the schema 2 lock</li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
@@ -1397,7 +1399,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <div class="phase">
         <div class="n0"><span>Phase 1</span></div>
         <h3>Team profile</h3>
-        <ul><li>Profiles and <code>craftar init</code></li><li>Remote Forge (Git URL)</li><li>PM tool → MCP, platform → MCP</li><li><code>doctor</code>, registry</li></ul>
+        <ul><li>Profiles and <code>craftar init</code></li><li>PM tool → MCP, platform → MCP</li><li><code>doctor</code>, registry</li></ul>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 2</span></div>
