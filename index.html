@@ -1390,6 +1390,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
           <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
           <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant, <code>take: param</code> or <code>take: section</code>)</li>
           <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by <code>forge unify</code></li>
+          <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache, the schema 2 lock</li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
@@ -1398,7 +1399,7 @@ team-d-workspace     team-d    angular · dotnet  agents-md           7c1e9a2   
       <div class="phase">
         <div class="n0"><span>Phase 1</span></div>
         <h3>Team profile</h3>
-        <ul><li>Profiles and <code>craftar init</code></li><li>Remote Forge (Git URL)</li><li>PM tool → MCP, platform → MCP</li><li><code>doctor</code>, registry</li></ul>
+        <ul><li>Profiles and <code>craftar init</code></li><li>PM tool → MCP, platform → MCP</li><li><code>doctor</code>, registry</li></ul>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 2</span></div>
