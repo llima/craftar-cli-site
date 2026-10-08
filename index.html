@@ -1311,11 +1311,11 @@ craftar workspaces — 4 registered
       </article>
 
       <article class="feature">
-        <div><div class="id">F12</div><h3>Diagnostics</h3></div>
+        <div><div class="id">F12 <span class="pill now">working</span></div><h3>Diagnostics</h3></div>
         <p class="why"><b>problem · P2</b>Sync failures usually come from the environment: missing env vars, wrong Node, no Docker, unreachable Forge.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar doctor <span class="c">#&nbsp;planned</span></code></div>
-          <p class="mech">Checks Node and rulesync versions, Git access to the Forge, every <code>authEnv</code> required by MCP ingredients, Docker when services exist, <code>dotnet</code> when templates exist, and lockfile consistency.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar doctor <span class="c">[--fetch] [--strict] [--json] # one line per finding, each with its fix</span></code></div>
+          <p class="mech">Checks this machine — Node ≥ 22, <code>git</code>, <code>~/.craftar</code>, the registry, the Forge cache — and, inside a workspace, its configuration and Forge, the plan's warnings, declared parameters with no value, the <code>${NAME}</code> variables a written MCP server expects and the environment lacks (names only, never values), the lock, <code>status</code> and registration. Each finding is one line — <code>ok</code>, <code>warn</code> or <code>error</code> — with the command that fixes it. It only reports: nothing is written to a workspace, a lock or the registry, and a remote Forge is read from the cache unless <code>--fetch</code> is given. It exits 1 on an <code>error</code>, or on a <code>warn</code> under <code>--strict</code>; <code>--json</code> is a contract for tooling. Planned: Docker and <code>dotnet</code> checks once services and templates exist, rulesync once it is a dependency.</p>
         </div>
       </article>
 
@@ -1336,7 +1336,7 @@ craftar workspaces — 4 registered
       <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today the rule and its reviewer are separate ingredients (<code>rule/&lt;name&gt;</code>, <code>agent/&lt;name&gt;-reviewer</code>) grouped by a stack recipe.</p><p class="ref">← FM-5</p></div>
       <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited.</p><p class="ref">← FM-6</p></div>
       <div class="rule"><div class="never">never</div><h3>Translate</h3><p>Language is an attribute of the ingredient. The Forge may hold rules in one language and docs in another; Craftar emits text as written.</p><p class="ref">← FM-7</p></div>
-      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Store a secret</h3><p>Ingredients are meant to declare <code>authEnv</code>; settings would be emitted as <code>settings.example.json</code>; <code>doctor</code> would verify the variables exist on the machine. Planned: not built yet, though <code>craftar import</code> already refuses ingredients holding secret-like values, and a <code>forge:</code> URL holding credentials is refused.</p><p class="ref">← FM-8</p></div>
+      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Store a secret</h3><p>Ingredients are meant to declare <code>authEnv</code>; settings would be emitted as <code>settings.example.json</code>; <code>doctor</code> would verify the variables exist on the machine. Planned: <code>authEnv</code> and <code>settings.example.json</code> are not built yet; <code>craftar doctor</code> already names the <code>${NAME}</code> variables a written MCP server expects and the environment lacks, never their values, <code>craftar import</code> refuses ingredients holding secret-like values, and a <code>forge:</code> URL holding credentials is refused.</p><p class="ref">← FM-8</p></div>
     </div>
   </section>
 
@@ -1401,6 +1401,7 @@ craftar workspaces — 4 registered
           <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by <code>forge unify</code></li>
           <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache, the schema 2 lock</li>
           <li><code>craftar init</code> with flags</li>
+          <li><code>craftar doctor</code>: what is off on the machine and in the workspace</li>
           <li>Workspace registry and <code>craftar workspaces</code></li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
@@ -1410,7 +1411,7 @@ craftar workspaces — 4 registered
       <div class="phase">
         <div class="n0"><span>Phase 1</span></div>
         <h3>Team profile</h3>
-        <ul><li>Profiles and an interactive <code>craftar init</code></li><li>PM tool → MCP, platform → MCP</li><li><code>doctor</code></li></ul>
+        <ul><li>Profiles and an interactive <code>craftar init</code></li><li>PM tool → MCP, platform → MCP</li></ul>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 2</span></div>
@@ -1432,7 +1433,7 @@ craftar workspaces — 4 registered
     <div class="status-grid">
       <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
       <div><h3>Open questions</h3><ul><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
-      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ. To start an empty workspace from a Forge instead, run <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>: it writes <code>craftar.yaml</code> and runs the first <code>sync</code>.</p></div>
+      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ. To start an empty workspace from a Forge instead, run <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>: it writes <code>craftar.yaml</code> and runs the first <code>sync</code>. When something fails, <code>craftar doctor</code> lists what is off on the machine and in the workspace, each finding with the command that fixes it.</p></div>
     </div>
   </section>
 
