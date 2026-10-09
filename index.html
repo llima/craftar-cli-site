@@ -1202,7 +1202,7 @@ craftar workspaces — 4 registered
             <code><span class="p">$</span> craftar cache prune <span class="c">[--dry-run] # cached Forges nothing uses, unfinished fetches, trees unused for 14 days</span></code>
             <code><span class="p">$</span> craftar sync --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
           </div>
-          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. With a git-URL Forge, <code>ref</code> follows a branch or pins a tag or full SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy unless it passes <code>--offline</code>. <code>craftar cache prune</code> removes the Forge cache entries nothing uses — no registered workspace and not the current one — entries whose first fetch never completed, and trees unused for 14 days; it never touches a workspace, a lock or the registry, and <code>--dry-run</code> shows what it would remove.</p>
+          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. With a git-URL Forge, <code>ref</code> follows a branch or pins a tag or full SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy unless it passes <code>--offline</code>. <code>craftar cache prune</code> removes the Forge cache entries nothing uses — no registered workspace and not the current one — entries whose first fetch never completed, and trees unused for 14 days; it never touches a workspace, a lock or the registry, and <code style="white-space:nowrap">--dry-run</code> shows what it would remove.</p>
         </div>
       </article>
 
