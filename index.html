@@ -235,6 +235,7 @@
   .phase ul li::before { content: "— "; color: var(--faint); }
   .phase.now { border-color: rgba(233,145,90,.5); background: linear-gradient(180deg, var(--ember-soft), var(--plate) 60%); }
   .phase.done { border-color: rgba(123,196,138,.35); }
+  .phase.done .bar i { background: var(--ok); }
   .phase .bar { height: 3px; background: var(--seam-2); border-radius: 2px; overflow: hidden; }
   .phase .bar i { display: block; height: 100%; background: var(--ember); }
 
@@ -1385,35 +1386,42 @@ craftar workspaces — 4 registered
   <!-- ================= STATUS ================= -->
   <section id="status">
     <div class="eyebrow">Status</div>
-    <h2>Phase 0 — validated against a hand-built workspace with an oracle test.</h2>
+    <h2>Phase 1 — the foundations are done; the client layer is in progress.</h2>
     <p class="lede" style="margin-top:22px">Before generating anything new, Craftar has to reproduce what teams already have. The oracle imports a hand-built workspace (Claude Code + Kiro), syncs it, and asserts byte equality of every generated file; a second sync must be a no-op; a Forge edit must reach both targets; a manual edit must surface as drift and survive; a removed ingredient must disappear; an unmanaged file must be untouched.</p>
 
     <div class="phases">
-      <div class="phase now">
-        <div class="n0"><span>Phase 0</span><span style="color:var(--ember)">in progress</span></div>
+      <div class="phase done">
+        <div class="n0"><span>Phase 0</span><span style="color:var(--ok)">done</span></div>
         <h3>Foundations</h3>
         <ul>
           <li>Forge schema: ingredients, recipes, profiles</li>
           <li>Layer resolver with exclusive slots and params</li>
           <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
-          <li>The read-only catalogue: <code>recipes</code>, <code>ingredients</code> and <code>targets</code> with the capability matrix</li>
-          <li><code>add recipe</code> / <code>remove recipe</code>, editing the workspace's recipe choice</li>
           <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
-          <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant, <code>take: param</code> or <code>take: section</code>; the registered workspaces planned before and after, <code style="white-space:nowrap">--prune-recipes</code>), <code>forge impact</code></li>
+          <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant, <code>take: param</code> or <code>take: section</code>)</li>
           <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by <code>forge unify</code></li>
-          <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache (<code>craftar cache prune</code>), the schema 2 lock</li>
-          <li><code>craftar init</code> with flags</li>
-          <li><code>craftar doctor</code>: what is off on the machine and in the workspace</li>
-          <li>Workspace registry and <code>craftar workspaces</code></li>
           <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
           <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
         </ul>
-        <div class="bar" aria-hidden="true"><i style="width:70%"></i></div>
+        <div class="bar" aria-hidden="true"><i style="width:100%"></i></div>
       </div>
-      <div class="phase">
-        <div class="n0"><span>Phase 1</span></div>
-        <h3>Team profile</h3>
-        <ul><li>Profiles and an interactive <code>craftar init</code></li><li>PM tool → MCP, platform → MCP</li></ul>
+      <div class="phase now">
+        <div class="n0"><span>Phase 1</span><span style="color:var(--ember)">in progress</span></div>
+        <h3>Client profile</h3>
+        <ul>
+          <li>The read-only catalogue: <code>recipes</code>, <code>ingredients</code> and <code>targets</code> with the capability matrix</li>
+          <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache (<code>craftar cache prune</code>), the schema 2 lock</li>
+          <li><code>craftar init</code> with flags</li>
+          <li><code>add recipe</code> / <code>remove recipe</code>, editing the workspace's recipe choice</li>
+          <li><code>craftar doctor</code>: what is off on the machine and in the workspace</li>
+          <li>Workspace registry and <code>craftar workspaces</code></li>
+          <li><code>forge impact</code>; <code>forge unify</code> planning the registered workspaces before and after, <code style="white-space:nowrap">--prune-recipes</code></li>
+          <li>Next: an interactive <code>craftar init</code></li>
+          <li>Next: cloning a profile's repositories at init</li>
+          <li>Next: PM tool → MCP</li>
+          <li>Next: platform → MCP</li>
+        </ul>
+        <div class="bar" aria-hidden="true"><i style="width:64%"></i></div>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 2</span></div>
