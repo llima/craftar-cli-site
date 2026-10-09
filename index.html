@@ -1199,9 +1199,10 @@ craftar workspaces — 4 registered
             <code><span class="p">$</span> craftar diff <span class="c">[--exit-code] # what sync would change, orphans included; writes nothing</span></code>
             <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan · orphan-drift</span></code>
             <code><span class="p">$</span> craftar sync --offline <span class="c"># remote Forge: fetched first; --offline reads the cached copy</span></code>
+            <code><span class="p">$</span> craftar cache prune <span class="c">[--dry-run] # cached Forges nothing uses, unfinished fetches, trees unused for 14 days</span></code>
             <code><span class="p">$</span> craftar sync --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
           </div>
-          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. With a git-URL Forge, <code>ref</code> follows a branch or pins a tag or full SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy unless it passes <code>--offline</code>.</p>
+          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. With a git-URL Forge, <code>ref</code> follows a branch or pins a tag or full SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy unless it passes <code>--offline</code>. <code>craftar cache prune</code> removes the Forge cache entries nothing uses — no registered workspace and not the current one — entries whose first fetch never completed, and trees unused for 14 days; it never touches a workspace, a lock or the registry, and <code>--dry-run</code> shows what it would remove.</p>
         </div>
       </article>
 
@@ -1400,7 +1401,7 @@ craftar workspaces — 4 registered
           <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
           <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant, <code>take: param</code> or <code>take: section</code>; the registered workspaces planned before and after, <code style="white-space:nowrap">--prune-recipes</code>), <code>forge impact</code></li>
           <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by <code>forge unify</code></li>
-          <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache, the schema 2 lock</li>
+          <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache (<code>craftar cache prune</code>), the schema 2 lock</li>
           <li><code>craftar init</code> with flags</li>
           <li><code>craftar doctor</code>: what is off on the machine and in the workspace</li>
           <li>Workspace registry and <code>craftar workspaces</code></li>
