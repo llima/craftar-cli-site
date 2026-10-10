@@ -205,11 +205,11 @@
 
   /* ---------- guarantees ---------- */
   .rules { margin-top: 48px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }
-  @media (max-width: 800px) { .rules { grid-template-columns: 1fr; } }
+  @media (max-width: 800px) { .rules { grid-template-columns: minmax(0, 1fr); } }
   .rule { background: var(--plate); padding: 24px; display: grid; gap: 10px; align-content: start; }
   .rule .never { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: #D98A8A; }
   .rule h3 { font-size: 18px; }
-  .rule p { font-size: 14.5px; color: var(--muted); }
+  .rule p { font-size: 14.5px; color: var(--muted); overflow-wrap: anywhere; }
   .rule .because { font-size: 13.5px; color: var(--faint); border-top: 1px dashed var(--seam-2); padding-top: 10px; }
   .rule .because::before { content: "learned the hard way — "; color: var(--faint); }
 
@@ -1237,14 +1237,14 @@ craftar workspaces — 4 registered
       </article>
 
       <article class="feature">
-        <div><div class="id">F4 <span class="pill now">flags working</span></div><h3>Workspace bootstrap</h3></div>
+        <div><div class="id">F4 <span class="pill now">working</span></div><h3>Workspace bootstrap</h3></div>
         <p class="why"><b>problem · P2</b>Starting with a new team means reassembling repos, harness, templates and local services from memory.</p>
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar init --forge ../forge --profile team-a --targets claude-code,kiro <span class="c"># writes craftar.yaml, then runs the first sync</span></code>
-            <code><span class="p">$</span> craftar init <span class="c">#&nbsp;planned — interactive: Forge → profile → recipes/targets → clone repos? → templates/services? → sync</span></code>
+            <code><span class="p">$</span> craftar init <span class="c">#&nbsp;in a terminal: asks for the Forge, the profile, then the recipes and targets; confirms once</span></code>
           </div>
-          <p class="mech">Writes <code>craftar.yaml</code> — the Forge, the profile, and the recipe and target choices given as flags — only once the workspace resolves and plans, then runs the first <code>sync</code>, which registers the workspace. Files already on disk are adopted when they equal the plan and otherwise left as they are and reported; an existing <code>craftar.yaml</code> is never edited. Planned: the interactive flow, cloning the profile's <code>repos</code>, templates and services.</p>
+          <p class="mech">Writes <code>craftar.yaml</code> — the Forge, the profile, and the recipe and target choices, given as flags or as answers — only once the workspace resolves and plans, then runs the first <code>sync</code>, which registers the workspace. Files already on disk are adopted when they equal the plan and otherwise left as they are and reported; an existing <code>craftar.yaml</code> is never edited. In a terminal, <code>craftar init</code> asks for a <code>--forge</code> or a <code>--profile</code> it was not given — the Forge last synced on this machine offered, the profile from the Forge's list, then the recipes and targets to keep or adjust — confirms once before anything is written, and ends by printing the same run as flags, for CI; off a terminal a missing flag is refused. When a declared parameter a file the plan writes cites has no value, <code>craftar.yaml</code> is still written and the first <code>sync</code> is not run. Planned: cloning the profile's <code>repos</code>, templates and services.</p>
         </div>
       </article>
 
@@ -1318,7 +1318,7 @@ craftar workspaces — 4 registered
         <p class="why"><b>problem · P2</b>Sync failures usually come from the environment: missing env vars, wrong Node, no Docker, unreachable Forge.</p>
         <div class="how">
           <div class="cmds"><code><span class="p">$</span> craftar doctor <span class="c">[--fetch] [--strict] [--json] # one line per finding, each with its fix</span></code></div>
-          <p class="mech">Checks this machine — Node ≥ 22, <code>git</code>, <code>~/.craftar</code>, the registry, the Forge cache — and, inside a workspace, its configuration and Forge, the plan's warnings, declared parameters with no value, the <code>${NAME}</code> variables a written MCP server expects and the environment lacks (names only, never values), the lock, <code>status</code> and registration. Each finding is one line — <code>ok</code>, <code>warn</code> or <code>error</code> — with the command that fixes it. It only reports: nothing is written to a workspace, a lock or the registry, and a remote Forge is read from the cache unless <code>--fetch</code> is given. It exits 1 on an <code>error</code>, or on a <code>warn</code> under <code>--strict</code>; <code>--json</code> is a contract for tooling. Planned: Docker and <code>dotnet</code> checks once services and templates exist, rulesync once it is a dependency.</p>
+          <p class="mech">Checks this machine — Node ≥ 22, <code>git</code>, <code>~/.craftar</code>, the registry, the Forge cache — and, inside a workspace, its configuration and Forge, the plan's warnings, declared parameters with no value (an <code>error</code> when a file the plan writes cites one, a <code>warn</code> when nothing does), the variables a written MCP server declares in <code>authEnv</code> or references as <code>${NAME}</code> and the environment lacks (names only, never values), the lock, <code>status</code> and registration. Each finding is one line — <code>ok</code>, <code>warn</code> or <code>error</code> — with the command that fixes it. It only reports: nothing is written to a workspace, a lock or the registry, and a remote Forge is read from the cache unless <code>--fetch</code> is given. It exits 1 on an <code>error</code>, or on a <code>warn</code> under <code>--strict</code>; <code>--json</code> is a contract for tooling. Planned: Docker and <code>dotnet</code> checks once services and templates exist, rulesync once it is a dependency.</p>
         </div>
       </article>
 
@@ -1329,7 +1329,7 @@ craftar workspaces — 4 registered
   <section id="invariants">
     <div class="eyebrow">Invariants</div>
     <h2>Constraints derived from the failure modes.</h2>
-    <p class="lede" style="margin-top:22px">These are the constraints Craftar is built against, in every command and every emitter — what distinguishes it from a template renderer. The two marked <span class="pill">planned</span> are design commitments, not yet enforced by the code.</p>
+    <p class="lede" style="margin-top:22px">These are the constraints Craftar is built against, in every command and every emitter — what distinguishes it from a template renderer. The one marked <span class="pill">planned</span> is a design commitment, not yet enforced by the code.</p>
 
     <div class="rules">
       <div class="rule"><div class="never">never</div><h3>Touch a file not in the lockfile</h3><p>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved and never removed; one at a path the Forge would write is reported by <code>status</code> as a collision and never touched. Regeneration is per file.</p><p class="ref">← FM-1</p></div>
@@ -1337,9 +1337,9 @@ craftar workspaces — 4 registered
       <div class="rule"><div class="never">never</div><h3>Leave an orphan on disk</h3><p>An output whose ingredient left the resolved set is removed on the next sync and named in the summary, in every target. <code>--check</code> fails on orphans, and <code>diff</code> shows an orphan as the removal of the whole file (a hand-edited one as a header, since sync keeps it).</p><p class="ref">← FM-3</p></div>
       <div class="rule"><div class="never">never</div><h3>Require a manual mirror</h3><p>Everything a second target needs — steering, agent JSON, command copies — is emitted from the same ingredient. If two files must say the same thing, both are generated.</p><p class="ref">← FM-4</p></div>
       <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today the rule and its reviewer are separate ingredients (<code>rule/&lt;name&gt;</code>, <code>agent/&lt;name&gt;-reviewer</code>) grouped by a stack recipe.</p><p class="ref">← FM-5</p></div>
-      <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited.</p><p class="ref">← FM-6</p></div>
+      <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited. A parameter an ingredient declares with no default, that a file the plan writes cites and no layer sets, stops <code>sync</code>: nothing is written until it has a value.</p><p class="ref">← FM-6</p></div>
       <div class="rule"><div class="never">never</div><h3>Translate</h3><p>Language is an attribute of the ingredient. The Forge may hold rules in one language and docs in another; Craftar emits text as written.</p><p class="ref">← FM-7</p></div>
-      <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Store a secret</h3><p>Ingredients are meant to declare <code>authEnv</code>; settings would be emitted as <code>settings.example.json</code>; <code>doctor</code> would verify the variables exist on the machine. Planned: <code>authEnv</code> and <code>settings.example.json</code> are not built yet; <code>craftar doctor</code> already names the <code>${NAME}</code> variables a written MCP server expects and the environment lacks, never their values, <code>craftar import</code> refuses ingredients holding secret-like values, and a <code>forge:</code> URL holding credentials is refused.</p><p class="ref">← FM-8</p></div>
+      <div class="rule"><div class="never">never</div><h3>Store a secret</h3><p>An MCP ingredient declares <code>authEnv</code> — the environment variables its server needs, names only, never a value; an item shaped like a known token fails the load. With <code>claude-code</code>, <code>sync</code> writes <code>.claude/settings.craftar.example.json</code>, each declared name with an empty value, for the developer to copy into their own untracked <code>.claude/settings.json</code>. <code>craftar doctor</code> names the variables a written MCP server declares in <code>authEnv</code> or references as <code>${NAME}</code> and the environment lacks, never their values; <code>craftar import</code> refuses ingredients holding secret-like values, and a <code>forge:</code> URL holding credentials is refused.</p><p class="ref">← FM-8</p></div>
     </div>
   </section>
 
@@ -1357,7 +1357,7 @@ craftar workspaces — 4 registered
           <tr><td>agent</td><td class="y">native<br><code>.claude/agents/&lt;name&gt;.md</code></td><td class="part">converted<br><code>.kiro/agents/&lt;name&gt;.json</code></td><td class="n">unsupported</td></tr>
           <tr><td>command</td><td class="y">native<br><code>.claude/commands/&lt;name&gt;.md</code></td><td class="part">converted<br><code>.kiro/steering/commands/&lt;name&gt;.md</code></td><td class="n">unsupported</td></tr>
           <tr><td>skill</td><td class="y">native<br><code>.claude/skills/&lt;name&gt;/&lt;file&gt; · .claude/skills/&lt;name&gt;.md</code></td><td class="part">converted<br><code>.kiro/skills/&lt;name&gt;/&lt;file&gt;</code></td><td class="n">unsupported</td></tr>
-          <tr><td>mcp</td><td class="y">native<br><code>.mcp.json</code></td><td class="y">native<br><code>.kiro/settings/mcp.json</code></td><td class="n">unsupported</td></tr>
+          <tr><td>mcp</td><td class="y">native<br><code>.mcp.json · .claude/settings.craftar.example.json</code></td><td class="y">native<br><code>.kiro/settings/mcp.json</code></td><td class="n">unsupported</td></tr>
           <tr><td>script</td><td class="y">native<br><code>.claude/scripts/&lt;file&gt;</code></td><td class="n">unsupported</td><td class="n">unsupported</td></tr>
           <tr><td>steering</td><td class="n">unsupported</td><td class="y">native<br><code>.kiro/steering/&lt;name&gt;.md</code></td><td class="n">unsupported</td></tr>
           <tr><td>hook</td><td class="y">native<br><code>.claude/hooks/&lt;file&gt;</code></td><td class="n">unsupported</td><td class="n">unsupported</td></tr>
@@ -1416,12 +1416,12 @@ craftar workspaces — 4 registered
           <li><code>craftar doctor</code>: what is off on the machine and in the workspace</li>
           <li>Workspace registry and <code>craftar workspaces</code></li>
           <li><code>forge impact</code>; <code>forge unify</code> planning the registered workspaces before and after, <code style="white-space:nowrap">--prune-recipes</code></li>
-          <li>Next: an interactive <code>craftar init</code></li>
+          <li>An interactive <code>craftar init</code>: choose the Forge and the profile</li>
           <li>Next: cloning a profile's repositories at init</li>
           <li>Next: PM tool → MCP</li>
           <li>Next: platform → MCP</li>
         </ul>
-        <div class="bar" aria-hidden="true"><i style="width:64%"></i></div>
+        <div class="bar" aria-hidden="true"><i style="width:73%"></i></div>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 2</span></div>
@@ -1443,7 +1443,7 @@ craftar workspaces — 4 registered
     <div class="status-grid">
       <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
       <div><h3>Open questions</h3><ul><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
-      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ. To start an empty workspace from a Forge instead, run <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>: it writes <code>craftar.yaml</code> and runs the first <code>sync</code>. When something fails, <code>craftar doctor</code> lists what is off on the machine and in the workspace, each finding with the command that fixes it.</p></div>
+      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ. To start an empty workspace from a Forge instead, run <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>: it writes <code>craftar.yaml</code> and runs the first <code>sync</code> — or, in a terminal, run <code>craftar init</code> alone and answer its questions. When something fails, <code>craftar doctor</code> lists what is off on the machine and in the workspace, each finding with the command that fixes it.</p></div>
     </div>
   </section>
 
