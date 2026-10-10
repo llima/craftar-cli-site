@@ -1237,14 +1237,14 @@ craftar workspaces — 4 registered
       </article>
 
       <article class="feature">
-        <div><div class="id">F4 <span class="pill now">flags working</span></div><h3>Workspace bootstrap</h3></div>
+        <div><div class="id">F4 <span class="pill now">working</span></div><h3>Workspace bootstrap</h3></div>
         <p class="why"><b>problem · P2</b>Starting with a new team means reassembling repos, harness, templates and local services from memory.</p>
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar init --forge ../forge --profile team-a --targets claude-code,kiro <span class="c"># writes craftar.yaml, then runs the first sync</span></code>
-            <code><span class="p">$</span> craftar init <span class="c">#&nbsp;planned — interactive: Forge → profile → recipes/targets → clone repos? → templates/services? → sync</span></code>
+            <code><span class="p">$</span> craftar init <span class="c">#&nbsp;in a terminal: asks for the Forge, the profile, then the recipes and targets; confirms once</span></code>
           </div>
-          <p class="mech">Writes <code>craftar.yaml</code> — the Forge, the profile, and the recipe and target choices given as flags — only once the workspace resolves and plans, then runs the first <code>sync</code>, which registers the workspace. Files already on disk are adopted when they equal the plan and otherwise left as they are and reported; an existing <code>craftar.yaml</code> is never edited. Planned: the interactive flow, cloning the profile's <code>repos</code>, templates and services.</p>
+          <p class="mech">Writes <code>craftar.yaml</code> — the Forge, the profile, and the recipe and target choices, given as flags or as answers — only once the workspace resolves and plans, then runs the first <code>sync</code>, which registers the workspace. Files already on disk are adopted when they equal the plan and otherwise left as they are and reported; an existing <code>craftar.yaml</code> is never edited. In a terminal, <code>craftar init</code> asks for a <code>--forge</code> or a <code>--profile</code> it was not given — the Forge last synced on this machine offered, the profile from the Forge's list, then the recipes and targets to keep or adjust — confirms once before anything is written, and ends by printing the same run as flags, for CI; off a terminal a missing flag is refused. Planned: cloning the profile's <code>repos</code>, templates and services.</p>
         </div>
       </article>
 
@@ -1416,12 +1416,12 @@ craftar workspaces — 4 registered
           <li><code>craftar doctor</code>: what is off on the machine and in the workspace</li>
           <li>Workspace registry and <code>craftar workspaces</code></li>
           <li><code>forge impact</code>; <code>forge unify</code> planning the registered workspaces before and after, <code style="white-space:nowrap">--prune-recipes</code></li>
-          <li>Next: an interactive <code>craftar init</code></li>
+          <li>An interactive <code>craftar init</code>: choose the Forge and the profile</li>
           <li>Next: cloning a profile's repositories at init</li>
           <li>Next: PM tool → MCP</li>
           <li>Next: platform → MCP</li>
         </ul>
-        <div class="bar" aria-hidden="true"><i style="width:64%"></i></div>
+        <div class="bar" aria-hidden="true"><i style="width:73%"></i></div>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 2</span></div>
@@ -1443,7 +1443,7 @@ craftar workspaces — 4 registered
     <div class="status-grid">
       <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
       <div><h3>Open questions</h3><ul><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>What Kimi and Codex read beyond <code>AGENTS.md</code></li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
-      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ. To start an empty workspace from a Forge instead, run <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>: it writes <code>craftar.yaml</code> and runs the first <code>sync</code>. When something fails, <code>craftar doctor</code> lists what is off on the machine and in the workspace, each finding with the command that fixes it.</p></div>
+      <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ. To start an empty workspace from a Forge instead, run <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>: it writes <code>craftar.yaml</code> and runs the first <code>sync</code> — or, in a terminal, run <code>craftar init</code> alone and answer its questions. When something fails, <code>craftar doctor</code> lists what is off on the machine and in the workspace, each finding with the command that fixes it.</p></div>
     </div>
   </section>
 
