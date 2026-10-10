@@ -525,7 +525,7 @@
   <span class="add">+</span> .claude/commands/create-component.md
   <span class="add">+</span> .kiro/steering/frontend-angular.md
   <span class="del">-</span> .kiro/steering/frontend-react.md  <span class="dim">(orphan: no longer produced by the Forge)</span>
-  <span class="chg">!</span> .kiro/agents/frontend-reviewer.json  <span class="dim">hand-edited since last sync — run `craftar diff` and either `--overwrite-drift` or promote the change to the Forge</span>
+  <span class="chg">!</span> .kiro/agents/frontend-reviewer.json  <span class="dim">hand-edited since last sync — `craftar drift show &lt;path&gt;`, then `craftar drift discard` or `craftar drift promote`</span>
 <span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
     </div>
   </section>
@@ -1219,7 +1219,7 @@ craftar workspaces — 4 registered
             <code><span class="p">$</span> craftar forge impact <span class="c"># every registered workspace reading this Forge, and what its next sync would do</span></code>
             <code><span class="p">$</span> craftar targets <span class="c"># the capability matrix: what each target does with each ingredient type</span></code>
           </div>
-          <p class="mech">Three layers: the open standards — <code>AGENTS.md</code> (the always-on rules, then each scoped rule listed at the file a target writes for it or embedded when none does), Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> — written by the target emitters; tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned. Importing a second client into an existing Forge reuses every ingredient whose render for that profile equals the workspace file, infers declared <code>{{key}}</code> values into the profile, and makes the rest variants; <code>forge unify</code> resolves each one back into its base (see <a href="#unify">Growing the Forge</a>).</p>
+          <p class="mech">Three layers: the open standards — <code>AGENTS.md</code> (the always-on rules, then each scoped rule listed at the file a target writes for it or embedded when none does), Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> — written by the target emitters; tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned. Importing a second client into an existing Forge reuses every ingredient whose render for that profile equals the workspace file, infers declared <code>{{key}}</code> values into the profile, and makes the rest variants; <code>forge unify</code> resolves each one back into its base (see <a href="#unify">Growing the Forge</a>). <code>craftar import <span style="white-space:nowrap">--report</span> &lt;file.md&gt;</code> also writes a Markdown report of the import: what was created, reused, made a variant or rejected, and the <code>.kiro/</code> files that differ from what <code>sync</code> would generate — as paths and line counts, never content.</p>
         </div>
       </article>
 
@@ -1275,14 +1275,16 @@ craftar workspaces — 4 registered
       </article>
 
       <article class="feature">
-        <div><div class="id">F8 <span class="pill now">detection working</span></div><h3>Drift and reverse contribution</h3></div>
+        <div><div class="id">F8 <span class="pill now">working</span></div><h3>Drift and reverse contribution</h3></div>
         <p class="why"><b>problem · P2</b>Generated files get edited in place. Either the edit is lost on the next sync, or the generator is abandoned (FM-2).</p>
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar status <span class="c"># drifted files listed; never overwritten without --overwrite-drift</span></code>
-            <code><span class="p">$</span> craftar drift show &lt;file&gt; · drift discard · drift promote <span class="c">#&nbsp;planned</span></code>
+            <code><span class="p">$</span> craftar drift show <span class="c"># the hand-edited files, whether the Forge also changed each, whether the edit can be promoted; with a path, its diff</span></code>
+            <code><span class="p">$</span> craftar drift discard &lt;path...&gt; <span class="c"># a sync that also regenerates the named hand-edited files; their edits are lost</span></code>
+            <code><span class="p">$</span> craftar drift promote &lt;path&gt; <span class="c"># carry one hand edit of a .claude/ file into the Forge</span></code>
           </div>
-          <p class="mech">Normalized hashes from the lock are compared with disk. Planned: <code>promote</code> will convert the edit back into an ingredient via <code>import</code> and open a Forge branch. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
+          <p class="mech">Normalized hashes from the lock are compared with disk. <code>drift discard</code> is a <code>sync</code> that also regenerates the named hand-edited files and removes a named hand-edited file the Forge no longer produces. <code>drift promote</code> carries one hand edit of a <code>.claude/</code> file into the Forge's working tree — a value in the profile's <code>params</code> or <code>sections</code> when the edit is only that, otherwise a variant for the workspace's profile — gated on git and proved before the first write; it never syncs and never commits. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
         </div>
       </article>
 
@@ -1339,7 +1341,7 @@ craftar workspaces — 4 registered
       <div class="rule"><div class="never">never <span class="pill">planned</span></div><h3>Split a rule from its reviewer</h3><p>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today the rule and its reviewer are separate ingredients (<code>rule/&lt;name&gt;</code>, <code>agent/&lt;name&gt;-reviewer</code>) grouped by a stack recipe.</p><p class="ref">← FM-5</p></div>
       <div class="rule"><div class="never">never</div><h3>Inline a volatile value</h3><p>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited. A parameter an ingredient declares with no default, that a file the plan writes cites and no layer sets, stops <code>sync</code>: nothing is written until it has a value.</p><p class="ref">← FM-6</p></div>
       <div class="rule"><div class="never">never</div><h3>Translate</h3><p>Language is an attribute of the ingredient. The Forge may hold rules in one language and docs in another; Craftar emits text as written.</p><p class="ref">← FM-7</p></div>
-      <div class="rule"><div class="never">never</div><h3>Store a secret</h3><p>An MCP ingredient declares <code>authEnv</code> — the environment variables its server needs, names only, never a value; an item shaped like a known token fails the load. With <code>claude-code</code>, <code>sync</code> writes <code>.claude/settings.craftar.example.json</code>, each declared name with an empty value, for the developer to copy into their own untracked <code>.claude/settings.json</code>. <code>craftar doctor</code> names the variables a written MCP server declares in <code>authEnv</code> or references as <code>${NAME}</code> and the environment lacks, never their values; <code>craftar import</code> refuses ingredients holding secret-like values, and a <code>forge:</code> URL holding credentials is refused.</p><p class="ref">← FM-8</p></div>
+      <div class="rule"><div class="never">never</div><h3>Store a secret</h3><p>An MCP ingredient declares <code>authEnv</code> — the environment variables its server needs, names only, never a value; an item shaped like a known token fails the load. With <code>claude-code</code>, <code>sync</code> writes <code>.claude/settings.craftar.example.json</code>, each declared name with an empty value, for the developer to copy into their own untracked <code>.claude/settings.json</code>. <code>craftar doctor</code> names the variables a written MCP server declares in <code>authEnv</code> or references as <code>${NAME}</code> and the environment lacks, never their values; <code>craftar import</code> refuses ingredients holding secret-like values, and a <code>forge:</code> URL holding credentials is refused. A Forge file that is not valid YAML is reported by an error code and a position at most, never by quoting the line; one its schema refuses is reported by key, never by a value it holds.</p><p class="ref">← FM-8</p></div>
     </div>
   </section>
 
@@ -1417,16 +1419,20 @@ craftar workspaces — 4 registered
           <li>Workspace registry and <code>craftar workspaces</code></li>
           <li><code>forge impact</code>; <code>forge unify</code> planning the registered workspaces before and after, <code style="white-space:nowrap">--prune-recipes</code></li>
           <li>An interactive <code>craftar init</code>: choose the Forge and the profile</li>
+          <li><code>authEnv</code> on MCP ingredients: the environment variables a server needs, by name</li>
+          <li><code>craftar drift</code>: <code>show</code>, <code>discard</code>, <code>promote</code></li>
+          <li>A sync refused when a declared parameter has no value</li>
+          <li><code>craftar import <span style="white-space:nowrap">--report</span></code>: a Markdown report of an import</li>
           <li>Next: cloning a profile's repositories at init</li>
           <li>Next: PM tool → MCP</li>
           <li>Next: platform → MCP</li>
         </ul>
-        <div class="bar" aria-hidden="true"><i style="width:73%"></i></div>
+        <div class="bar" aria-hidden="true"><i style="width:80%"></i></div>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 2</span></div>
         <h3>Environment</h3>
-        <ul><li><code>service</code> ingredient</li><li>Project templates</li><li><code>drift show / discard / promote</code></li><li><code>docs validate</code></li></ul>
+        <ul><li><code>service</code> ingredient</li><li>Project templates</li><li><code>docs validate</code></li></ul>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 3</span></div>
