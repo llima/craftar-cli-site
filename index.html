@@ -525,7 +525,7 @@
   <span class="add">+</span> .claude/commands/create-component.md
   <span class="add">+</span> .kiro/steering/frontend-angular.md
   <span class="del">-</span> .kiro/steering/frontend-react.md  <span class="dim">(orphan: no longer produced by the Forge)</span>
-  <span class="chg">!</span> .kiro/agents/frontend-reviewer.json  <span class="dim">hand-edited since last sync — run `craftar diff` and either `--overwrite-drift` or promote the change to the Forge</span>
+  <span class="chg">!</span> .kiro/agents/frontend-reviewer.json  <span class="dim">hand-edited since last sync — `craftar drift show &lt;path&gt;`, then `craftar drift discard` or `craftar drift promote`</span>
 <span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
     </div>
   </section>
@@ -1275,14 +1275,16 @@ craftar workspaces — 4 registered
       </article>
 
       <article class="feature">
-        <div><div class="id">F8 <span class="pill now">detection working</span></div><h3>Drift and reverse contribution</h3></div>
+        <div><div class="id">F8 <span class="pill now">working</span></div><h3>Drift and reverse contribution</h3></div>
         <p class="why"><b>problem · P2</b>Generated files get edited in place. Either the edit is lost on the next sync, or the generator is abandoned (FM-2).</p>
         <div class="how">
           <div class="cmds">
             <code><span class="p">$</span> craftar status <span class="c"># drifted files listed; never overwritten without --overwrite-drift</span></code>
-            <code><span class="p">$</span> craftar drift show &lt;file&gt; · drift discard · drift promote <span class="c">#&nbsp;planned</span></code>
+            <code><span class="p">$</span> craftar drift show <span class="c"># the hand-edited files, whether the Forge also changed each, whether the edit can be promoted; with a path, its diff</span></code>
+            <code><span class="p">$</span> craftar drift discard &lt;path...&gt; <span class="c"># regenerate only the named files from the Forge; their edits are lost</span></code>
+            <code><span class="p">$</span> craftar drift promote &lt;path&gt; <span class="c"># carry one hand edit of a .claude/ file into the Forge</span></code>
           </div>
-          <p class="mech">Normalized hashes from the lock are compared with disk. Planned: <code>promote</code> will convert the edit back into an ingredient via <code>import</code> and open a Forge branch. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
+          <p class="mech">Normalized hashes from the lock are compared with disk. <code>drift discard</code> is a <code>sync</code> that also regenerates the named hand-edited files and removes a named hand-edited file the Forge no longer produces. <code>drift promote</code> carries one hand edit of a <code>.claude/</code> file into the Forge's working tree — a value in the profile's <code>params</code> or <code>sections</code> when the edit is only that, otherwise a variant for the workspace's profile — gated on git and proved before the first write; it never syncs and never commits. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
         </div>
       </article>
 
@@ -1426,7 +1428,7 @@ craftar workspaces — 4 registered
       <div class="phase">
         <div class="n0"><span>Phase 2</span></div>
         <h3>Environment</h3>
-        <ul><li><code>service</code> ingredient</li><li>Project templates</li><li><code>drift show / discard / promote</code></li><li><code>docs validate</code></li></ul>
+        <ul><li><code>service</code> ingredient</li><li>Project templates</li><li><code>docs validate</code></li></ul>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 3</span></div>
