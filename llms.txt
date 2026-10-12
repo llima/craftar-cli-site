@@ -168,7 +168,7 @@ Workspace output (AGENTS.md target):
 
 ### What syncs where
 
-Craftar writes the AI coder's own files — `.claude/` plus `.mcp.json` for Claude Code, `.kiro/` for Kiro — and a root `AGENTS.md` for the tools that read the open standard: Codex, Cursor, Kimi and Copilot consume that file today, while native emitters for their own formats are planned, as is generating tool-agnostic output such as `docs/` or `local-stack/`. For a workspace whose recipes bring a `service` ingredient, `sync` also writes `.craftar/` — `.craftar/compose.yaml`, `.craftar/.gitattributes` and `.craftar/services/<name>/…` — for no target. Client-owned folders like `src/` or `infra/` are never touched — only paths recorded in `craftar.lock` are ever written or removed. Outside a workspace and a Forge, Craftar writes on its own only under `~/.craftar` (by default): the Forge cache and the registry.
+Craftar writes the AI coder's own files — `.claude/` plus `.mcp.json` for Claude Code, `.kiro/` for Kiro — and a root `AGENTS.md` for the tools that read the open standard: Codex, Cursor, Kimi and Copilot consume that file today, while native emitters for their own formats are planned, as is generating tool-agnostic output such as `docs/`. For a workspace whose recipes bring a `service` ingredient, `sync` also writes `.craftar/` — `.craftar/compose.yaml`, `.craftar/.gitattributes` and `.craftar/services/<name>/…` — for no target. Client-owned folders like `src/` or `infra/` are never touched — only paths recorded in `craftar.lock` are ever written or removed. Outside a workspace and a Forge, Craftar writes on its own only under `~/.craftar` (by default): the Forge cache and the registry.
 
 ### Growing the Forge — a second client, one base
 
