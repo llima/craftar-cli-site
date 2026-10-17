@@ -1307,11 +1307,11 @@ craftar workspaces — 4 registered
       </article>
 
       <article class="feature">
-        <div><div class="id">F11</div><h3>Craftar as an MCP server</h3></div>
+        <div><div class="id">F11 <span class="pill now">read-only working</span></div><h3>Craftar as an MCP server</h3></div>
         <p class="why"><b>problem · P1 · P2</b>The agent itself should be able to check status, sync, or add a recipe without leaving the session.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar mcp <span class="c">#&nbsp;planned</span></code></div>
-          <p class="mech">Exposes <code>status</code>, <code>sync</code>, <code>diff</code>, <code>explain</code>, <code>recipes</code>, <code>add recipe</code>, <code>services up</code>. Packaged as a Claude Code plugin, an Agent Plugin, and Warp workflows — thin shells over the CLI.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar mcp <span class="c">[--workspace &lt;dir&gt;] [--fetch] # started by the AI coder, over stdin and stdout</span></code></div>
+          <p class="mech">A read-only MCP server the AI coder starts — registered in its own MCP configuration, or for a whole team as an ordinary <code>mcp</code> ingredient that <code>sync</code> writes like any other server. It serves the one workspace it was started in through seven tools that only read — <code>status</code>, <code>diff</code>, <code>explain</code>, <code>recipes</code>, <code>ingredients</code>, <code>targets</code>, <code>doctor</code> — each answering with the data its command prints, so the agent can say "run <code>craftar sync</code>" instead of editing a generated file. It writes nothing — no workspace file, lock, registry or Forge — reads no network unless started with <code>--fetch</code>, and never returns a hand-edited MCP configuration file; a result can carry the Forge's profile names, so register it only where that is acceptable. Upgrade every machine to craftar 0.29.0 or later before adding it to a shared Forge. Planned: writing tools (<code>sync</code>, <code>add recipe</code>); a Claude Code plugin, an Agent Plugin and Warp workflows as thin shells over the CLI.</p>
         </div>
       </article>
 
@@ -1427,6 +1427,7 @@ craftar workspaces — 4 registered
           <li><code>craftar import <span style="white-space:nowrap">--prefer-kiro</span></code>: a rule's source taken from its Kiro steering file</li>
           <li>A profile's <code>integrations</code> block: PM tool and platform as recipes selected by the profile</li>
           <li><code>{{param}}</code> inside an MCP server</li>
+          <li><code>craftar mcp</code>: a read-only MCP server, seven reading tools for an AI coder</li>
           <li>Next: cloning a profile's repositories at init</li>
         </ul>
         <div class="bar" aria-hidden="true"><i style="width:88%"></i></div>
@@ -1444,7 +1445,7 @@ craftar workspaces — 4 registered
       <div class="phase">
         <div class="n0"><span>Phase 4</span></div>
         <h3>Ecosystem</h3>
-        <ul><li><code>craftar mcp</code></li><li>Claude Code plugin, Agent Plugin</li><li>Warp workflows</li><li>Kimi, Codex, Cursor emitters</li><li>Documentation</li></ul>
+        <ul><li>Writing tools for <code>craftar mcp</code>: <code>sync</code>, <code>add recipe</code></li><li>Claude Code plugin, Agent Plugin</li><li>Warp workflows</li><li>Kimi, Codex, Cursor emitters</li><li>Documentation</li></ul>
       </div>
     </div>
 
