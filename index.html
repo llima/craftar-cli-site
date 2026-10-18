@@ -1298,11 +1298,11 @@ craftar workspaces — 4 registered
       </article>
 
       <article class="feature">
-        <div><div class="id">F10 <span class="pill now">registry working</span></div><h3>Registry and dashboard</h3></div>
+        <div><div class="id">F10 <span class="pill now">working</span></div><h3>Registry and dashboard</h3></div>
         <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar workspaces <span class="c">[--fetch] # every registered workspace, its status computed now</span></code><code><span class="p">$</span> craftar workspaces forget &lt;dir&gt; · craftar workspaces prune</code><code><span class="p">$</span> craftar ui <span class="c">#&nbsp;planned</span></code></div>
-          <p class="mech">A writing <code>sync</code> records its workspace in <code>~/.craftar/registry.json</code>. <code>craftar workspaces</code> prints each one — profile, stack, targets, Forge, last sync — with a status computed on the spot: <code>up to date</code>, <code>outdated</code>, <code>drift</code>, <code>no lock</code>, <code>missing</code> or <code>error</code>, plus <code>forge moved</code> when the Forge's commit is no longer the lock's; it reads a remote Forge from the cache unless <code>--fetch</code> is given. <code>CRAFTAR_NO_REGISTRY</code> turns the registry off, for CI runners and throwaway checkouts. From the Forge's side, <code>craftar forge impact</code> lists every registered workspace that reads it — by its path, by a git remote, or through another clone — with what its next <code>sync</code> would do; a workspace synced on CI, on another machine or with the registry off is not in it. Planned: these views as a local web page, with actions <code>sync</code> / <code>diff</code> / <code>explain</code>. <code>craftar ls</code> stays the view of one workspace's resolution.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar workspaces <span class="c">[--fetch] # every registered workspace, its status computed now</span></code><code><span class="p">$</span> craftar workspaces forget &lt;dir&gt; · craftar workspaces prune</code><code><span class="p">$</span> craftar ui <span class="c">[--port &lt;n&gt;] # a local, read-only dashboard on 127.0.0.1</span></code></div>
+          <p class="mech">A writing <code>sync</code> records its workspace in <code>~/.craftar/registry.json</code>. <code>craftar workspaces</code> prints each one — profile, stack, targets, Forge, last sync — with a status computed on the spot: <code>up to date</code>, <code>outdated</code>, <code>drift</code>, <code>no lock</code>, <code>missing</code> or <code>error</code>, plus <code>forge moved</code> when the Forge's commit is no longer the lock's; it reads a remote Forge from the cache unless <code>--fetch</code> is given. <code>CRAFTAR_NO_REGISTRY</code> turns the registry off, for CI runners and throwaway checkouts. From the Forge's side, <code>craftar forge impact</code> lists every registered workspace that reads it — by its path, by a git remote, or through another clone — with what its next <code>sync</code> would do; a workspace synced on CI, on another machine or with the registry off is not in it. <code>craftar ui</code> serves these views as a local page in a browser: the table of <code>craftar workspaces</code> and, for a registered workspace, what <code>status</code>, <code>diff</code> and <code>explain</code> say about it and what <code>recipes</code> and <code>ingredients</code> say about its Forge. It is read-only — it writes nothing (the Forge cache is used as every reader uses it), reaches no network (a remote Forge is read from the cached copy, and the page says so) and never runs <code>sync</code>: it prints the command to copy. It listens on <code>127.0.0.1</code> only (port 4747 by default; <code>--port 0</code> takes a free one), answers <code>GET</code> only, and every answer that carries data needs a token generated for that run, carried in the address it prints — whoever holds that address can read what the reading commands print, so open it only in a browser of the same user on the same machine. <code>craftar ls</code> stays the view of one workspace's resolution.</p>
         </div>
       </article>
 
@@ -1428,6 +1428,7 @@ craftar workspaces — 4 registered
           <li>A profile's <code>integrations</code> block: PM tool and platform as recipes selected by the profile</li>
           <li><code>{{param}}</code> inside an MCP server</li>
           <li><code>craftar mcp</code>: a read-only MCP server, seven reading tools for an AI coder</li>
+          <li><code>craftar ui</code>: a local, read-only dashboard of the registered workspaces, on <code>127.0.0.1</code> only</li>
           <li>Next: cloning a profile's repositories at init</li>
         </ul>
         <div class="bar" aria-hidden="true"><i style="width:88%"></i></div>
@@ -1440,7 +1441,7 @@ craftar workspaces — 4 registered
       <div class="phase">
         <div class="n0"><span>Phase 3</span></div>
         <h3>Automation</h3>
-        <ul><li><code>docs validate</code></li><li>GitHub Action, Azure Pipelines task</li><li><code>craftar ui</code></li></ul>
+        <ul><li><code>docs validate</code></li><li>GitHub Action, Azure Pipelines task</li></ul>
       </div>
       <div class="phase">
         <div class="n0"><span>Phase 4</span></div>
