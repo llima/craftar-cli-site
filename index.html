@@ -225,9 +225,9 @@
   .legend { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 14px; font-family: var(--mono); font-size: 12px; color: var(--faint); }
 
   /* ---------- roadmap ---------- */
-  .phases { margin-top: 48px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .phases { margin-top: 48px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
   @media (max-width: 1000px) { .phases { grid-template-columns: repeat(2, minmax(0,1fr)); } }
-  @media (max-width: 560px) { .phases { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .phases { grid-template-columns: minmax(0, 1fr); } }
   .phase { border: 1px solid var(--seam); border-radius: var(--r); background: var(--plate); padding: 18px; display: grid; gap: 10px; align-content: start; position: relative; }
   .phase .n0 { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); display: flex; justify-content: space-between; align-items: center; }
   .phase h3 { font-size: 18px; }
@@ -1313,7 +1313,7 @@ craftar workspaces — 4 registered
         <p class="why"><b>problem · P1 · P2</b>The agent itself should be able to ask what is pending, why a file exists and what the Forge offers without leaving the session — and say "run <code>craftar sync</code>" instead of editing a generated file.</p>
         <div class="how">
           <div class="cmds"><code><span class="p">$</span> craftar mcp <span class="c">[--workspace &lt;dir&gt;] [--fetch] # started by the AI coder, over stdin and stdout</span></code></div>
-          <p class="mech">A read-only MCP server the AI coder starts — registered in its own MCP configuration, or for a whole team as an ordinary <code>mcp</code> ingredient that <code>sync</code> writes like any other server. It serves the one workspace it was started in through seven tools that only read — <code>status</code>, <code>diff</code>, <code>explain</code>, <code>recipes</code>, <code>ingredients</code>, <code>targets</code>, <code>doctor</code> — each answering with the data its command prints, so the agent can say "run <code>craftar sync</code>" instead of editing a generated file. It writes nothing — no workspace file, lock, registry or Forge (the Forge cache is used as every reader uses it) — reads no network unless started with <code>--fetch</code>, and never returns a hand-edited MCP configuration file; a result can carry the Forge's profile names, so register it only where that is acceptable. Upgrade every machine to craftar 0.29.0 or later before adding it to a shared Forge. Planned: writing tools (<code>sync</code>, <code>add recipe</code>); a Claude Code plugin, an Agent Plugin and Warp workflows as thin shells over the CLI.</p>
+          <p class="mech">A read-only MCP server the AI coder starts — registered in its own MCP configuration, or for a whole team as an ordinary <code>mcp</code> ingredient that <code>sync</code> writes like any other server. It serves the one workspace it was started in through seven tools that only read — <code>status</code>, <code>diff</code>, <code>explain</code>, <code>recipes</code>, <code>ingredients</code>, <code>targets</code>, <code>doctor</code> — each answering with the data its command prints, so the agent can say "run <code>craftar sync</code>" instead of editing a generated file. It writes nothing — no workspace file, lock, registry or Forge (the Forge cache is used as every reader uses it) — reads no network unless started with <code>--fetch</code>, and never returns a hand-edited MCP configuration file; a result can carry the Forge's profile names, so register it only where that is acceptable. Upgrade every machine to craftar 0.29.0 or later before adding it to a shared Forge. Planned: writing tools (<code>sync</code>, <code>add recipe</code>); a Claude Code plugin and an Agent Plugin as thin shells over the CLI.</p>
         </div>
       </article>
 
@@ -1401,7 +1401,7 @@ craftar workspaces — 4 registered
         <ul>
           <li>Forge schema: ingredients, recipes, profiles</li>
           <li>Layer resolver with exclusive slots and params</li>
-          <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile</li>
+          <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile, drift and orphans</li>
           <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
           <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant, <code>take: param</code> or <code>take: section</code>)</li>
           <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by <code>forge unify</code></li>
@@ -1416,13 +1416,13 @@ craftar workspaces — 4 registered
         <ul>
           <li>The read-only catalogue: <code>recipes</code>, <code>ingredients</code> and <code>targets</code> with the capability matrix</li>
           <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache (<code>craftar cache prune</code>), the schema 2 lock</li>
-          <li><code>craftar init</code> with flags</li>
-          <li><code>add recipe</code> / <code>remove recipe</code>, editing the workspace's recipe choice</li>
-          <li><code>craftar doctor</code>: what is off on the machine and in the workspace</li>
           <li>Workspace registry and <code>craftar workspaces</code></li>
+          <li><code>add recipe</code> / <code>remove recipe</code>, editing the workspace's recipe choice</li>
+          <li><code>craftar init</code> with flags</li>
+          <li><code>craftar doctor</code>: what is off on the machine and in the workspace</li>
           <li><code>forge impact</code>; <code>forge unify</code> planning the registered workspaces before and after, <code style="white-space:nowrap">--prune-recipes</code>; <code>forge promote</code></li>
           <li>An interactive <code>craftar init</code>: choose the Forge and the profile</li>
-          <li><code>authEnv</code> on MCP ingredients: the environment variables a server needs, by name</li>
+          <li><code>authEnv</code> on MCP ingredients: the environment variables a server needs, by name, and the generated <code style="overflow-wrap:anywhere">.claude/<wbr>settings.craftar<wbr>.example.json</code></li>
           <li><code>craftar drift</code>: <code>show</code>, <code>discard</code>, <code>promote</code></li>
           <li>A sync refused when a declared parameter has no value</li>
           <li><code>craftar import <span style="white-space:nowrap">--report</span></code>: a Markdown report of an import</li>
@@ -1442,14 +1442,9 @@ craftar workspaces — 4 registered
         <ul><li>Local services: <code>service</code> ingredients, <code>.craftar/</code>, <code>craftar services up | down | status</code></li><li><code>craftar templates list | install</code>: <code>dotnet new</code> project templates declared in a profile</li></ul>
       </div>
       <div class="phase">
-        <div class="n0"><span>Phase 3</span></div>
-        <h3>Automation</h3>
-        <ul><li><code>docs validate</code></li><li>GitHub Action, Azure Pipelines task</li></ul>
-      </div>
-      <div class="phase">
-        <div class="n0"><span>Phase 4</span></div>
-        <h3>Ecosystem</h3>
-        <ul><li>Writing tools for <code>craftar mcp</code>: <code>sync</code>, <code>add recipe</code></li><li>Claude Code plugin, Agent Plugin</li><li>Warp workflows</li><li>Kimi, Codex, Cursor emitters</li><li>Documentation</li></ul>
+        <div class="n0"><span>Not in a phase</span></div>
+        <h3>Later</h3>
+        <ul><li>A rulesync bridge for Codex, Kimi and Cursor specifics</li><li><code>craftar docs validate</code></li><li>A GitHub Action and an Azure Pipelines task around <code style="white-space:nowrap">sync --check</code></li><li>Writing tools for <code>craftar mcp</code>: <code>sync</code>, <code>add recipe</code></li><li>Its Claude Code / Agent Plugin packaging</li></ul>
       </div>
     </div>
 
