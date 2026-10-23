@@ -1290,7 +1290,7 @@ craftar workspaces — 4 registered
         <div><div class="id">F9 <span class="pill now">--check working</span></div><h3>CI</h3></div>
         <p class="why"><b>problem · P2</b>Sync that depends on someone remembering will lag by workspace.</p>
         <div class="how">
-          <div class="cmds"><code><span class="p">$</span> craftar sync --check <span class="c"># exit ≠ 0 when behind or drifted</span></code><code><span class="p">$</span> craftar diff --exit-code <span class="c"># the same verdict as --check, with the diff that explains it</span></code></div>
+          <div class="cmds"><code><span class="p">$</span> craftar sync --check <span class="c"># exit ≠ 0 when out of sync or drifted</span></code><code><span class="p">$</span> craftar diff --exit-code <span class="c"># the same verdict as --check, with the diff that explains it</span></code></div>
           <p class="mech"><code>AGENTS.md</code> has a byte budget, <code>agents-md.maxBytes</code> (default 32768, Codex's <code>project_doc_max_bytes</code>; <code>0</code> turns it off): over it every plan warns, naming the largest rules, and when a recipe, the profile or the workspace sets it, <code>sync --check</code>, <code>status</code> and <code>diff --exit-code</code> with no path fail — a writing <code>sync</code> still writes. Later, outside the phases: a GitHub Action and an Azure Pipelines task around <code>sync --check</code>.</p>
         </div>
       </article>
