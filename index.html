@@ -387,7 +387,7 @@
       <li><a href="#features">Capabilities</a></li>
       <li><a href="#invariants">Invariants</a></li>
       <li><a href="#targets">Targets</a></li>
-      <li><a href="#status">Status</a></li>
+      <li><a href="#start">Get started</a></li>
       <li><a href="/docs/">Docs</a></li>
     </ul>
     <a class="btn" href="https://github.com/llima/craftar-cli" rel="noopener">
@@ -1275,77 +1275,14 @@ craftar workspaces — 4 registered
     <div class="legend"><span class="y">native — written in the tool's own place for that type, as the Forge holds it</span><span class="part">converted — written in another form: frontmatter or a banner added, references rewritten, another container format, or folded into a shared file</span><span class="n">unsupported — not written; sync warns and names the ingredient</span><span><code>service</code> is aimed at no AI coder: <code>sync</code> writes it under <code>.craftar/</code> for no target.</span><span><code>craftar targets</code> also prints what each converted cell changes.</span></div>
   </section>
 
-  <!-- ================= STATUS ================= -->
-  <section id="status">
-    <div class="eyebrow">Status</div>
-    <h2>Phases 0, 1 and 2 — the foundations, the client layer and the environment — are done.</h2>
-    <p class="lede" style="margin-top:22px">Before generating anything new, Craftar has to reproduce what teams already have. The oracle imports a hand-built workspace (Claude Code + Kiro), syncs it, and asserts byte equality of every generated file; a second sync must be a no-op; a Forge edit must reach both targets; a manual edit must surface as drift and survive; a removed ingredient must disappear; an unmanaged file must be untouched.</p>
-
-    <div class="phases">
-      <div class="phase done">
-        <div class="n0"><span>Phase 0</span><span style="color:var(--ok)">done</span></div>
-        <h3>Foundations</h3>
-        <ul>
-          <li>Forge schema: ingredients, recipes, profiles</li>
-          <li>Layer resolver with exclusive slots and params</li>
-          <li><code>sync</code>, <code>diff</code>, <code>status</code>, <code>explain</code>, <code>ls</code>, lockfile, drift and orphans</li>
-          <li><code>import --from claude-code</code>, reusing a base whose render matches when a second client joins the Forge</li>
-          <li><code>forge variants</code>, <code>forge diff</code>, <code>forge unify</code> (base, variant, <code>take: param</code> or <code>take: section</code>)</li>
-          <li>Sections: client-specific blocks in ingredient bodies, overridden per profile and workspace, each client's content inferred by import or extracted from a variant by <code>forge unify</code></li>
-          <li>Emitters: Claude Code, Kiro, AGENTS.md</li>
-          <li>Oracle suite against a private hand-built workspace, plus a synthetic suite in CI on Linux and Windows</li>
-        </ul>
-        <div class="bar" aria-hidden="true"><i style="width:100%"></i></div>
-      </div>
-      <div class="phase done">
-        <div class="n0"><span>Phase 1</span><span style="color:var(--ok)">done</span></div>
-        <h3>Client profile</h3>
-        <ul>
-          <li>The read-only catalogue: <code>recipes</code>, <code>ingredients</code> and <code>targets</code> with the capability matrix</li>
-          <li>Remote Forge: a git URL and <code>ref</code>, a per-machine cache (<code>craftar cache prune</code>), the schema 2 lock</li>
-          <li>Workspace registry and <code>craftar workspaces</code></li>
-          <li><code>add recipe</code> / <code>remove recipe</code>, editing the workspace's recipe choice</li>
-          <li><code>craftar init</code> with flags</li>
-          <li><code>craftar doctor</code>: what is off on the machine and in the workspace</li>
-          <li><code>forge impact</code>; <code>forge unify</code> planning the registered workspaces before and after, <code style="white-space:nowrap">--prune-recipes</code>; <code>forge promote</code></li>
-          <li>An interactive <code>craftar init</code>: choose the Forge and the profile</li>
-          <li><code>authEnv</code> on MCP ingredients: the environment variables a server needs, by name, and the generated <code style="overflow-wrap:anywhere">.claude/<wbr>settings.craftar<wbr>.example.json</code></li>
-          <li><code>craftar drift</code>: <code>show</code>, <code>discard</code>, <code>promote</code></li>
-          <li>A sync refused when a declared parameter has no value</li>
-          <li><code>craftar import <span style="white-space:nowrap">--report</span></code>: a Markdown report of an import</li>
-          <li><code>craftar import <span style="white-space:nowrap">--prefer-kiro</span></code>: a rule's source taken from its Kiro steering file</li>
-          <li>A profile's <code>integrations</code> block: PM tool and platform as recipes selected by the profile</li>
-          <li><code>{{param}}</code> inside an MCP server</li>
-          <li><code>craftar mcp</code>: a read-only MCP server, seven reading tools for an AI coder</li>
-          <li><code>craftar ui</code>: a local, read-only dashboard of the registered workspaces, on <code>127.0.0.1</code> only</li>
-          <li>Cloning a profile's repositories: <code>init <span style="white-space:nowrap">--clone</span></code>, <code>craftar repos</code></li>
-          <li>A new profile from <code>craftar init</code>: <code style="white-space:nowrap">--new-profile</code>, <code>--like</code></li>
-          <li>Writing tools for <code>craftar mcp</code>: <code style="white-space:nowrap">--allow-writes</code> — <code>sync</code>, <code>add_recipe</code>, <code>remove_recipe</code>, behind a consent typed per workspace</li>
-          <li>Writing actions in <code>craftar ui</code>: <code style="white-space:nowrap">--allow-writes</code> — Sync and Discard edit, confirmed in the page</li>
-          <li>The Claude Code plugin of <code>craftar mcp</code>: <code>plugins/craftar/</code> — a <code>/craftar</code> skill and the reading tools</li>
-          <li>The CI wrappers: <code style="overflow-wrap:anywhere">ci/github/action.yml</code>, <code style="overflow-wrap:anywhere">ci/azure/check.yml</code> — <code style="white-space:nowrap">sync --check</code> as a pull request's gate</li>
-          <li>Kiro agents' <code>permissions</code>: <code>permissions.rules</code> derived from the agent's tools, so kiro-cli 2.37 no longer rewrites the file</li>
-          <li><code>craftar settings apply</code>: the generated <code>hooks</code> and <code>env</code> names merged into <code style="overflow-wrap:anywhere">.claude/<wbr>settings.json</code>, only when a person types it</li>
-        </ul>
-        <div class="bar" aria-hidden="true"><i style="width:100%"></i></div>
-      </div>
-      <div class="phase done">
-        <div class="n0"><span>Phase 2</span><span style="color:var(--ok)">done</span></div>
-        <h3>Environment</h3>
-        <ul><li>Local services: <code>service</code> ingredients, <code>.craftar/</code>, <code>craftar services up | down | status</code></li><li><code>craftar templates list | install</code>: <code>dotnet new</code> project templates declared in a profile</li><li><code>craftar docs validate</code>: links, leaked tool-call tags and encoding always, and a profile's declared <code>docs:</code> taxonomy</li></ul>
-        <div class="bar" aria-hidden="true"><i style="width:100%"></i></div>
-      </div>
-      <div class="phase">
-        <div class="n0"><span>Not in a phase</span></div>
-        <h3>Later</h3>
-        <ul><li>A rulesync bridge for Codex, Kimi and Cursor specifics</li><li>The Agent Plugin packaging of <code>craftar mcp</code></li></ul>
-      </div>
-    </div>
+  <!-- ================= GET STARTED ================= -->
+  <section id="start">
+    <div class="eyebrow">Get started</div>
+    <h2>Try it in five minutes.</h2>
 
     <div class="status-grid">
-      <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
-      <div><h3>Open questions</h3><ul><li>Forge as a separate repo (current) vs. monorepo with team repos</li><li>Multiple Forges per workspace (schema reserved, not implemented)</li></ul></div>
       <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ. To start an empty workspace from a Forge instead, run <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>: it writes <code>craftar.yaml</code> and runs the first <code>sync</code> — or, in a terminal, run <code>craftar init</code> alone and answer its questions. When something fails, <code>craftar doctor</code> lists what is off on the machine and in the workspace, each finding with the command that fixes it.</p></div>
+      <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
     </div>
   </section>
 
