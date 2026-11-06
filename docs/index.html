@@ -39,10 +39,10 @@
   @media (max-width: 960px) { .docs { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
   @media (max-width: 520px) { .docs { grid-template-columns: minmax(0, 1fr); } }
   .doc-index { position: sticky; top: 24px; }
-  @media (max-width: 960px) { .doc-index { position: static; } .doc-index ol { columns: 2; column-gap: 24px; } }
-  @media (max-width: 520px) { .doc-index ol { columns: 1; } }
+  @media (max-width: 960px) { .doc-index { position: static; } .doc-index ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; } }
+  @media (max-width: 520px) { .doc-index ol { grid-template-columns: minmax(0, 1fr); } }
+  .doc-index { display: block; padding-block: 0; }
   .doc-index ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
-  .doc-index ol li { break-inside: avoid; }
   .doc-index a { color: var(--muted); text-decoration: none; display: block; padding: 6px 0; }
   .doc-index a:hover { color: var(--text); }
   .doc-entries { display: grid; gap: 48px; }
@@ -89,7 +89,7 @@
   <section id="docs">
     <div class="eyebrow">Documentation</div>
     <h1>Capabilities</h1>
-    <p class="lede">Each capability with the problem it addresses, every command it adds and how it works. The <a href="/#features">home page</a> keeps a short card for each. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code>#&nbsp;planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+    <p class="lede" style="margin-top:22px">Each capability with the problem it addresses, every command it adds and how it works. The <a href="/#features">home page</a> keeps a short card for each. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code>#&nbsp;planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
 
     <div class="docs">
       <nav class="doc-index" aria-label="Capabilities">
@@ -270,7 +270,7 @@
 
   <footer>
     <span>Craftar — open-source workspace harness manager. TypeScript / Node · MIT.</span>
-    <span><a href="/">Top</a> · <a href="/#model">Model</a> · <a href="https://github.com/llima/craftar-cli" rel="noopener">github</a></span>
+    <span><a href="#docs">Top</a> · <a href="/#model">Model</a> · <a href="https://github.com/llima/craftar-cli" rel="noopener">github</a></span>
   </footer>
 </div>
 </body>
