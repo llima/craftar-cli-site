@@ -196,7 +196,7 @@ One rule, two clients. `forge unify` never merges `ingredient.yaml` and refuses 
 ## Invariants (each derived from a failure mode; these are the constraints Craftar is built against — the one marked (planned) is a design commitment, not yet enforced by the code)
 
 - Never touch a file not in the lockfile — unknown files are preserved; one at a path the Forge would write is reported as a collision (FM-1).
-- Never hash raw bytes — normalize LF, UTF-8, strip BOM; compare JSON structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output is always CRLF without BOM (FM-2).
+- Never hash raw bytes — normalize LF, UTF-8, strip BOM; compare JSON structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output keeps the EOL and never writes a BOM (FM-2).
 - Never leave an orphan on disk — `--check` fails on it and `diff` shows it as the removal of the whole file (a hand-edited one as a header, since sync keeps it) (FM-3).
 - Never require a manual mirror — everything a second target needs is generated (FM-4).
 - Never split a rule from its reviewer — one ingredient, two outputs (FM-5) (planned; today the rule and its reviewer are separate ingredients (rule/<name>, agent/<name>-reviewer) grouped by a stack recipe).
