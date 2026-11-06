@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Craftar docs — every capability, its commands and how it works</title>
+<meta name="description" content="Each Craftar capability with the problem it addresses, every command it adds and how it works — the full reference behind the summary on craftar.dev.">
+<link rel="canonical" href="https://craftar.dev/docs/">
+<meta name="theme-color" content="#0A0E13">
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Craftar">
+<meta property="og:url" content="https://craftar.dev/docs/">
+<meta property="og:title" content="Craftar docs — every capability, its commands and how it works">
+<meta property="og:description" content="Each Craftar capability with the problem it addresses, every command it adds and how it works — the full reference behind the summary on craftar.dev.">
+<meta property="og:image" content="https://craftar.dev/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Craftar: a build system for AI-coding harnesses. Emits to .claude/, .mcp.json, .kiro/ and AGENTS.md.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Craftar docs — every capability, its commands and how it works">
+<meta name="twitter:description" content="Each Craftar capability with the problem it addresses, every command it adds and how it works — the full reference behind the summary on craftar.dev.">
+<meta name="twitter:image" content="https://craftar.dev/og.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","headline":"Craftar docs — every capability, its commands and how it works","description":"Each Craftar capability with the problem it addresses, every command it adds and how it works — the full reference behind the summary on craftar.dev.","url":"https://craftar.dev/docs/","isPartOf":{"@type":"WebSite","name":"Craftar","url":"https://craftar.dev/"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/site.css">
+<style>
+  .docs { margin-top: 56px; display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 48px; align-items: start; }
+  @media (max-width: 960px) { .docs { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
+  @media (max-width: 520px) { .docs { grid-template-columns: minmax(0, 1fr); } }
+  .doc-index { position: sticky; top: 24px; }
+  @media (max-width: 960px) { .doc-index { position: static; } .doc-index ol { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; } }
+  @media (max-width: 520px) { .doc-index ol { grid-template-columns: minmax(0, 1fr); } }
+  .doc-index { display: block; padding-block: 0; }
+  .doc-index ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+  .doc-index a { color: var(--muted); text-decoration: none; display: block; padding: 6px 0; }
+  .doc-index a:hover { color: var(--text); }
+  .doc-entries { display: grid; gap: 48px; }
+  .doc-entry { scroll-margin-top: 24px; max-width: 78ch; }
+  .doc-entry .id { font-family: var(--mono); font-size: 12px; color: var(--faint); letter-spacing: .08em; margin-bottom: 8px; display: flex; gap: 10px; align-items: center; }
+  .doc-entry h2 { font-size: 22px; margin-bottom: 16px; }
+  .doc-entry .why { color: var(--muted); font-size: 15.5px; margin-bottom: 20px; }
+  .doc-entry .why b { color: var(--faint); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; display: block; margin-bottom: 4px; }
+  .doc-entry .cmds { margin-bottom: 16px; }
+  .doc-entry .mech { font-size: 15px; color: var(--muted); margin-bottom: 16px; }
+  .doc-entry .mech::before { content: "mechanism"; display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav aria-label="Primary">
+    <a class="logo" href="/" aria-label="Craftar home">
+      <svg viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <rect x="2" y="14" width="10" height="10" rx="1.5" fill="#E9915A"/>
+        <rect x="14" y="14" width="10" height="10" rx="1.5" fill="#7FB4D6"/>
+        <rect x="8" y="2" width="10" height="10" rx="1.5" fill="#E7ECF1"/>
+      </svg>
+      Craftar
+    </a>
+    <ul>
+      <li><a href="/#problem">Problems</a></li>
+      <li><a href="/#failures">Failure modes</a></li>
+      <li><a href="/#model">Model</a></li>
+      <li><a href="/#features">Capabilities</a></li>
+      <li><a href="/#invariants">Invariants</a></li>
+      <li><a href="/#targets">Targets</a></li>
+      <li><a href="/#start">Get started</a></li>
+      <li><a href="/docs/" aria-current="page">Docs</a></li>
+    </ul>
+    <a class="btn" href="https://github.com/llima/craftar-cli" rel="noopener">
+      <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+      github
+    </a>
+  </nav>
+
+  <section id="docs">
+    <div class="eyebrow">Documentation</div>
+    <h1>Capabilities</h1>
+    <p class="lede" style="margin-top:22px">Each capability with the problem it addresses, every command it adds and how it works. The <a href="/#features">home page</a> keeps a short card for each. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code>#&nbsp;planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+
+    <div class="docs">
+      <nav class="doc-index" aria-label="Capabilities">
+        <ol>
+          <li><a href="#f1">F1 Forge → workspace sync</a></li>
+          <li><a href="#f2">F2 Multi-target emission</a></li>
+          <li><a href="#f3">F3 Layers and stack slots</a></li>
+          <li><a href="#f4">F4 Workspace bootstrap</a></li>
+          <li><a href="#f5">F5 PM tool and internal platform per profile</a></li>
+          <li><a href="#f6">F6 Local services per workspace</a></li>
+          <li><a href="#f7">F7 Project templates</a></li>
+          <li><a href="#f8">F8 Drift and reverse contribution</a></li>
+          <li><a href="#f9">F9 CI</a></li>
+          <li><a href="#f10">F10 Registry and dashboard</a></li>
+          <li><a href="#f11">F11 Craftar as an MCP server</a></li>
+          <li><a href="#f12">F12 Diagnostics</a></li>
+        </ol>
+      </nav>
+
+      <div class="doc-entries">
+        <article class="doc-entry" id="f1">
+          <div class="id">F1 <span class="pill now">working</span><span class="pill mvp">mvp</span></div>
+          <h2>Forge → workspace sync</h2>
+          <p class="why"><b>problem · P1 · P2</b>A change to any of A agents or their rules must reach T workspaces in K formats; today that is T × K manual edits with no provenance.</p>
+          <div class="cmds">
+            <code><span class="p">$</span> craftar sync <span class="c">[--dry-run] [--check] [--overwrite-drift]</span></code>
+            <code><span class="p">$</span> craftar diff <span class="c">[--exit-code] # what sync would change, orphans included; writes nothing</span></code>
+            <code><span class="p">$</span> craftar status <span class="c"># per file: new · update · unchanged · adopt · drift · collision · orphan · orphan-drift</span></code>
+            <code><span class="p">$</span> craftar sync --offline <span class="c"># remote Forge: fetched first; --offline reads the cached copy</span></code>
+            <code><span class="p">$</span> craftar cache prune <span class="c">[--dry-run] # cached Forges nothing uses, unfinished fetches, trees unused for 14 days</span></code>
+            <code><span class="p">$</span> craftar sync --targets kiro · craftar update <span class="c">#&nbsp;planned</span></code>
+          </div>
+          <p class="mech">One command resolves and emits for every active target and prints what it wrote, removed and skipped, file by file. With a git-URL Forge, <code>ref</code> follows a branch or pins a tag or full SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy unless it passes <code>--offline</code>. <code>craftar cache prune</code> removes the Forge cache entries nothing uses — no registered workspace and not the current one — entries whose first fetch never completed, and trees unused for 14 days; it never touches a workspace, a lock or the registry, and <code style="white-space:nowrap">--dry-run</code> shows what it would remove. A symbolic link never carries <code>sync</code> out of the tree it works on: a Forge file read through a link that leaves the Forge or leads into its <code>.git</code>, and a workspace path that leaves through one, refuse the run before anything is written — there is no flag; a link that stays inside works as before. In a git repository, <code>sync</code> and <code>sync --check</code> warn for each generated file git ignores, naming the ignore rule by file, line and pattern; craftar never edits an ignore file, and <code>mayBeIgnored</code> in <code>craftar.yaml</code> lists the paths kept out of git on purpose.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f2">
+          <div class="id">F2 <span class="pill now">working</span><span class="pill mvp">mvp</span></div>
+          <h2>Multi-target emission</h2>
+          <p class="why"><b>problem · P1</b>Each team's AI coder has its own file layout, frontmatter and agent schema. Translating by hand yields FM-4: mirrors that diverge.</p>
+          <div class="cmds">
+            <code><span class="p">$</span> craftar import --from claude-code <span class="c"># existing .claude/ → ingredients + recipes + profile</span></code>
+            <code><span class="p">$</span> craftar forge variants <span class="c"># where clients differ, nearest first</span></code>
+            <code><span class="p">$</span> craftar forge diff rule/deploy <span class="c"># hunks, each with a suggested class</span></code>
+            <code><span class="p">$</span> craftar forge unify rule/deploy --profile acme --plan plan.yaml <span class="c"># base, variant, param or section</span></code>
+            <code><span class="p">$</span> craftar forge impact <span class="c"># every registered workspace reading this Forge, and what its next sync would do</span></code>
+            <code><span class="p">$</span> craftar targets <span class="c"># the capability matrix: what each target does with each ingredient type</span></code>
+          </div>
+          <p class="mech">Three layers: the open standards — <code>AGENTS.md</code> (the always-on rules, then each scoped rule listed at the file a target writes for it or embedded when none does), Agent Skills (<code>SKILL.md</code>) and <code>mcp.json</code> — written by the target emitters; tool-specific formats; Craftar post-processors for known gaps, e.g. injecting <code>resources: file://.kiro/steering/*.md</code> into Kiro custom agents, and writing each agent's <code>permissions.rules</code>, derived from its tools as kiro-cli 2.37 derives them, so Kiro no longer rewrites the file. Today Craftar's own emitters cover Claude Code, Kiro and AGENTS.md, and the Kiro emitter reproduces a hand-built workspace byte for byte, including agent JSON and command mirrors. Delegating Codex, Kimi and Cursor formats to rulesync is planned. Importing a second client into an existing Forge reuses every ingredient whose render for that profile equals the workspace file, infers declared <code>{{key}}</code> values into the profile, and makes the rest variants; <code>forge unify</code> resolves each one back into its base (see <a href="/#unify">Growing the Forge</a>). <code>craftar forge promote &lt;type/name&gt; <span style="white-space:nowrap">--profile</span> &lt;p&gt;</code> goes the other way: it makes a profile's variant the base and gives the old base back, as a variant of its own, to every other profile that resolved it — gated on git, proved before the first write, never a commit. <code>craftar import <span style="white-space:nowrap">--report</span> &lt;file.md&gt;</code> also writes a Markdown report of the import: what was created, reused, made a variant or rejected, and the <code>.kiro/</code> files that differ from what <code>sync</code> would generate — as paths and line counts, never content. <code>craftar import <span style="white-space:nowrap">--prefer-kiro</span> &lt;rule,…&gt;</code> takes the named rules from <code>.kiro/steering/&lt;name&gt;.md</code> instead of <code>.claude/rules/&lt;name&gt;.md</code>, for a steering mirror that was edited by hand and is the text to keep; the text is accepted only when it is proved to render back to that steering file's body for Kiro. Rules only: commands, agents and skills are not taken from Kiro. Import reads a Claude rule's <code>paths:</code> frontmatter as its scope, so a scoped rule stays scoped — <code>fileMatch</code> for Kiro, and a scoped rule in <code>AGENTS.md</code> — and keeps that frontmatter verbatim, so <code>.claude/rules/&lt;name&gt;.md</code> comes back byte for byte. At <code>schema: 7</code> import never writes a generated rules index over its placeholder silently: a variant that holds the placeholder and whose file differs from what <code>sync</code> writes is refused, a new variant that freezes the list is warned, and <code>--prefer-kiro</code> refuses a rule whose ingredient holds the placeholder. Import takes nothing from behind a symbolic link that leaves the workspace or leads into its <code>.git</code>: such a source is rejected and listed, never adopted. In a Forge at <code>schema: 8</code>, a source equal to the importing profile's own local is reused there, one that differs is refused, and the Forge it would write is first loaded on a scratch copy. With <code>--local=auto</code>, a new source of the profile becomes a local there instead of a root ingredient, and a local that differs is rewritten; <code>--local=always</code> writes no ingredient at the root. A new local no recipe of the profile's folder cites is wired into the recipe <code>&lt;p&gt;-local</code>. With <code>agents-md.primary: true</code>, in a Forge that declares <code>schema: 5</code> and a workspace whose targets include <code>agents-md</code>, an always-on rule with the default <code>targets</code> is written to <code>AGENTS.md</code> alone — with all three targets, instead of three times (<code>.claude/rules/</code>, <code>.kiro/steering/</code> and <code>AGENTS.md</code>): its other files become orphans <code>sync</code> removes; the <code>.claude/</code>, <code>.kiro/</code> and <code>AGENTS.md</code> texts that cite it point at its place in <code>AGENTS.md</code>; scripts, hooks and files copied as bytes are never rewritten — a reference left there is warned with its file and line; and generated Kiro <code>resources</code> name only the steering files the plan writes, while a hand-written entry naming a file the plan does not write and the disk lacks fails <code>sync --check</code> (a writing <code>sync</code> still writes). Craftar writes no <code>CLAUDE.md</code>; when one keeps Claude Code from reading <code>AGENTS.md</code>, every plan says so. The mode is opt-in — a workspace that does not set it sees no change — and every craftar before 0.36.0 refuses a <code>schema: 5</code> Forge. A <code>hook</code> ingredient can declare its <code>registration</code> — the event, matcher and command Claude Code runs it with — and <code>claude-code</code> writes it to <code>.claude/settings.craftar.example.json</code>; <code>craftar settings apply</code> merges it into <code>.claude/settings.json</code>, only when a person types it, keeping every <code>env</code> value, <code>permissions</code> and every other key — or the block is copied by hand. No other command writes a settings file Claude Code reads. Every craftar before 0.38.0 refuses a Forge whose hook holds <code>registration</code>.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f3">
+          <div class="id">F3 <span class="pill now">working</span></div>
+          <h2>Layers and stack slots</h2>
+          <p class="why"><b>problem · P1</b>Teams differ in stack. Without composition, a React team inherits Angular reviewers, or every team gets a hand-pruned fork of the harness.</p>
+          <div class="cmds">
+            <code><span class="p">$</span> craftar add recipe frontend-react --replace · craftar remove recipe aws-local <span class="c"># edits craftar.yaml, never syncs</span></code>
+            <code><span class="p">$</span> craftar recipes · craftar ingredients --recipe frontend-angular <span class="c"># the catalogue: every recipe and ingredient, and what this workspace uses</span></code>
+            <code><span class="p">$</span> craftar explain .kiro/steering/workflow.md <span class="c"># which layer decided this file</span></code>
+            <code><span class="p">$</span> craftar forge localize rule/acme-deploy --profile acme · craftar forge share rule/acme-deploy --profile acme <span class="c"># schema 8: into a profile's folder and back</span></code>
+          </div>
+          <p class="mech">Recipes declaring the same <code>slot</code> are mutually exclusive. <code>craftar add recipe</code> and <code>craftar remove recipe</code> change the workspace's choice in <code>craftar.yaml</code> in place — refusing a recipe that would share a slot (unless <code>--replace</code>), removing one another recipe still brings in through <code>extends</code>, or an edit that would not resolve — and print what the next <code>sync</code> would do; they never sync. <code>craftar recipes</code> and <code>craftar ingredients</code> list the whole Forge read-only, mark what the workspace uses (and, for recipes, why), and <code>--recipe</code> shows what choosing one would bring. The profile sets the team default; the workspace may override; the local file (<code>craftar.local.yaml</code>, git-ignored) overrides the workspace for one developer; its arrays replace the workspace's. An ingredient body can also mark a client-specific block as a <em>section</em> (<code class="nolig">&lt;!-- craftar:section flavors --&gt;</code> … <code class="nolig">&lt;!-- /craftar:section --&gt;</code>): the block is the default, a profile's <code>sections</code> or the workspace's <code>overrides.sections</code> replace or empty it, no rendered body holds the markers, <code>explain</code> names the layer each section came from, and <code>forge unify</code> can extract a section from a variant (<code>take: section</code>). A Forge that uses sections declares <code>schema: 2</code> or above, so an older CLI refuses it rather than leak the markers. In a Forge that declares <code>schema: 6</code>, an opening marker can name the targets that receive the block (<code class="nolig">&lt;!-- craftar:section flavors targets=claude-code,kiro --&gt;</code>): a target it names gets the section as any other, a target it does not name gets nothing of it, whatever a profile or the workspace sets, and a marker with no <code>targets=</code> is read as before. A Forge that writes no <code>targets=</code> sees no change, and every craftar before 0.39.0 refuses a <code>schema: 6</code> Forge. In a Forge that declares <code>schema: 7</code>, a line of a rule or steering body that holds <code style="overflow-wrap:anywhere">{{craftar.rules.index}}</code> alone becomes the list of the rules the profile resolves, as each target names them: up to three groups — <code>Always on:</code>, <code>Scoped:</code>, <code>On request:</code> — one line per rule with its description, or by its reference alone, warned, when it has none; a rule no target of the workspace writes is left out. <code>explain</code> names an indexed file's list, <code>AGENTS.md</code> aside. A placeholder not alone on its line, or in an agent, a command or a skill, is left as written and warned; so is one alone on its line below <code>schema: 7</code>. Either warning makes <code>doctor --strict</code> exit 1. The index is generated, never a parameter, and every key starting with <code>craftar.</code> is reserved: <code>forge unify</code> never extracts into one and <code>import</code> never infers one. A Forge that writes no placeholder and sets no <code>craftar.</code> key sees no change from the index, and every craftar before 0.40.0 refuses a <code>schema: 7</code> Forge. In a Forge that declares <code>schema: 8</code>, a profile's folder holds its own ingredients and recipes (<code>profiles/&lt;p&gt;/ingredients/</code>, <code>profiles/&lt;p&gt;/recipes/</code>), which only that profile sees: they render exactly as they would at the root, a root recipe can never reach them, and a broken reference fails the load, naming the files. <code>explain</code> names where a file's ingredient lives. Every craftar before 0.45.0 refuses a <code>schema: 8</code> Forge. <code>craftar forge localize</code> moves a root ingredient only one profile resolves into that profile's folder, with the root recipes that cite it, and <code>craftar forge share</code> moves a local back to the root — each gated on git and proved, before the first write, to change no byte any profile or registered workspace plans; neither commits. In a Forge that declares <code>schema: 9</code>, an ingredient's metadata takes <code>{{param}}</code> too — a rule's <code>paths:</code> and pattern, an agent's or a command's description — a value that would break the file it lands in fails the plan, and <code>forge diff</code> and <code>forge unify</code> work on those fields; every craftar before 0.47.0 refuses a <code>schema: 9</code> Forge.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f4">
+          <div class="id">F4 <span class="pill now">working</span></div>
+          <h2>Workspace bootstrap</h2>
+          <p class="why"><b>problem · P2</b>Starting with a new team means reassembling repos, harness, templates and local services from memory.</p>
+          <div class="cmds">
+            <code><span class="p">$</span> craftar init --forge ../forge --profile team-a --targets claude-code,kiro <span class="c"># writes craftar.yaml, then runs the first sync</span></code>
+            <code><span class="p">$</span> craftar init <span class="c">#&nbsp;in a terminal: asks for the Forge, the profile, then the recipes and targets; confirms once</span></code>
+            <code><span class="p">$</span> craftar init --forge ../forge --new-profile team-e --like team-a <span class="c"># writes profiles/team-e/profile.yaml (not committed), then the workspace</span></code>
+            <code><span class="p">$</span> craftar repos · craftar repos clone <span class="c"># the profile's repositories, present or missing — then clone the missing ones</span></code>
+          </div>
+          <p class="mech">Writes <code>craftar.yaml</code> — the Forge, the profile, and the recipe and target choices, given as flags or as answers — only once the workspace resolves and plans, then runs the first <code>sync</code>, which registers the workspace. Files already on disk are adopted when they equal the plan and otherwise left as they are and reported; an existing <code>craftar.yaml</code> is never edited. In a terminal, <code>craftar init</code> asks for a <code>--forge</code> or a <code>--profile</code> it was not given — the Forge last synced on this machine offered, the profile from the Forge's list, then the recipes and targets to keep or adjust — confirms once before anything is written, and ends by printing the same run as flags, for CI; off a terminal a missing flag is refused. When a declared parameter a file the plan writes cites has no value, <code>craftar.yaml</code> is still written and the first <code>sync</code> is not run. With <code style="white-space:nowrap">--clone</code> it then clones each repository the profile's <code>repos</code> lists into the workspace — <code>git clone</code> over <code>https</code> or <code>ssh</code> only, with the <code>git</code> found on <code>PATH</code>, never over a file <code>sync</code> writes, into the Forge or out of the workspace; when <code>init</code> asks for what the flags do not give, it lists the URLs first and asks, the default no. A clone is recorded nowhere, and <code>sync</code> never updates or removes it. <code>craftar repos</code> lists those repositories in an existing workspace — <code>present</code>, <code>missing</code> or <code>blocked</code>, with their URLs — and <code>craftar repos clone</code> clones the missing ones. With <code><span style="white-space:nowrap">--new-profile</span> &lt;name&gt;</code> (optionally <code>--like &lt;profile&gt;</code>), <code>init</code> first writes one new file in a Forge directory, <code>profiles/&lt;name&gt;/profile.yaml</code> — the recipes and targets chosen, nothing else of the template — behind a git gate and never committed, then starts the workspace on it; in a terminal the profile list offers <code>0) a new profile</code>.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f5">
+          <div class="id">F5 <span class="pill now">working</span></div>
+          <h2>PM tool and internal platform per profile</h2>
+          <p class="why"><b>problem · P1</b>Agents need to read user stories and talk to the team's internal developer platform; each team uses a different tool for both.</p>
+          <p class="mech">In a Forge that declares <code>schema: 3</code> or above, a profile's <code>integrations</code> block selects recipes and gives params. <code>integrations.&lt;slot&gt;.kind: &lt;kind&gt;</code> selects the recipe named <code>&lt;slot&gt;-&lt;kind&gt;</code> — <code>integrations.pm.kind: azure-devops</code> selects <code>pm-azure-devops</code>, a recipe that lists, say, the MCP ingredient and a rule describing where stories live — and every scalar of the block is the param <code>integrations.&lt;slot&gt;.&lt;key&gt;</code>, cited in a body as <code>{{integrations.pm.org}}</code>. An integration with no <code>kind</code> gives params only. A schema 3 Forge is read only by craftar 0.27.0 and later; below <code>schema: 3</code> the block is ignored, without a warning; a <code>kind</code> with no recipe stops <code>sync</code>. In a Forge that declares <code>schema: 4</code>, an MCP server takes the params its ingredient declares, so one server serves every client: <code>url: "{{integrations.idp.url}}"</code>, with <code>integrations.idp.url</code> declared in the ingredient's <code>params</code>, renders each profile's own URL, and <code>.mcp.json</code> and <code>.kiro/settings/mcp.json</code> get the same rendered server. A declared key with no value stops <code>sync</code>; a key the ingredient does not declare is left as written, with a warning when some layer gives it a value; below <code>schema: 4</code> a server is written exactly as the Forge holds it. A schema 4 Forge is read only by craftar 0.28.0 and later. Tokens are referenced by <code>authEnv</code>, never stored (FM-8).</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f6">
+          <div class="id">F6 <span class="pill now">working</span></div>
+          <h2>Local services per workspace</h2>
+          <p class="why"><b>problem · P1</b>Cloud dependencies (queues, buckets) need a local stand-in, and the agent has to know its endpoints and fake credentials.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar services up | down | status <span class="c"># Docker Compose on what the lock records</span></code></div>
+          <p class="mech">A <code>service</code> ingredient is a Docker Compose fragment plus the files it mounts. <code>sync</code> writes it under <code>.craftar/services/&lt;name&gt;/</code>, with the stack <code>.craftar/compose.yaml</code> — a Compose <code>include</code> of every fragment — for no target, text always LF without a BOM (a file listed as <code>binary</code> is copied as bytes), and records each file in <code>craftar.lock</code> (schema 3 only for a workspace that has a service). They are generated files like any other: <code>status</code>, <code>diff</code> and <code>sync --check</code> treat them the same. <code>craftar services up</code> reads the lock, not the Forge, and refuses to start a stack with a missing or hand-edited file, or with a stack or fragment the lock does not record; <code>down</code> stops it and <code>status</code> shows it. <code>sync</code> never runs Docker; <code>up</code> needs Docker Compose 2.20.0 or later. A Forge that holds a <code>service</code> ingredient is read only by craftar 0.25.0 and later.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f7">
+          <div class="id">F7 <span class="pill now">list | install working</span></div>
+          <h2>Project templates</h2>
+          <p class="why"><b>problem · P1</b>New projects should use the team's own <code>dotnet new</code> (or <code>npm create</code>, <code>nx</code>, <code>cookiecutter</code>) templates; agents need to know which.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar templates list | install <span class="c"># the dotnet new templates the profile declares</span></code><code><span class="p">$</span> /create-project <span class="c">#&nbsp;planned</span></code></div>
+          <p class="mech">A profile's <code>templates</code> block lists packages per kind — <code>dotnet-new</code> today — with an optional <code>source</code> feed. <code>craftar templates list</code> shows what the profile declares; <code>craftar templates install</code> runs <code>dotnet new install</code> once per entry, into the user's own template store. Nothing installs implicitly — not <code>sync</code>, not <code>init</code>, not <code>doctor</code>. An entry of a kind this CLI cannot install (<code>npm-create</code>, <code>nx</code>) is listed, skipped and warned. A <code>source</code> carrying a user or a password is refused; authentication is NuGet's. Planned: a generated rule mapping archetype → template, and a wrapping <code>/create-project</code> command.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f8">
+          <div class="id">F8 <span class="pill now">working</span></div>
+          <h2>Drift and reverse contribution</h2>
+          <p class="why"><b>problem · P2</b>Generated files get edited in place. Either the edit is lost on the next sync, or the generator is abandoned (FM-2).</p>
+          <div class="cmds">
+            <code><span class="p">$</span> craftar status <span class="c"># drifted files listed; never overwritten without --overwrite-drift</span></code>
+            <code><span class="p">$</span> craftar drift show <span class="c"># the hand-edited files, whether the Forge also changed each, whether the edit can be promoted; with a path, its diff</span></code>
+            <code><span class="p">$</span> craftar drift discard &lt;path...&gt; <span class="c"># a sync that also regenerates the named hand-edited files; their edits are lost</span></code>
+            <code><span class="p">$</span> craftar drift promote &lt;path&gt; <span class="c"># carry one hand edit of a .claude/ file into the Forge</span></code>
+          </div>
+          <p class="mech">Normalized hashes from the lock are compared with disk. <code>drift discard</code> is a <code>sync</code> that also regenerates the named hand-edited files and removes a named hand-edited file the Forge no longer produces. <code>drift promote</code> carries one hand edit of a <code>.claude/</code> file into the Forge's working tree — a value in the profile's <code>params</code> or <code>sections</code> when the edit is only that, otherwise a variant for the workspace's profile — gated on git and proved before the first write; it never syncs and never commits. A file that holds an expanded rules index is not promotable: edit the Forge's rule, or the description of the rules it lists. So is a hand edit of a metadata field the Forge renders from a parameter, at <code>schema: 9</code>; <code>drift show</code> says why. At <code>schema: 8</code>, a hand edit of a profile-local file is promoted into the local itself: a value inference proves goes to the profile's <code>params</code> or <code>sections</code>, otherwise the local's own files are edited in place, with no variant. Sync direction is Forge → workspace; reverse flow is always explicit.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f9">
+          <div class="id">F9 <span class="pill now">working</span></div>
+          <h2>CI</h2>
+          <p class="why"><b>problem · P2</b>Sync that depends on someone remembering will lag by workspace.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar sync --check <span class="c"># exit ≠ 0 when out of sync or drifted</span></code><code><span class="p">$</span> craftar diff --exit-code <span class="c"># the same verdict as --check, with the diff that explains it</span></code><code><span class="p">$</span> craftar sync --check --committed <span class="c">[rev] · --check --index # the same check over a commit or git's index</span></code><code><span class="p">$</span> craftar git-hooks install <span class="c">[--pre-push] [--pre-commit] # an optional hook that runs it, only when typed</span></code><code><span class="p">uses:</span> llima/craftar-cli/ci/github@&lt;SHA or v-tag&gt; <span class="c"># GitHub Action · Azure: template ci/azure/check.yml@craftar</span></code></div>
+          <p class="mech"><code>AGENTS.md</code> has a byte budget, <code>agents-md.maxBytes</code> (default 32768, Codex's <code>project_doc_max_bytes</code>; <code>0</code> turns it off): over it every plan warns, naming the largest rules, and when a recipe, the profile or the workspace sets it, <code>sync --check</code>, <code>status</code> and <code>diff --exit-code</code> with no path fail — a writing <code>sync</code> still writes. Two thin wrappers in the CLI's repository make a pull request fail when a workspace is out of step with its Forge: a GitHub Action (<code>ci/github/action.yml</code>) and an Azure Pipelines step template (<code>ci/azure/check.yml</code>). Each installs an exact <code>craftar</code> version, outside the checkout, runs <code>sync --check</code> — its exit code is the step's — and names the files out of sync as annotations and a job summary, never a file's content; they write nothing to the workspace. A private Forge's token comes only from the workflow, for an origin the workflow names. Pin them to a commit SHA or a <code>v&lt;version&gt;</code> tag: a change under <code>ci/</code> reaches a branch reference the moment it merges. The action ran on GitHub's Linux and Windows runners; the Azure template has not run on a real agent. <code>craftar sync --check --committed [rev]</code> and <code>--check --index</code> give the same verdict over what git holds — a commit or the index — instead of the folder, writing nothing and starting no hook, filter or <code>core.fsmonitor</code> of the repository. <code>craftar git-hooks install</code> writes, only when typed, a <code>pre-push</code> (or <code>pre-commit</code>) hook that runs that check, only inside the repository, starting only the <code>craftar</code> on <code>PATH</code>; <code>uninstall</code> and <code>status</code> complete it.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f10">
+          <div class="id">F10 <span class="pill now">working</span></div>
+          <h2>Registry and dashboard</h2>
+          <p class="why"><b>problem · P2</b>With a dozen workspaces there is no view of which is behind, drifted or on which Forge version.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar workspaces <span class="c">[--fetch] # every registered workspace, its status computed now</span></code><code><span class="p">$</span> craftar workspaces forget &lt;dir&gt; · craftar workspaces prune</code><code><span class="p">$</span> craftar ui <span class="c">[--port &lt;n&gt;] [--allow-writes] # a local dashboard on 127.0.0.1, read-only unless --allow-writes</span></code></div>
+          <p class="mech">A writing <code>sync</code> records its workspace in <code>~/.craftar/registry.json</code>. <code>craftar workspaces</code> prints each one — profile, stack, targets, Forge, last sync — with a status computed on the spot: <code>up to date</code>, <code>outdated</code>, <code>drift</code>, <code>no lock</code>, <code>missing</code> or <code>error</code>, plus <code>forge moved</code> when the Forge's commit is no longer the lock's; it reads a remote Forge from the cache unless <code>--fetch</code> is given. <code>CRAFTAR_NO_REGISTRY</code> turns the registry off, for CI runners and throwaway checkouts. From the Forge's side, <code>craftar forge impact</code> lists every registered workspace that reads it — by its path, by a git remote, or through another clone — with what its next <code>sync</code> would do; a workspace synced on CI, on another machine or with the registry off is not in it. <code>craftar ui</code> serves these views as a local page in a browser: the table of <code>craftar workspaces</code> and, for a registered workspace, what <code>status</code>, <code>diff</code> and <code>explain</code> say about it and what <code>recipes</code> and <code>ingredients</code> say about its Forge. Without <code>--allow-writes</code> it is read-only — it writes nothing (the Forge cache is used as every reader uses it) and never runs <code>sync</code>: it prints the command to copy. It reaches no network either way: a remote Forge is read from the cached copy, and the page says so. Started with <code>--allow-writes</code> — typing the flag is the consent — the page also offers <strong>Sync</strong> for a workspace and <strong>Discard edit</strong> for one hand-edited file (<code>drift</code> or <code>orphan-drift</code>, from its open diff), each confirmed in the page: a sync that never passes <code>--overwrite-drift</code> — every hand edit and collision is skipped and listed — or a <code>craftar drift discard</code> of that one path. Neither is offered for <code>.claude/settings.craftar.example.json</code> or for a workspace whose Forge is remote, and either is refused when the workspace changed since the page showed it. It listens on <code>127.0.0.1</code> only (port 4747 by default; <code>--port 0</code> takes a free one), answers <code>GET</code> only — with <code>--allow-writes</code>, also <code>POST</code> to its two writing routes, from its own address — and every answer that carries data needs a token generated for that run, carried in the address it prints — whoever holds that address can read what the reading commands print, so open it only in a browser of the same user on the same machine, exactly as printed. It takes no <code>--workspace</code>, and exits 1 when the registry is off or cannot be read. <code>craftar ls</code> stays the view of one workspace's resolution.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f11">
+          <div class="id">F11 <span class="pill now">working</span></div>
+          <h2>Craftar as an MCP server</h2>
+          <p class="why"><b>problem · P1 · P2</b>The agent itself should be able to ask what is pending, why a file exists and what the Forge offers without leaving the session — and say "run <code>craftar sync</code>" instead of editing a generated file.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar mcp <span class="c">[--workspace &lt;dir&gt;] [--fetch] [--allow-writes] # started by the AI coder, over stdin and stdout</span></code><code><span class="p">&gt;</span> /plugin marketplace add llima/craftar-cli · /plugin install craftar@craftar <span class="c"># in Claude Code: the /craftar skill and the reading tools</span></code><code><span class="p">$</span> craftar mcp allow-writes · craftar mcp revoke-writes <span class="c"># the consent, typed by a person in a terminal, per workspace</span></code></div>
+          <p class="mech">An MCP server the AI coder starts — registered in its own MCP configuration, or for a whole team as an ordinary <code>mcp</code> ingredient that <code>sync</code> writes like any other server. It serves the one workspace it was started in through seven tools that only read — <code>status</code>, <code>diff</code>, <code>explain</code>, <code>recipes</code>, <code>ingredients</code>, <code>targets</code>, <code>doctor</code> — each answering with the data its command prints, so the agent can say "run <code>craftar sync</code>" instead of editing a generated file. Without <code>--allow-writes</code> it writes nothing — no workspace file, lock, registry or Forge (the Forge cache is used as every reader uses it) — reads no network unless started with <code>--fetch</code>, and never returns a hand-edited MCP configuration file; a result can carry the Forge's profile names, so register it only where that is acceptable. Started with <code>--allow-writes</code>, it also serves <code>sync</code>, <code>add_recipe</code> and <code>remove_recipe</code>. The flag grants nothing by itself: a writing call acts only in a workspace where a person typed <code>craftar mcp allow-writes</code> in a terminal, for the Forge, ref and profile the server is pinned to — the shell tools of Claude Code and Kiro give a program no terminal, so an agent cannot grant it through them (one that drives a real terminal could) — and <code>craftar mcp revoke-writes</code> takes it back without a restart. The <code>sync</code> tool never overwrites or removes a hand edit: every <code>drift</code>, <code>orphan-drift</code> and <code>collision</code> is skipped and listed, for a person to resolve with <code>drift discard</code> or <code>drift promote</code>, and a remote Forge needs <code>--fetch</code>; <code>add_recipe</code> and <code>remove_recipe</code> never sync. A result carries what the commands print, never a file's content. Upgrade every machine to craftar 0.29.0 or later before adding it to a shared Forge, and to 0.35.0 or later before registering it with <code>--allow-writes</code>. In Claude Code, a plugin in the CLI's repository holds a <code>/craftar</code> skill and starts the <code>craftar</code> on <code>PATH</code> — install 0.40.1 or later — as <code>craftar mcp</code> with its reading tools only — never <code>--allow-writes</code>, never <code>--fetch</code>; in a project with no <code>craftar.yaml</code> it does not start. When <code>craftar</code> comes from a version manager's shim (asdf, volta, mise once trusted), a project's files can choose what runs when the server starts. Planned: an Agent Plugin.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="f12">
+          <div class="id">F12 <span class="pill now">working</span></div>
+          <h2>Diagnostics</h2>
+          <p class="why"><b>problem · P2</b>Sync failures usually come from the environment: missing env vars, wrong Node, no Docker, unreachable Forge.</p>
+          <div class="cmds"><code><span class="p">$</span> craftar doctor <span class="c">[--fetch] [--strict] [--json] # one line per finding, each with its fix</span></code><code><span class="p">$</span> craftar docs validate <span class="c">[path] [--fetch] [--strict] [--json] # the workspace's Markdown: links, leaked tool-call tags, encoding, the profile's docs: block</span></code></div>
+          <p class="mech">Checks this machine — Node ≥ 22, <code>git</code>, <code>~/.craftar</code>, the registry, the Forge cache — and, inside a workspace, its configuration and Forge, the plan's warnings, declared parameters with no value (an <code>error</code> when a file the plan writes cites one, a <code>warn</code> when nothing does), the variables a written MCP server declares in <code>authEnv</code> or references as <code>${NAME}</code> and the environment lacks (names only, never values), the lock, <code>status</code> and registration, and — in a workspace with a local service — Docker with its Compose plugin and the variables a service fragment needs that nothing sets (names only), and — when the profile declares templates — the <code>templates</code> block and, for a <code>dotnet-new</code> entry, the .NET SDK — and the planned <code>AGENTS.md</code> against its byte budget — and, under <code>agents-md.primary</code>, a <code>CLAUDE.md</code>, <code>CLAUDE.local.md</code> or <code>.claude/CLAUDE.md</code> — at the root or in a directory above it — that keeps Claude Code from reading <code>AGENTS.md</code> and the Kiro agents' hand-written <code>resources</code> — and, when the plan writes a hook's registration, a planned handler that is in no settings file Claude Code reads (at most a <code>warn</code>, so <code>--strict</code> exits 1 until <code>craftar settings apply</code> runs or the block is copied) — and, when <code>claude-code</code> writes a skill as one file, that Claude Code (measured with <code>2.1.310</code>) does not list it (a <code>warn</code> per skill, with the fix, so <code>--strict</code> exits 1; the file is still written) — and, in a git repository, a generated file git ignores (<code>generated-ignored</code>, a <code>warn</code>, unless the path is listed under <code>mayBeIgnored</code>) — and a hook <code>craftar git-hooks</code> wrote (<code>git-hooks</code>) — and a path that leaves the workspace through a symbolic link (<code>workspace-links</code>, an <code>error</code>). Each finding is one line — <code>ok</code>, <code>warn</code> or <code>error</code> — with the command that fixes it. It only reports: nothing is written to a workspace, a lock or the registry, and a remote Forge is read from the cache unless <code>--fetch</code> is given. It exits 1 on an <code>error</code>, or on a <code>warn</code> under <code>--strict</code>; <code>--json</code> is a contract for tooling. <code>craftar docs validate</code> checks a workspace's Markdown under <code>docs/</code>, <code>.claude/</code> and at its root — links that resolve inside the workspace, tool-call tags leaked outside code, files that are not UTF-8 text and, where the profile declares a <code>docs:</code> block, its categories, required frontmatter, dated file names and <code>related:</code> entries — one line per finding, naming a file, a line and a column, never a line of the file; it writes nothing and reads without the network unless <code>--fetch</code>, which concerns the Forge only. Planned: a rulesync check once it is a dependency.</p>
+          <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="colophon">
+    <a class="stamp" href="/llms.txt" aria-label="Made by AI, for AI — plain-text version">
+      <svg class="ring" viewBox="0 0 168 168" aria-hidden="true">
+        <defs>
+          <path id="ring-top" d="M30 84 a54 54 0 0 1 108 0"/>
+          <path id="ring-bottom" d="M20 84 a64 64 0 0 0 128 0"/>
+        </defs>
+        <text><textPath href="#ring-top" startOffset="50%" text-anchor="middle">made by AI · for AI</textPath></text>
+        <text><textPath href="#ring-bottom" startOffset="50%" text-anchor="middle">human-reviewed</textPath></text>
+      </svg>
+      <span class="center">
+        <span class="big">AI</span>
+        <span class="sep"></span>
+        <span class="small">llms.txt</span>
+      </span>
+    </a>
+    <p>This page was written by a language model, from the project's specification and the notes of the workspaces that motivated it, and reviewed by a person. It is also meant to be read by language models: every diagram carries a prose description, the metadata is structured, and a plain-text version lives at <a href="/llms.txt">llms.txt</a>.</p>
+  </div>
+
+  <footer>
+    <span>Craftar — open-source workspace harness manager. TypeScript / Node · MIT.</span>
+    <span><a href="#docs">Top</a> · <a href="/#model">Model</a> · <a href="https://github.com/llima/craftar-cli" rel="noopener">github</a></span>
+  </footer>
+</div>
+</body>
+</html>
