@@ -85,7 +85,8 @@ nav ul a { text-decoration: none; } nav ul a:hover { color: var(--text); }
 .cmds code { display: block; font-size: 13px; color: var(--text); background: var(--plate); border: 1px solid var(--seam); border-radius: 3px; padding: 6px 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .cmds code .p { color: var(--ember); } .cmds code .c { color: var(--faint); }
 .feature .why b { color: var(--faint); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; display: block; margin-bottom: 4px; }
-.feature .how > p:first-child::before, .feature .how .mech::before { content: "mechanism"; display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
+.doclink, .doc-back { font-family: var(--mono); font-size: 13px; color: var(--steel); text-decoration: none; }
+.doclink:hover, .doclink:focus, .doc-back:hover, .doc-back:focus { text-decoration: underline; }
 
 /* ---------- colophon / stamp ---------- */
 .colophon { border-top: 1px solid var(--seam); padding-block: 56px; display: grid; grid-template-columns: auto minmax(0,1fr); gap: 40px; align-items: center; }

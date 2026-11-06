@@ -189,15 +189,11 @@
   .fail-wrap td:nth-child(2) { color: var(--text); }
   .fail-wrap td code { color: var(--steel); }
   .ref { font-family: var(--mono); font-size: 11.5px; color: var(--faint); letter-spacing: .04em; }
-  .doclink { font-family: var(--mono); font-size: 13px; color: var(--steel); text-decoration: none; }
-  .doclink:hover, .doclink:focus { text-decoration: underline; }
-  .status-grid { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }
-  @media (max-width: 800px) { .status-grid { grid-template-columns: 1fr; } }
-  .status-grid > div { background: var(--plate); padding: 22px; display: grid; gap: 8px; align-content: start; }
-  .status-grid h3 { font-size: 15px; color: var(--muted); font-weight: 600; }
-  .status-grid p, .status-grid li { font-size: 14.5px; color: var(--muted); }
-  .status-grid ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
-  .status-grid li::before { content: "— "; color: var(--faint); }
+  .start-grid { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }
+  @media (max-width: 800px) { .start-grid { grid-template-columns: 1fr; } }
+  .start-grid > div { background: var(--plate); padding: 22px; display: grid; gap: 8px; align-content: start; }
+  .start-grid h3 { font-size: 15px; color: var(--muted); font-weight: 600; }
+  .start-grid p { font-size: 14.5px; color: var(--muted); }
 
   /* sync flow: import goes up (ember), sync comes down (steel) */
   .diagram .comet { fill: none; stroke-width: 2.8; stroke-linecap: round; }
@@ -1266,7 +1262,7 @@ craftar workspaces — 4 registered
     <h2>Install it, import what a team already has, and see what a sync would change.</h2>
     <p class="lede" style="margin-top:22px">Craftar has to reproduce what teams already have. The oracle imports a hand-built workspace (Claude Code + Kiro), syncs it, and asserts byte equality of every generated file; a second sync must be a no-op; a Forge edit must reach both targets; a manual edit must surface as drift and survive; a removed ingredient must disappear; an unmanaged file must be untouched.</p>
 
-    <div class="status-grid">
+    <div class="start-grid">
       <div><h3>Trying it</h3><p>Install with <code>npm install -g craftar</code> (Node&nbsp;≥&nbsp;22), or prefix any command with <code>npx</code>. Then, inside an existing Claude Code workspace, run <code>craftar import --from claude-code --forge &lt;dir&gt; --profile &lt;name&gt; --write-config</code> to obtain a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> to see what a sync would change. Nothing in <code>.claude/</code> or <code>.kiro/</code> is rewritten until <code>sync</code>. Import a second workspace into the same Forge under another profile, and <code>craftar forge variants --forge &lt;dir&gt;</code> lists where the two differ. To start an empty workspace from a Forge instead, run <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>: it writes <code>craftar.yaml</code> and runs the first <code>sync</code> — or, in a terminal, run <code>craftar init</code> alone and answer its questions. When something fails, <code>craftar doctor</code> lists what is off on the machine and in the workspace, each finding with the command that fixes it.</p></div>
       <div><h3>Stack</h3><p>TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitters for Claude Code, Kiro and AGENTS.md; rulesync is planned as the conversion dependency for further tool-specific formats; Craftar owns the layer above — Forge, resolution, lockfile, drift, registry.</p></div>
     </div>
