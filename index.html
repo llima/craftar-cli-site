@@ -29,7 +29,7 @@
 <meta name="twitter:description" content="Keep rules, agents, commands, skills, hooks and MCPs in one Forge in Git. Craftar emits them natively into every workspace, for every AI coder your team uses.">
 <meta name="twitter:image" content="https://craftar.dev/og.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Craftar","description":"Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients and recipes, and emits it in the native format of each AI coder (Claude Code, Kiro, and an AGENTS.md that Codex, Cursor, Warp, Copilot and Kimi read) into every workspace, with a lockfile for drift detection and a per-machine registry of workspaces.","programmingLanguage":"TypeScript","runtimePlatform":"Node.js","applicationCategory":"DeveloperApplication","keywords":["AI coding agents","harness","Claude Code","Kiro","Cursor","Codex","AGENTS.md","MCP","rulesync","developer tooling","monorepo","workspace sync"]}
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"Craftar","description":"Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients and recipes, and emits it in the native format of each AI coder (Claude Code, Kiro and AGENTS.md — working — and Cursor, Copilot, Agent Skills, Codex and Antigravity as mvp) into every workspace, with a lockfile for drift detection and a per-machine registry of workspaces.","programmingLanguage":"TypeScript","runtimePlatform":"Node.js","applicationCategory":"DeveloperApplication","keywords":["AI coding agents","harness","Claude Code","Kiro","Cursor","Codex","AGENTS.md","MCP","Copilot","Antigravity","developer tooling","monorepo","workspace sync"]}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -111,7 +111,7 @@
   .target b { font-weight: 600; font-size: 15px; }
   .target code { font-size: 12px; color: var(--muted); }
   .targets-h { margin: 14px 0 6px; }
-  .targets-h:first-of-type { margin-top: 0; }
+  .col-h + .targets-h { margin-top: 0; }
   .target.mvp { border-left-color: var(--ember); }
 
   .concepts { margin-top: 72px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }

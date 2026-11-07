@@ -1,6 +1,6 @@
 # Craftar
 
-> Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients, and emits it in the native format of each AI coder (Claude Code, Kiro, and an AGENTS.md that Codex, Cursor, Warp, Copilot and Kimi read) into every workspace, with a lockfile for drift detection and a per-machine registry of workspaces.
+> Open-source CLI (TypeScript/Node) that treats an AI-coding harness — rules, agents, commands, skills, hooks, MCP servers — as source in a Git repository (the Forge), composes it per team from reusable ingredients, and emits it in the native format of each AI coder (Claude Code, Kiro and AGENTS.md — working — and Cursor, Copilot, Agent Skills, Codex and Antigravity as mvp) into every workspace, with a lockfile for drift detection and a per-machine registry of workspaces.
 
 This file is the plain-text companion of the Craftar site — the home page (index.html) and the documentation (docs/index.html) — written for language models and other automated readers. Same content, no layout; diagrams are described in prose — verbatim from the accessible description of each figure — and the two whose topology carries the argument are also given as Mermaid graphs.
 
