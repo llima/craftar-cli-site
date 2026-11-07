@@ -127,7 +127,7 @@ Workspace output (mvp targets: cursor, copilot, agent-skills, codex, antigravity
 - .codex/agents/: *.toml (Codex)
 - .agents/rules/: *.md; .agents/agents/: *.md (Antigravity)
 - .agents/skills/create-api-endpoint/SKILL.md (Agent Skills: the command, as a skill)
-- The command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Codex takes the agents only: it reads its rules from AGENTS.md — add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning.
+- The command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Codex takes the agents only — sync warns — and reads its rules from AGENTS.md — add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning.
 
 ### node-fullstack — Node.js teams using TypeScript
 
@@ -158,7 +158,7 @@ Workspace output (mvp targets: cursor, copilot, agent-skills, codex, antigravity
 - .codex/agents/: *.toml (Codex)
 - .agents/rules/: *.md; .agents/agents/: *.md; .agents/mcp_config.json (npm-audit MCP) (Antigravity)
 - .agents/skills/create-express-route/SKILL.md (Agent Skills: the command, as a skill)
-- The command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Codex takes the agents only: it reads its rules from AGENTS.md — add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning. Codex keeps its MCP servers in .codex/config.toml, which craftar does not write: sync warns, and the npm-audit server is configured there by hand.
+- The command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Codex takes the agents only — sync warns — and reads its rules from AGENTS.md — add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning. Codex keeps its MCP servers in .codex/config.toml, which craftar does not write: sync warns, and the npm-audit server is configured there by hand.
 
 ### iac-multicloud — Platform teams managing infrastructure as code
 
@@ -188,7 +188,7 @@ Workspace output (mvp targets: cursor, copilot, agent-skills, codex, antigravity
 - .codex/agents/: *.toml (Codex)
 - .agents/rules/: *.md; .agents/agents/: *.md (Antigravity)
 - .agents/skills/create-aws-stack/SKILL.md, .agents/skills/create-helm-chart/SKILL.md (Agent Skills: each command, as a skill)
-- Each command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Codex takes the agents only: it reads its rules from AGENTS.md — add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning.
+- Each command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Codex takes the agents only — sync warns — and reads its rules from AGENTS.md — add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning.
 
 ### What syncs where
 
