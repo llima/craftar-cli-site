@@ -95,7 +95,7 @@ P2 resolved (diagram): same developer machine and same four workspaces as the pr
 
 ## In practice — Forge → Workspace by stack
 
-The layer resolution above is the logical flow — layers resolving into targets. This is the physical mapping: how a real Forge for a given stack becomes actual files in the workspace. Select a stack, then a target to see what `craftar sync` writes today. Every stack lists the three working targets: Claude Code, Kiro and AGENTS.md. The five mvp targets — Cursor, Copilot, Agent Skills, Codex and Antigravity — write the paths listed in the capability matrix (Targets and capability coverage, below). In each workspace, `craftar.yaml` is the input the workspace owns and `craftar.lock` is generated.
+The layer resolution above is the logical flow — layers resolving into targets. This is the physical mapping: how a real Forge for a given stack becomes actual files in the workspace. Select a stack, then a target to see what `craftar sync` writes today. Every stack lists the three working targets — Claude Code, Kiro and AGENTS.md — and an mvp tab: the five mvp targets — Cursor, Copilot, Agent Skills, Codex and Antigravity — writing into one workspace. The capability matrix (Targets and capability coverage, below) lists every path. In each workspace, `craftar.yaml` is the input the workspace owns and `craftar.lock` is generated.
 
 ### dotnet-enterprise — .NET backend teams following Clean Architecture
 
@@ -121,6 +121,14 @@ Workspace output (AGENTS.md target):
 - AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
 - One file: the emitter composes the rules only. The four agents and the command have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
 
+Workspace output (mvp targets: cursor, copilot, agent-skills, codex, antigravity, in one workspace):
+- .cursor/rules/: *.mdc; .cursor/agents/: *.md (Cursor)
+- .github/copilot-instructions.md (always-on rules), .github/instructions/: *.instructions.md (scoped rules), .github/agents/: *.agent.md (Copilot)
+- .codex/agents/: *.toml (Codex)
+- .agents/rules/: *.md; .agents/agents/: *.md (Antigravity)
+- .agents/skills/create-api-endpoint/SKILL.md (Agent Skills: the command, as a skill)
+- The command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Codex takes the agents only: it reads its rules from AGENTS.md — add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning.
+
 ### node-fullstack — Node.js teams using TypeScript
 
 Forge structure:
@@ -144,6 +152,14 @@ Workspace output (AGENTS.md target):
 - AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
 - One file: the emitter composes the rules only. The four agents, the command and the npm-audit MCP have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
 
+Workspace output (mvp targets: cursor, copilot, agent-skills, codex, antigravity, in one workspace):
+- .cursor/rules/: *.mdc; .cursor/agents/: *.md; .cursor/mcp.json (npm-audit MCP) (Cursor)
+- .github/copilot-instructions.md (always-on rules), .github/instructions/: *.instructions.md (scoped rules), .github/agents/: *.agent.md; .vscode/mcp.json (npm-audit MCP) (Copilot)
+- .codex/agents/: *.toml (Codex)
+- .agents/rules/: *.md; .agents/agents/: *.md; .agents/mcp_config.json (npm-audit MCP) (Antigravity)
+- .agents/skills/create-express-route/SKILL.md (Agent Skills: the command, as a skill)
+- The command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Codex takes the agents only: it reads its rules from AGENTS.md — add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning. Codex keeps its MCP servers in .codex/config.toml, which craftar does not write: sync warns, and the npm-audit server is configured there by hand.
+
 ### iac-multicloud — Platform teams managing infrastructure as code
 
 Forge structure:
@@ -165,6 +181,14 @@ Workspace output (Kiro target):
 Workspace output (AGENTS.md target):
 - AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
 - One file: the emitter composes the rules only. The four agents and the two commands have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
+
+Workspace output (mvp targets: cursor, copilot, agent-skills, codex, antigravity, in one workspace):
+- .cursor/rules/: *.mdc; .cursor/agents/: *.md (Cursor)
+- .github/copilot-instructions.md (always-on rules), .github/instructions/: *.instructions.md (scoped rules), .github/agents/: *.agent.md (Copilot)
+- .codex/agents/: *.toml (Codex)
+- .agents/rules/: *.md; .agents/agents/: *.md (Antigravity)
+- .agents/skills/create-aws-stack/SKILL.md, .agents/skills/create-helm-chart/SKILL.md (Agent Skills: each command, as a skill)
+- Each command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Codex takes the agents only: it reads its rules from AGENTS.md — add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning.
 
 ### What syncs where
 
