@@ -90,6 +90,7 @@
     <div class="docs">
       <nav class="doc-index" aria-label="Releases">
         <ol>
+          <li><a href="#v1-7-0">1.7.0</a></li>
           <li><a href="#v1-6-0">1.6.0</a></li>
           <li><a href="#v1-5-0">1.5.0</a></li>
           <li><a href="#v1-4-0">1.4.0</a></li>
@@ -102,6 +103,17 @@
       </nav>
 
       <div class="doc-entries">
+        <article class="doc-entry" id="v1-7-0">
+          <div class="id"><time datetime="2026-11-08">Nov 8, 2026</time></div>
+          <h2>1.7.0 — craftar setup, a Forge from scratch</h2>
+          <ul class="changes">
+            <li>A new command, <code>craftar setup</code>: creates a Forge from scratch (or by importing a workspace's <code>.claude/</code>), makes it a git repository with one initial commit, and starts workspaces on it. It is the one craftar command that commits, only in the directory it creates or finds empty, and it never pushes. See <a href="/docs/#setup">Setup</a>.</li>
+            <li><code>craftar</code> with no arguments, in a terminal, on a machine with no registered workspace, ends its help with <code>new here? run craftar setup</code>; the interactive <code>craftar init</code> suggests it when a Forge answer names no Forge.</li>
+            <li>No other command changes; no byte changes for a workspace already in sync.</li>
+          </ul>
+          <a class="doc-back" href="https://github.com/llima/craftar-cli/releases/tag/v1.7.0" rel="noopener">Release v1.7.0 on GitHub →</a>
+        </article>
+
         <article class="doc-entry" id="v1-6-0">
           <div class="id"><time datetime="2026-11-08">Nov 8, 2026</time></div>
           <h2>1.6.0 — The opencode target, mvp</h2>

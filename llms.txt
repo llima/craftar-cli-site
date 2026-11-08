@@ -241,14 +241,14 @@ Needs Node 22 or later, and git for a Forge in a repository. `npx craftar --vers
 ```
 $ npm install -g craftar
 $ craftar --version
-1.6.0
+1.7.0
 ```
 
-### Setup — a new Forge and its first workspaces (1.7.0 — not released yet)
+### Setup — a new Forge and its first workspaces (since 1.7.0)
 
-`craftar setup` creates a Forge — a new Git repository with one commit — and starts the first workspaces on it. It ships in craftar 1.7.0, not released yet; until then, start from an existing Forge with `craftar init --forge <dir> --profile <name>`. `craftar setup` alone, in a terminal, asks where the Forge goes, its first profile, the workspaces and the targets; `--import` brings a workspace's `.claude/` into the new Forge first. Setup only creates: a Forge directory that exists and is not empty is refused, with the `craftar init` command to use it instead. The Forge gets a README, a starter rule, the profile and a `base` recipe, and one commit with no remote; each workspace then gets its `craftar.yaml` and its first sync. The interactive form lists every target, each as working or mvp, and ends with the `craftar setup` line that repeats it.
+`craftar setup` creates a Forge — a new Git repository with one commit — and starts the first workspaces on it. It needs craftar 1.7.0 or later; with a Forge already, start a workspace with `craftar init --forge <dir> --profile <name>`. `craftar setup` alone, in a terminal, asks where the Forge goes, its first profile, the workspaces and the targets; `--import` brings a workspace's `.claude/` into the new Forge first. Setup only creates: a Forge directory that exists and is not empty is refused, with the `craftar init` command to use it instead. The Forge gets a README, a starter rule, the profile and a `base` recipe, and one commit with no remote; each workspace then gets its `craftar.yaml` and its first sync. The interactive form lists every target, each as working or mvp, and ends with the `craftar setup` line that repeats it.
 
-Terminal (animated on the page; measured on the 1.7.0 branch, llima/craftar-cli#130, before its release; the commit hash differs on every run):
+Terminal (animated on the page; measured on the 1.7.0 branch, llima/craftar-cli#130; the commit hash differs on every run):
 
 ```
 $ craftar setup --forge-dir acme-forge --profile acme --targets claude-code,kiro --workspace acme-portal
@@ -331,6 +331,12 @@ Trying it: install with `npm install -g craftar` (Node ≥ 22), or prefix any co
 Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitter per target; rulesync stays a reference for the formats, not a dependency. License: MIT.
 
 ## Changelog (as on https://craftar.dev/changelog/ — every release since 1.0.0, newest first; a summary of the README's Upgrading)
+
+### 1.7.0 — craftar setup, a Forge from scratch (2026-11-08)
+
+- A new command, `craftar setup`: creates a Forge from scratch (or by importing a workspace's `.claude/`), makes it a git repository with one initial commit, and starts workspaces on it. It is the one craftar command that commits, only in the directory it creates or finds empty, and it never pushes. See https://craftar.dev/docs/#setup.
+- `craftar` with no arguments, in a terminal, on a machine with no registered workspace, ends its help with `new here? run craftar setup`; the interactive `craftar init` suggests it when a Forge answer names no Forge.
+- No other command changes; no byte changes for a workspace already in sync.
 
 ### 1.6.0 — The opencode target, mvp (2026-11-08)
 

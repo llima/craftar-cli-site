@@ -54,7 +54,6 @@
   .doc-entry .cmds { margin-bottom: 16px; }
   .doc-entry .mech { font-size: 15px; color: var(--muted); margin-bottom: 16px; }
   .doc-entry .mech::before { content: "mechanism"; display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
-  .doc-entry .id .pill.soon { color: var(--warn); border-color: rgba(224,179,90,.4); }
   .tt { background: #070A0E; border: 1px solid var(--seam-2); border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
   .term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--seam); background: var(--plate); font-family: var(--mono); font-size: 12px; color: var(--faint); }
   .term-bar .dots { display: flex; gap: 6px; margin-right: 6px; }
@@ -183,7 +182,7 @@
           <div class="id">Install</div>
           <h2>Install</h2>
           <p class="why"><b>needs</b>Node 22 or later, and git for a Forge in a repository.</p>
-          <div class="tt" role="img" aria-label="~"><div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~</div><div class="tt-body" style="--loop:10.0s"><span class="ln" style="animation-name:o-i0"><span class="p">$</span> <span class="ty" style="animation-name:w-i0;--n:22ch">npm install -g craftar</span></span><span class="ln" style="animation-name:o-i1"><span class="p">$</span> <span class="ty" style="animation-name:w-i1;--n:17ch">craftar --version</span></span><span class="ln" style="animation-name:o-i2">1.6.0</span></div></div>
+          <div class="tt" role="img" aria-label="~"><div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~</div><div class="tt-body" style="--loop:10.0s"><span class="ln" style="animation-name:o-i0"><span class="p">$</span> <span class="ty" style="animation-name:w-i0;--n:22ch">npm install -g craftar</span></span><span class="ln" style="animation-name:o-i1"><span class="p">$</span> <span class="ty" style="animation-name:w-i1;--n:17ch">craftar --version</span></span><span class="ln" style="animation-name:o-i2">1.7.0</span></div></div>
           <div class="cmds">
             <code><span class="p">$</span> npx craftar --version <span class="c"># or run any command through npx</span></code>
             <code><span class="p">$</span> craftar doctor <span class="c"># what is off on the machine and in the workspace, with the fix</span></code>
@@ -191,11 +190,11 @@
         </article>
 
         <article class="doc-entry" id="setup">
-          <div class="id">Setup <span class="pill soon">1.7.0 — not released yet</span></div>
+          <div class="id">Setup <span class="pill">since 1.7.0</span></div>
           <h2>Setup — a new Forge and its first workspaces</h2>
-          <p class="why"><b>no Forge yet</b><code>craftar setup</code> creates a Forge — a new Git repository with one commit — and starts the first workspaces on it. It ships in craftar 1.7.0, not released yet; until then, start from an existing Forge with <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>.</p>
+          <p class="why"><b>no Forge yet</b><code>craftar setup</code> creates a Forge — a new Git repository with one commit — and starts the first workspaces on it. It needs craftar 1.7.0 or later; with a Forge already, start a workspace with <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>.</p>
           <div class="tt" role="img" aria-label="/work"><div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>/work</div><div class="tt-body" style="--loop:24.0s"><span class="ln" style="animation-name:o-u0"><span class="p">$</span> <span class="ty" style="animation-name:w-u0;--n:102ch">craftar setup --forge-dir acme-forge --profile acme --targets claude-code,kiro --workspace acme-portal</span></span><span class="ln" style="animation-name:o-u1">craftar setup — created Forge acme-forge at /work/acme-forge (schema 1)</span><span class="ln" style="animation-name:o-u2">  wrote craftar.forge.yaml, README.md, ingredients/rules/project-conventions/ingredient.yaml, ingredients/rules/project-conventions/rule.md, profiles/acme/profile.yaml, recipes/base.yaml</span><span class="ln" style="animation-name:o-u3">  git: initial commit 04b6cbb (no remote)</span><span class="ln" style="animation-name:o-u4">craftar init — wrote craftar.yaml in /work/acme-portal</span><span class="ln" style="animation-name:o-u5">  forge ../acme-forge · profile acme · recipes base · targets claude-code, kiro (from the profile)</span><span class="ln" style="animation-name:o-u6">craftar sync — profile acme · recipes base · targets claude-code, kiro</span><span class="ln" style="animation-name:o-u7">  wrote 2, removed 0 orphan(s), skipped 0</span><span class="ln add" style="animation-name:o-u8">  + .claude/rules/project-conventions.md</span><span class="ln add" style="animation-name:o-u9">  + .kiro/steering/project-conventions.md</span><span class="ln" style="animation-name:o-u10">next: edit the Forge (/work/acme-forge), commit, then craftar sync in each workspace</span></div></div>
-          <p class="tt-cap">Measured on the 1.7.0 branch (llima/craftar-cli#130), before its release; the commit hash differs on every run.</p>
+          <p class="tt-cap">Measured on the 1.7.0 branch (llima/craftar-cli#130); the commit hash differs on every run.</p>
           <div class="cmds">
             <code><span class="p">$</span> craftar setup <span class="c"># in a terminal: asks where the Forge goes, its first profile, the workspaces and the targets</span></code>
             <code><span class="p">$</span> craftar setup --forge-dir api-forge --profile acme-api --workspace acme-api --import <span class="c"># bring a workspace's .claude/ into the new Forge first</span></code>
