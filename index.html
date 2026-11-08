@@ -35,19 +35,94 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/site.css">
 <style>
-  /* ---------- hero ---------- */
-  .hero { padding-block: 72px 96px; border-top: 0; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; }
-  @media (max-width: 960px) { .hero { grid-template-columns: minmax(0, 1fr); padding-block: 40px 72px; gap: 40px; } }
-  .hero h1 .em { color: var(--ember); }
-  .hero .lede { margin-top: 26px; }
-  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; align-items: center; }
-  .install { display: inline-flex; align-items: center; gap: 12px; padding: 10px 14px; border: 1px solid var(--seam-2); border-radius: var(--r); background: var(--plate); font-family: var(--mono); font-size: 14px; color: var(--muted); overflow-wrap: anywhere; max-width: 100%; }
-  .install b { color: var(--text); font-weight: 500; }
-  .install .dollar { color: var(--ember); }
-  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 28px; font-family: var(--mono); font-size: 12.5px; color: var(--faint); letter-spacing: .02em; }
-  .hero-meta > span::before { content: "·"; margin-right: 10px; color: var(--seam-2); }
-  .hero-meta > span:first-child::before { content: none; }
-  .hero-meta > span { color: var(--muted); }
+  /* ---------- hero: centered title, the demo (action × where), buttons, tools ---------- */
+  .hero { padding-block: 72px 80px; border-top: 0; text-align: center; }
+  .hero h1 { max-width: 14ch; margin-inline: auto; }
+  .hero .lede { max-width: 62ch; margin: 24px auto 0; }
+  .demo { margin: 44px auto 0; max-width: 1180px; text-align: left; }
+  .demo-bar { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .segs { display: inline-flex; gap: 2px; padding: 4px; border: 1px solid var(--seam-2); border-radius: 10px; background: var(--plate); }
+  .segs button { font: 500 13.5px var(--body); color: var(--muted); background: none; border: 1px solid transparent; border-radius: 7px; padding: 7px 14px; cursor: pointer; }
+  .segs button[aria-selected="true"] { color: var(--text); border-color: var(--seam-2); background: var(--ink); }
+  .segs .pill { margin-left: 6px; font-size: 9.5px; color: var(--warn); border-color: rgba(224,179,90,.4); }
+  .screen[hidden] { display: none; }
+  .owin { display: grid; grid-template-columns: 200px minmax(0,1fr) minmax(0,340px); grid-template-rows: minmax(0,1fr) auto; border: 1px solid var(--seam-2); border-radius: 12px; overflow: hidden; background: #0D1218; box-shadow: 0 30px 80px -30px rgba(0,0,0,.8); min-height: 520px; }
+  .oside { background: #0B0F14; border-right: 1px solid var(--seam); padding: 12px 10px; display: grid; align-content: start; gap: 4px; font-size: 13px; color: var(--muted); }
+  .oline1 { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; color: var(--text); }
+  .oline1 .dots { display: flex; gap: 5px; } .oline1 .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--seam-2); display: block; }
+  .sitem { padding: 6px 8px; border-radius: 6px; } .sitem:first-of-type { background: var(--plate); }
+  .shead { margin-top: 12px; padding: 0 8px; font-size: 11.5px; color: var(--faint); }
+  .sproj { padding: 6px 8px; color: var(--text); }
+  .sws { padding: 8px; border-radius: 6px; display: grid; gap: 2px; } .sws.on { background: var(--plate); border: 1px solid var(--seam); }
+  .sws .tag { font-size: 10px; color: var(--faint); } .sws .br { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .ocenter, .oright { min-width: 0; display: flex; flex-direction: column; }
+  .oright { border-left: 1px solid var(--seam); background: var(--plate); }
+  .otabs { display: flex; gap: 2px; border-bottom: 1px solid var(--seam); padding: 6px 8px 0; font-family: var(--mono); font-size: 12px; }
+  .otabs span { padding: 6px 10px; color: var(--faint); border-radius: 6px 6px 0 0; } .otabs .on { color: var(--text); background: #0D1218; border: 1px solid var(--seam); border-bottom: 0; }
+  .oright .otabs .on { background: var(--plate); }
+  .mod { font-style: normal; color: var(--warn); }
+  .sc { padding: 14px; display: grid; gap: 6px; align-content: start; }
+  .scrow { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; padding: 4px 8px; border-radius: 4px; }
+  .scrow i { font-style: normal; color: var(--ok); }
+  .ost3a { opacity: 0; animation: ost3 15s infinite; } .ost1a { animation: ost1 15s infinite; color: var(--faint); font-size: 13px; }
+  .ed { margin: 0; padding: 16px; font: 12.5px/1.8 var(--mono); color: #C9D3DD; white-space: pre; overflow: hidden; }
+  .ed .g { color: var(--faint); display: inline-block; width: 2ch; }
+  .typed { display: inline-block; overflow: hidden; vertical-align: bottom; white-space: pre; width: 0; animation: typeline 15s steps(37, end) infinite; color: var(--warn); }
+  @keyframes typeline { 0%, 3% { width: 0 } 18%, 100% { width: 37ch } }
+  .caret { display: inline-block; width: 7px; height: 1.1em; background: var(--ember); vertical-align: text-bottom; animation: blink 1s steps(1) infinite; }
+  .dock { border: 0; border-radius: 0; flex: 1; background: transparent; }
+  .dock .ohead { display: none; }
+  .ostatus { grid-column: 1 / -1; display: flex; justify-content: space-between; padding: 6px 12px; border-top: 1px solid var(--seam); font-family: var(--mono); font-size: 11.5px; color: var(--faint); background: #0B0F14; }
+  .ocraft { color: var(--warn); }
+  .con { max-width: 920px; margin-inline: auto; } .con .cap { font-size: 13px; color: var(--faint); margin-top: 8px; }
+  .tt { background: #070A0E; border: 1px solid var(--seam-2); border-radius: 10px; overflow: hidden; }
+  .tt-body { padding: 16px 20px 18px; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: #C9D3DD; overflow-x: auto; min-height: 420px; }
+  .tt .ln { display: block; white-space: pre; opacity: 0; animation-duration: var(--loop); animation-iteration-count: infinite; }
+  .tt .ty { display: inline-block; vertical-align: bottom; overflow: hidden; white-space: pre; width: 0; animation-duration: var(--loop); animation-iteration-count: infinite; animation-timing-function: steps(40, end); }
+  .tt .p { color: var(--ember); } .tt .add { color: var(--ok); } .tt .c { color: var(--faint); }
+  .cta2 { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 36px; }
+  .cta2 .install2 { text-decoration: none; font-family: var(--mono); font-size: 14px; border: 1px solid var(--seam-2); border-radius: 6px; padding: 10px 14px; color: var(--text); background: var(--plate); }
+  .cta2 .install2 .d { color: var(--ember); margin-right: 8px; }
+  .tools { list-style: none; padding: 0; margin: 28px auto 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; max-width: 900px; }
+  .tools a { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); text-decoration: none; font-size: 14px; }
+  .tools a:hover { color: var(--text); }
+  .glyph { width: 22px; height: 22px; border-radius: 5px; display: inline-grid; place-items: center; font: 700 10px var(--mono); color: var(--ink); background: var(--steel); letter-spacing: -.02em; }
+  .tools li:nth-child(3n+1) .glyph { background: var(--ember); } .tools li:nth-child(3n) .glyph { background: var(--text); }
+  @media (max-width: 960px) { .owin { grid-template-columns: minmax(0,1fr) minmax(0,320px); } .oside { display: none; } }
+  @media (max-width: 680px) { .owin { grid-template-columns: minmax(0,1fr); } .ocenter { display: none; } .oright { border-left: 0; } }
+  .dock .ostates { min-height: 0; }
+  @keyframes o-cu0 { 0%, 2.73% { opacity: 0 } 3.13%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-cu1 { 0%, 7.64% { width: 0 } 10.36%, 100% { width: 14ch } }
+  @keyframes o-cu1 { 0%, 7.64% { opacity: 0 } 7.65%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cu2 { 0%, 12.64% { opacity: 0 } 13.04%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cu3 { 0%, 13.45% { opacity: 0 } 13.85%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cu4 { 0%, 14.27% { opacity: 0 } 14.67%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cu5 { 0%, 15.09% { opacity: 0 } 15.49%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-cu6 { 0%, 20.00% { width: 0 } 22.73%, 100% { width: 12ch } }
+  @keyframes o-cu6 { 0%, 20.00% { opacity: 0 } 20.01%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cu7 { 0%, 25.00% { opacity: 0 } 25.40%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cu8 { 0%, 25.82% { opacity: 0 } 26.22%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cu9 { 0%, 26.64% { opacity: 0 } 27.04%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cu10 { 0%, 27.45% { opacity: 0 } 27.85%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs0 { 0%, 2.31% { opacity: 0 } 2.71%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-cs1 { 0%, 6.46% { width: 0 } 8.88%, 100% { width: 18ch } }
+  @keyframes o-cs1 { 0%, 6.46% { opacity: 0 } 6.47%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs2 { 0%, 10.81% { opacity: 0 } 11.21%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-cs3 { 0%, 14.96% { width: 0 } 24.12%, 100% { width: 68ch } }
+  @keyframes o-cs3 { 0%, 14.96% { opacity: 0 } 14.97%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs4 { 0%, 26.04% { opacity: 0 } 26.44%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs5 { 0%, 26.73% { opacity: 0 } 27.13%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs6 { 0%, 27.42% { opacity: 0 } 27.82%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs7 { 0%, 28.12% { opacity: 0 } 28.52%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs8 { 0%, 28.81% { opacity: 0 } 29.21%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-cs9 { 0%, 32.96% { width: 0 } 40.77%, 100% { width: 58ch } }
+  @keyframes o-cs9 { 0%, 32.96% { opacity: 0 } 32.97%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs10 { 0%, 42.69% { opacity: 0 } 43.09%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs11 { 0%, 43.38% { opacity: 0 } 43.78%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs12 { 0%, 44.08% { opacity: 0 } 44.48%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs13 { 0%, 44.77% { opacity: 0 } 45.17%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-cs14 { 0%, 45.46% { opacity: 0 } 45.86%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @media (prefers-reduced-motion: reduce) { .ost.s1, .ost.s2, .ost1a { opacity: 0; visibility: hidden; } .ost.s3, .ost3a { opacity: 1; visibility: visible; } .typed { width: 37ch; } .tt .ln { opacity: 1; } .tt .ty { width: var(--n); } }
 
   /* terminal */
   .term { background: #070A0E; border: 1px solid var(--seam-2); border-radius: 6px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(233,145,90,.06); }
@@ -148,12 +223,6 @@
   .stage-hint { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
   .stage-hint a { color: var(--steel); text-decoration: none; }
 
-  /* hero stage: Console | Plugin (craftar for Orca, not released yet) */
-  .hero-stage { margin-top: 0; border: 0; background: none; min-width: 0; }
-  .hero-stage > .stage-bar { padding: 0 0 10px; border-bottom: 0; }
-  .hero-stage > [hidden] { display: none; }
-  .hero-stage .seg .pill { margin-left: 6px; color: var(--warn); border-color: rgba(224,179,90,.4); font-size: 9.5px; }
-  .orca-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .opanel { margin: 0; background: var(--plate); border: 1px solid var(--seam-2); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; font-size: 12px; }
   .opanel figcaption { border-top: 1px solid var(--seam); padding: 10px 14px; font-size: 12.5px; color: var(--muted); }
   .ohead { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--seam); font-family: var(--mono); font-size: 13px; }
@@ -199,8 +268,6 @@
   .osteps { display: flex; gap: 6px; font-family: var(--mono); font-size: 11px; }
   .osteps span { border: 1px solid var(--seam-2); border-radius: 10px; padding: 1px 8px; color: var(--faint); }
   .osteps .on { color: var(--ok); border-color: rgba(123,196,138,.5); } .osteps .cur { color: var(--ember); border-color: rgba(233,145,90,.55); }
-  @media (max-width: 860px) { .orca-pair { grid-template-columns: minmax(0, 1fr); } .ostates { min-height: 0; } }
-  .orca-fig .stack-cap { margin-top: 12px; }
   @media (prefers-reduced-motion: reduce) { .ost.s1, .ost.s2 { opacity: 0; visibility: hidden; } .ost.s3 { opacity: 1; visibility: visible; } }
   .fig { padding: 20px 20px 16px; }
   .fig .diagram { margin-top: 0; }
@@ -413,108 +480,108 @@
 
   <!-- ================= HERO ================= -->
   <section class="hero" id="top">
-    <div>
-      <h1>A build system for AI-coding harnesses.</h1>
-      <p class="lede">A <strong>harness</strong> — the rules, agents, commands, skills, hooks and MCP servers that shape coding agents — kept as source in one Git repository, the <strong>Forge</strong>. Craftar composes it per team, writes each tool's own files and records them in a lockfile (<a href="#p1" style="color:var(--steel);text-decoration:none">P1</a>, <a href="#p2" style="color:var(--steel);text-decoration:none">P2</a>).</p>
-      <div class="cta">
-        <a class="btn primary" href="/docs/#start">Get started</a>
-        <a class="btn" href="#model">Read the model</a>
-        <span class="install"><span class="dollar">$</span><b>npm install -g craftar</b></span>
+    <h1>A build system for AI-coding harnesses.</h1>
+    <p class="lede">A <strong>harness</strong> — the rules, agents, commands, skills, hooks and MCP servers that shape coding agents — kept as source in one Git repository, the <strong>Forge</strong>. Craftar composes it per team, writes each tool's own files and records them in a lockfile (<a href="#p1" style="color:var(--steel);text-decoration:none">P1</a>, <a href="#p2" style="color:var(--steel);text-decoration:none">P2</a>).</p>
+    <div class="demo" id="demo">
+      <div class="demo-bar">
+        <div class="segs" role="tablist" aria-label="Action"><button role="tab" id="act-update" aria-selected="true" data-action="update">Get an update from the Forge</button><button role="tab" id="act-send" aria-selected="false" data-action="send">Send an edit to the Forge</button></div>
+        <div class="segs" role="tablist" aria-label="Where"><button role="tab" id="view-orca" aria-selected="true" data-view="orca">In Orca <span class="pill">not released yet</span></button><button role="tab" id="view-console" aria-selected="false" data-view="console">In the console</button></div>
       </div>
-      <div class="hero-meta">
-        <span>claude-code</span><span>kiro</span><span>agents-md</span><span>cursor</span><span>copilot</span><span>agent-skills</span><span>codex</span><span>antigravity</span><span>opencode</span>
-      </div>
+    
+  <div class="screen" id="s-orca-update" role="tabpanel" aria-label="In Orca: get an update from the Forge"><div class="owin" role="img" aria-label="An Orca-style window: workspace list, the editor, and the craftar panel docked on the right"><aside class="oside"><div class="oline1"><span class="dots"><i></i><i></i><i></i></span><b>Orca</b></div>
+  <div class="sitem">⌕ Search</div><div class="sitem">☰ Tasks</div><div class="sitem">◷ Automations</div>
+  <div class="shead">Projects</div><div class="sproj">acme-web</div>
+  <div class="sws on"><b>acme-portal</b> <span class="tag">primary</span><span class="br">feature/checkout</span></div>
+  <div class="sws"><b>acme-api</b><span class="br">main</span></div></aside>
+  <main class="ocenter"><div class="otabs"><span class="on">Source control</span></div>
+  <div class="sc"><div class="olbl">staged changes</div>
+  <div class="scrow ost3a"><span>.kiro/steering/acme-style.md</span><i>M</i></div>
+  <div class="scrow ost3a"><span>.kiro/agents/reviewer.json</span><i>M</i></div>
+  <div class="scrow ost3a"><span>.claude/rules/release.md</span><i>A</i></div>
+  <div class="scrow ost3a"><span>craftar.lock</span><i>M</i></div>
+  <div class="olbl">changes</div><div class="scrow"><span>.claude/rules/acme-style.md</span><i>M</i></div>
+  <p class="schint ost1a">nothing staged yet — the Forge moved 3 files</p></div></main>
+  <div class="oright"><div class="otabs"><span class="on">craftar</span><span>Terminal</span></div><figure class="opanel dock" aria-label="Bring: the Forge moved, the panel lists what comes down, Update and stage writes and stages it">
+              <div class="ohead"><svg class="omark" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="14" width="10" height="10" rx="1.5" fill="#E9915A"/><rect x="14" y="14" width="10" height="10" rx="1.5" fill="#7FB4D6"/><rect x="8" y="2" width="10" height="10" rx="1.5" fill="#E7ECF1"/></svg><b>craftar</b><span class="ows">acme-portal</span><span class="obell" aria-hidden="true">2</span></div>
+              <div class="ostates">
+                <div class="ost s1">
+                  <div class="ocard f"><div><b class="ek">forge</b> <b>acme-forge</b></div><span class="om">main @ c759dd7 · moved 3 files</span><span class="oloc">local</span></div>
+                  <div class="osync"><b>craftar sync</b><span class="om">reads the Forge · emits per surface</span></div>
+                  <div class="osurf"><div><b>claude-code</b><span class="d-dr">drift</span><span class="om">1 new, 1 edited</span></div><div><b>kiro</b><span class="d-out">outdated</span><span class="om">2 to update</span></div><div><b>agents-md</b><span class="d-ok">up to date</span><span class="om">1 file</span></div></div>
+                  <div class="ocard w"><div><b class="sk">workspace</b> <b>acme-portal</b></div><span class="om">profile acme-services · lock forge@5b0d3f1</span></div>
+                  <div class="olbl">from the Forge <span>3</span></div>
+                  <div class="orow"><span>↓ .kiro/steering/acme-style.md</span><i>update</i></div>
+                  <div class="orow"><span>↓ .kiro/agents/reviewer.json</span><i>update</i></div>
+                  <div class="orow"><span>↓ .claude/rules/release.md</span><i>new</i></div>
+                  <div class="ofoot"><span class="obtn bring press1">↓ Bring 3 from the Forge</span><span class="obtn send">↑ Send 1 to the Forge</span></div>
+                </div>
+                <div class="ost s2">
+                  <div class="oask"><b>Bring 3 files from the Forge?</b><span>craftar writes them, then they are added to your commit (staged, not committed). Hand edits are kept.</span></div>
+                  <div class="olbl">written and staged <span>3</span></div>
+                  <div class="oline"><span>.kiro/steering/acme-style.md</span><i>update</i></div>
+                  <div class="oline"><span>.kiro/agents/reviewer.json</span><i>update</i></div>
+                  <div class="oline"><span>.claude/rules/release.md</span><i>new</i></div>
+                  <div class="oline"><span>craftar.lock</span><i>staged too</i></div>
+                  <div class="olbl">kept as you edited it <span>1</span></div>
+                  <div class="oline"><span>.claude/rules/acme-style.md</span><i class="sk">drift · kept</i></div>
+                  <div class="ofoot"><span class="obtn ghost">Cancel</span><span class="obtn bring wide press2">↓ Update and stage</span><small>never --overwrite-drift · never a commit</small></div>
+                </div>
+                <div class="ost s3">
+                  <div class="odone">✓ 3 files written and added to your commit, with craftar.lock</div>
+                  <div class="osurf"><div><b>claude-code</b><span class="d-dr">drift</span><span class="om">1 edited, kept</span></div><div><b>kiro</b><span class="d-ok">up to date</span><span class="om">staged</span></div><div><b>agents-md</b><span class="d-ok">up to date</span><span class="om">1 file</span></div></div>
+                  <div class="olbl">edited here <span>1</span></div>
+                  <div class="orow"><span>↑ .claude/rules/acme-style.md</span><i>can be sent</i></div>
+                </div>
+              </div>
+              <figcaption>Bring — the Forge moved; one click writes and stages exactly those files.</figcaption>
+            </figure></div>
+  <footer class="ostatus"><span>acme-portal · feature/checkout</span><span class="ocraft">craftar ↓3</span></footer></div></div>
+  <div class="screen" id="s-orca-send" role="tabpanel" aria-label="In Orca: send an edit to the Forge" hidden><div class="owin" role="img" aria-label="An Orca-style window: workspace list, the editor, and the craftar panel docked on the right"><aside class="oside"><div class="oline1"><span class="dots"><i></i><i></i><i></i></span><b>Orca</b></div>
+  <div class="sitem">⌕ Search</div><div class="sitem">☰ Tasks</div><div class="sitem">◷ Automations</div>
+  <div class="shead">Projects</div><div class="sproj">acme-web</div>
+  <div class="sws on"><b>acme-portal</b> <span class="tag">primary</span><span class="br">feature/checkout</span></div>
+  <div class="sws"><b>acme-api</b><span class="br">main</span></div></aside>
+  <main class="ocenter"><div class="otabs"><span class="on">project-conventions.md <i class="mod">●</i></span><span>shipping.ts</span></div>
+  <pre class="ed"><span class="g">1</span> # Project conventions
+  <span class="g">2</span>
+  <span class="g">3</span> - Name branches feat/&lt;slug&gt;.
+  <span class="g">4</span> <span class="typed">- Keep pull requests under 400 lines.</span><span class="caret"></span></pre></main>
+  <div class="oright"><div class="otabs"><span class="on">craftar</span><span>Terminal</span></div><figure class="opanel dock" aria-label="Send: a file edited here goes through a dry run, then Write to the Forge writes the Forge's working tree, never a commit">
+              <div class="ohead"><svg class="omark" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="14" width="10" height="10" rx="1.5" fill="#E9915A"/><rect x="14" y="14" width="10" height="10" rx="1.5" fill="#7FB4D6"/><rect x="8" y="2" width="10" height="10" rx="1.5" fill="#E7ECF1"/></svg><b>craftar</b><span class="ows">acme-portal</span></div>
+              <div class="ostates">
+                <div class="ost s1">
+                  <div class="olbl">edited here <span>1</span></div>
+                  <div class="orow"><span>↑ .claude/rules/project-conventions.md</span><i>can be sent</i></div>
+                  <div class="ofoot"><span class="obtn bring">↓ Bring 3 from the Forge</span><span class="obtn send press1">↑ Send 1 to the Forge</span><small>send: dry run first · never a commit</small></div>
+                </div>
+                <div class="ost s2">
+                  <div class="osteps"><span class="on">1 dry run</span><span class="cur">2 write</span><span>3 done</span></div>
+                  <div class="oask e"><b>Send .claude/rules/project-conventions.md to the Forge?</b><dl><dt>outcome</dt><dd>variant</dd><dt>becomes</dt><dd>rule/project-conventions--acme</dd><dt>forge</dt><dd>acme-forge (on this machine)</dd></dl></div>
+                  <div class="olbl">craftar would write in the Forge <span>3</span></div>
+                  <div class="oline"><span>…/project-conventions--acme/ingredient.yaml</span><i>created</i></div>
+  <div class="oline"><span>…/project-conventions--acme/rule.md</span><i>created</i></div>
+                  <div class="oline"><span>recipes/base.yaml</span><i>edited</i></div>
+                  <div class="olbl">after it</div>
+                  <div class="oline"><span>this workspace's next sync</span><i>unchanged 6</i></div>
+                  <div class="ofoot"><span class="obtn ghost">Cancel</span><span class="obtn send wide press2">↑ Write to the Forge</span><small>writes the Forge's working tree · nothing is committed, pushed or opened as a PR</small></div>
+                </div>
+                <div class="ost s3">
+                  <div class="osteps"><span class="on">1 dry run</span><span class="on">2 write</span><span class="on">3 done</span></div>
+                  <div class="odone">✓ Written to the Forge's working tree. .claude/rules/project-conventions.md is now rule/project-conventions--acme. Nothing was committed.</div>
+                  <div class="olbl">written in the Forge <span>3</span></div>
+                  <div class="oline"><span>…/project-conventions--acme/ingredient.yaml</span><i>created</i></div>
+  <div class="oline"><span>…/project-conventions--acme/rule.md</span><i>created</i></div>
+                  <div class="oline"><span>recipes/base.yaml</span><i>edited</i></div>
+                </div>
+              </div>
+              <figcaption>Send — a hand edit goes back to the Forge: dry run first, then Write to the Forge.</figcaption>
+            </figure></div>
+  <footer class="ostatus"><span>acme-portal · feature/checkout</span><span class="ocraft">craftar ↑1</span></footer></div></div>
+  <div class="screen con" id="s-console-update" role="tabpanel" aria-label="In the console: get an update from the Forge" hidden><div class="tt" role="img" aria-label="~/work/acme-portal"><div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~/work/acme-portal</div><div class="tt-body" style="--loop:22.0s"><span class="ln c" style="animation-name:o-cu0"># the Forge moved: a rule was edited and committed in acme-forge</span><span class="ln" style="animation-name:o-cu1"><span class="p">$</span> <span class="ty" style="animation-name:w-cu1;--n:14ch">craftar status</span></span><span class="ln" style="animation-name:o-cu2">craftar status — profile acme · recipes base</span><span class="ln" style="animation-name:o-cu3">  update 2</span><span class="ln" style="animation-name:o-cu4">  update        .claude/rules/project-conventions.md  rule/project-conventions</span><span class="ln" style="animation-name:o-cu5">  update        .kiro/steering/project-conventions.md  rule/project-conventions</span><span class="ln" style="animation-name:o-cu6"><span class="p">$</span> <span class="ty" style="animation-name:w-cu6;--n:12ch">craftar sync</span></span><span class="ln" style="animation-name:o-cu7">craftar sync — profile acme · recipes base · targets claude-code, kiro</span><span class="ln" style="animation-name:o-cu8">  wrote 2, removed 0 orphan(s), skipped 0</span><span class="ln add" style="animation-name:o-cu9">  + .claude/rules/project-conventions.md</span><span class="ln add" style="animation-name:o-cu10">  + .kiro/steering/project-conventions.md</span></div></div><p class="cap">craftar 1.7.0 on a synthetic workspace; the comment line stands for the Forge commit.</p></div>
+  <div class="screen con" id="s-console-send" role="tabpanel" aria-label="In the console: send an edit to the Forge" hidden><div class="tt" role="img" aria-label="~/work/acme-portal"><div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~/work/acme-portal</div><div class="tt-body" style="--loop:26.0s"><span class="ln c" style="animation-name:o-cs0"># a line was added to .claude/rules/project-conventions.md by hand</span><span class="ln" style="animation-name:o-cs1"><span class="p">$</span> <span class="ty" style="animation-name:w-cs1;--n:18ch">craftar drift show</span></span><span class="ln" style="animation-name:o-cs2">drift         .claude/rules/project-conventions.md  rule/project-conventions  forge: same  promote: yes</span><span class="ln" style="animation-name:o-cs3"><span class="p">$</span> <span class="ty" style="animation-name:w-cs3;--n:68ch">craftar drift promote .claude/rules/project-conventions.md --dry-run</span></span><span class="ln" style="animation-name:o-cs4">promote .claude/rules/project-conventions.md → rule/project-conventions--acme (variant, profile acme)</span><span class="ln" style="animation-name:o-cs5">  would write ingredients/rules/project-conventions--acme/ingredient.yaml</span><span class="ln" style="animation-name:o-cs6">  would write ingredients/rules/project-conventions--acme/rule.md</span><span class="ln" style="animation-name:o-cs7">  would edit recipes/base.yaml (ingredients)</span><span class="ln" style="animation-name:o-cs8">  dry run — the Forge was not written</span><span class="ln" style="animation-name:o-cs9"><span class="p">$</span> <span class="ty" style="animation-name:w-cs9;--n:58ch">craftar drift promote .claude/rules/project-conventions.md</span></span><span class="ln" style="animation-name:o-cs10">promote .claude/rules/project-conventions.md → rule/project-conventions--acme (variant, profile acme)</span><span class="ln add" style="animation-name:o-cs11">  wrote  ingredients/rules/project-conventions--acme/ingredient.yaml</span><span class="ln add" style="animation-name:o-cs12">  wrote  ingredients/rules/project-conventions--acme/rule.md</span><span class="ln add" style="animation-name:o-cs13">  edited recipes/base.yaml (ingredients)</span><span class="ln" style="animation-name:o-cs14">  the Forge is not committed — review with git, then commit and push it</span></div></div><p class="cap">craftar 1.7.0 on a synthetic workspace; the comment line stands for the hand edit.</p></div>
     </div>
-
-    <div class="stage hero-stage">
-      <div class="stage-bar" role="tablist" aria-label="Craftar from a terminal or from Orca">
-        <button class="seg" role="tab" id="tab-console" aria-selected="true" aria-controls="fig-console" data-fig="fig-console">Console</button>
-        <button class="seg" role="tab" id="tab-plugin" aria-selected="false" aria-controls="fig-plugin" data-fig="fig-plugin">Plugin <span class="pill">not released yet</span></button>
-      </div>
-      <div class="term" id="fig-console" role="tabpanel" aria-labelledby="tab-console" aria-label="Terminal showing craftar sync output">
-        <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~/work/team-a/platform-workspace</div>
-  <pre><span class="p">$</span> craftar sync
-  <b>craftar sync — profile team-a · recipes base → backend-clean-arch → frontend-angular → aws-local → pm-azure-devops · targets claude-code, kiro</b>
-
-    wrote <span class="add">4</span>, removed <span class="del">1</span> orphan(s), skipped <span class="chg">1</span>
-    <span class="add">+</span> .claude/rules/frontend-angular.md
-    <span class="add">+</span> .claude/agents/frontend-reviewer.md
-    <span class="add">+</span> .claude/commands/create-component.md
-    <span class="add">+</span> .kiro/steering/frontend-angular.md
-    <span class="del">-</span> .kiro/steering/frontend-react.md  <span class="dim">(orphan: no longer produced by the Forge)</span>
-    <span class="chg">!</span> .kiro/agents/frontend-reviewer.json  <span class="dim">hand-edited since last sync — `craftar drift show &lt;path&gt;`, then `craftar drift discard` or `craftar drift promote`</span>
-  <span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
-      </div>
-      <div class="orca-fig" id="fig-plugin" role="tabpanel" aria-labelledby="tab-plugin" hidden>
-        <div class="orca-pair">
-          <figure class="opanel" aria-label="Bring: the Forge moved, the panel lists what comes down, Update and stage writes and stages it">
-            <div class="ohead"><svg class="omark" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="14" width="10" height="10" rx="1.5" fill="#E9915A"/><rect x="14" y="14" width="10" height="10" rx="1.5" fill="#7FB4D6"/><rect x="8" y="2" width="10" height="10" rx="1.5" fill="#E7ECF1"/></svg><b>craftar</b><span class="ows">acme-portal</span><span class="obell" aria-hidden="true">2</span></div>
-            <div class="ostates">
-              <div class="ost s1">
-                <div class="ocard f"><div><b class="ek">forge</b> <b>acme-forge</b></div><span class="om">main @ c759dd7 · moved 3 files</span><span class="oloc">local</span></div>
-                <div class="osync"><b>craftar sync</b><span class="om">reads the Forge · emits per surface</span></div>
-                <div class="osurf"><div><b>claude-code</b><span class="d-dr">drift</span><span class="om">1 new, 1 edited</span></div><div><b>kiro</b><span class="d-out">outdated</span><span class="om">2 to update</span></div><div><b>agents-md</b><span class="d-ok">up to date</span><span class="om">1 file</span></div></div>
-                <div class="ocard w"><div><b class="sk">workspace</b> <b>acme-portal</b></div><span class="om">profile acme-services · lock forge@5b0d3f1</span></div>
-                <div class="olbl">from the Forge <span>3</span></div>
-                <div class="orow"><span>↓ .kiro/steering/acme-style.md</span><i>update</i></div>
-                <div class="orow"><span>↓ .kiro/agents/reviewer.json</span><i>update</i></div>
-                <div class="orow"><span>↓ .claude/rules/release.md</span><i>new</i></div>
-                <div class="ofoot"><span class="obtn bring press1">↓ Bring 3 from the Forge</span><span class="obtn send">↑ Send 1 to the Forge</span></div>
-              </div>
-              <div class="ost s2">
-                <div class="oask"><b>Bring 3 files from the Forge?</b><span>craftar writes them, then they are added to your commit (staged, not committed). Hand edits are kept.</span></div>
-                <div class="olbl">written and staged <span>3</span></div>
-                <div class="oline"><span>.kiro/steering/acme-style.md</span><i>update</i></div>
-                <div class="oline"><span>.kiro/agents/reviewer.json</span><i>update</i></div>
-                <div class="oline"><span>.claude/rules/release.md</span><i>new</i></div>
-                <div class="oline"><span>craftar.lock</span><i>staged too</i></div>
-                <div class="olbl">kept as you edited it <span>1</span></div>
-                <div class="oline"><span>.claude/rules/acme-style.md</span><i class="sk">drift · kept</i></div>
-                <div class="ofoot"><span class="obtn ghost">Cancel</span><span class="obtn bring wide press2">↓ Update and stage</span><small>never --overwrite-drift · never a commit</small></div>
-              </div>
-              <div class="ost s3">
-                <div class="odone">✓ 3 files written and added to your commit, with craftar.lock</div>
-                <div class="osurf"><div><b>claude-code</b><span class="d-dr">drift</span><span class="om">1 edited, kept</span></div><div><b>kiro</b><span class="d-ok">up to date</span><span class="om">staged</span></div><div><b>agents-md</b><span class="d-ok">up to date</span><span class="om">1 file</span></div></div>
-                <div class="olbl">edited here <span>1</span></div>
-                <div class="orow"><span>↑ .claude/rules/acme-style.md</span><i>can be sent</i></div>
-              </div>
-            </div>
-            <figcaption>Bring — the Forge moved; one click writes and stages exactly those files.</figcaption>
-          </figure>
-          <figure class="opanel" aria-label="Send: a file edited here goes through a dry run, then Write to the Forge writes the Forge's working tree, never a commit">
-            <div class="ohead"><svg class="omark" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="14" width="10" height="10" rx="1.5" fill="#E9915A"/><rect x="14" y="14" width="10" height="10" rx="1.5" fill="#7FB4D6"/><rect x="8" y="2" width="10" height="10" rx="1.5" fill="#E7ECF1"/></svg><b>craftar</b><span class="ows">acme-portal</span></div>
-            <div class="ostates">
-              <div class="ost s1">
-                <div class="olbl">edited here <span>1</span></div>
-                <div class="orow"><span>↑ .claude/rules/acme-style.md</span><i>can be sent</i></div>
-                <div class="ofoot"><span class="obtn bring">↓ Bring 3 from the Forge</span><span class="obtn send press1">↑ Send 1 to the Forge</span><small>send: dry run first · never a commit</small></div>
-              </div>
-              <div class="ost s2">
-                <div class="osteps"><span class="on">1 dry run</span><span class="cur">2 write</span><span>3 done</span></div>
-                <div class="oask e"><b>Send .claude/rules/acme-style.md to the Forge?</b><dl><dt>outcome</dt><dd>variant</dd><dt>becomes</dt><dd>rule/acme-style--acme-services</dd><dt>forge</dt><dd>acme-forge (on this machine)</dd></dl></div>
-                <div class="olbl">craftar would write in the Forge <span>3</span></div>
-                <div class="oline"><span>…/acme-style--acme-services/ingredient.yaml</span><i>created</i></div>
-<div class="oline"><span>…/acme-style--acme-services/rule.md</span><i>created</i></div>
-                <div class="oline"><span>recipes/local-stack.yaml</span><i>edited</i></div>
-                <div class="olbl">after it</div>
-                <div class="oline"><span>this workspace's next sync</span><i>unchanged 6</i></div>
-                <div class="ofoot"><span class="obtn ghost">Cancel</span><span class="obtn send wide press2">↑ Write to the Forge</span><small>writes the Forge's working tree · nothing is committed, pushed or opened as a PR</small></div>
-              </div>
-              <div class="ost s3">
-                <div class="osteps"><span class="on">1 dry run</span><span class="on">2 write</span><span class="on">3 done</span></div>
-                <div class="odone">✓ Written to the Forge's working tree. .claude/rules/acme-style.md is now rule/acme-style--acme-services. Nothing was committed.</div>
-                <div class="olbl">written in the Forge <span>3</span></div>
-                <div class="oline"><span>…/acme-style--acme-services/ingredient.yaml</span><i>created</i></div>
-<div class="oline"><span>…/acme-style--acme-services/rule.md</span><i>created</i></div>
-                <div class="oline"><span>recipes/local-stack.yaml</span><i>edited</i></div>
-              </div>
-            </div>
-            <figcaption>Send — a hand edit goes back to the Forge: dry run first, then Write to the Forge.</figcaption>
-          </figure>
-        </div>
-        <p class="stack-cap">craftar for Orca — <span class="pill">not released yet</span>. An Orca panel that drives the person's own <code>craftar</code>: <code>sync</code> through <code>craftar mcp --allow-writes</code> and its consent, never <code style="white-space:nowrap">--overwrite-drift</code>, and <code>drift promote</code> for a send. It stages exact paths and never commits. Synthetic <code>acme</code> data.</p>
-      </div>
-    </div>
+    <div class="cta2"><a class="btn primary" href="/docs/#start">Get started</a><a class="btn" href="#model">Read the model</a><a class="install2" href="/docs/#install" aria-label="Install craftar"><span class="d">$</span>npm install -g craftar</a></div>
+    <ul class="tools"><li><a href="https://www.anthropic.com/claude-code" rel="noopener"><span class="glyph" aria-hidden="true">CC</span>Claude Code</a></li><li><a href="https://kiro.dev" rel="noopener"><span class="glyph" aria-hidden="true">Ki</span>Kiro</a></li><li><a href="https://agents.md" rel="noopener"><span class="glyph" aria-hidden="true">AG</span>AGENTS.md</a></li><li><a href="https://cursor.com" rel="noopener"><span class="glyph" aria-hidden="true">Cu</span>Cursor</a></li><li><a href="https://github.com/features/copilot" rel="noopener"><span class="glyph" aria-hidden="true">Co</span>Copilot</a></li><li><a href="https://agentskills.io" rel="noopener"><span class="glyph" aria-hidden="true">SK</span>Agent Skills</a></li><li><a href="https://openai.com/codex/" rel="noopener"><span class="glyph" aria-hidden="true">Cx</span>Codex</a></li><li><a href="https://antigravity.google" rel="noopener"><span class="glyph" aria-hidden="true">An</span>Antigravity</a></li><li><a href="https://opencode.ai" rel="noopener"><span class="glyph" aria-hidden="true">OC</span>OpenCode</a></li></ul>
   </section>
 
   <!-- ================= PROBLEM ================= -->
@@ -1336,6 +1403,11 @@ craftar workspaces — 4 registered
         });
       });
     });
+    // Hero demo: action × where
+    (function(){var st={action:'update',view:'orca'};
+    function show(){document.querySelectorAll('.screen').forEach(function(s){s.hidden = s.id !== 's-'+st.view+'-'+st.action;});}
+    document.querySelectorAll('.segs button').forEach(function(b){b.addEventListener('click',function(){var k=b.dataset.action?'action':'view';st[k]=b.dataset[k];
+    b.parentNode.querySelectorAll('button').forEach(function(o){o.setAttribute('aria-selected',o===b?'true':'false');});show();});});})();
     // Forge examples tabs
     var forgeTabs = document.querySelectorAll('.forge-tab');
     forgeTabs.forEach(function (t) {
