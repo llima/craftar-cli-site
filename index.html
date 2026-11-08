@@ -132,32 +132,37 @@
   .before-cap { margin-top: 12px; font-size: 14px; color: var(--faint); }
 
   /* ---------- how it works ---------- */
-  .flow { margin-top: 56px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); gap: 20px; align-items: stretch; }
-  @media (max-width: 960px) { .flow { grid-template-columns: 1fr; } .flow .arrow { transform: rotate(90deg); justify-self: center; } }
-  .col-h { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 12px; display: flex; justify-content: space-between; }
+  /* a heading that opens a part inside a section gets the same rule above it as a section */
+  .subsec { margin-top: 96px; padding-top: 96px; border-top: 1px solid var(--seam); }
+  /* the sync flow: three columns of equal rhythm, the arrows level with the pipeline's middle */
+  .flow { margin-top: 48px; display: grid; grid-template-columns: minmax(0, .9fr) 56px minmax(0, 1fr) 56px minmax(0, 1.65fr); gap: 0 10px; align-items: start; }
+  @media (max-width: 960px) { .flow { grid-template-columns: minmax(0, 1fr); gap: 16px; } .flow .arrow { margin-top: 0; transform: rotate(90deg); justify-self: center; } .subsec { margin-top: 72px; padding-top: 72px; } }
+  @media (max-width: 520px) { .flow .targets { grid-template-columns: minmax(0, 1fr); } .flow .target { min-height: 0; } }
+  .col-h { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 14px; display: grid; gap: 4px; min-height: 36px; align-content: start; }
   .col-h .tag { color: var(--ember); } .col-h .tag.steel { color: var(--steel); }
   .stack { display: grid; gap: 6px; }
-  .layer { border: 1px solid var(--seam-2); border-left: 3px solid var(--ember); border-radius: var(--r); background: var(--plate); padding: 12px 14px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .layer { border: 1px solid var(--seam-2); border-left: 3px solid var(--ember); border-radius: var(--r); background: var(--plate); padding: 10px 14px; display: grid; gap: 2px; min-height: 60px; align-content: center; }
   .layer b { font-weight: 600; font-size: 15px; }
-  .layer span { font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: right; }
+  .layer span { font-family: var(--mono); font-size: 12px; color: var(--muted); }
   .layer:nth-child(1) { border-left-color: rgba(233,145,90,.35); }
   .layer:nth-child(2) { border-left-color: rgba(233,145,90,.55); }
   .layer:nth-child(3) { border-left-color: rgba(233,145,90,.75); }
   .layer:nth-child(4) { border-left-color: var(--ember); }
   .layer:nth-child(5) { border-left-color: var(--ember); border-style: dashed; border-left-style: solid; }
   .stack-cap { margin-top: 12px; font-size: 13.5px; color: var(--faint); }
-  .arrow { align-self: center; color: var(--faint); display: grid; place-items: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; }
+  .arrow { align-self: start; margin-top: 190px; color: var(--faint); display: grid; place-items: center; gap: 6px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; }
   .arrow svg { width: 40px; height: 16px; }
-  .engine { border: 1px solid var(--seam-2); border-radius: 6px; background: var(--plate); padding: 18px; height: 100%; display: flex; flex-direction: column; gap: 14px; }
+  .engine { border: 1px solid var(--seam-2); border-radius: 6px; background: var(--plate); padding: 18px; display: flex; flex-direction: column; gap: 14px; }
   .engine .cmd { font-family: var(--mono); font-size: 15px; color: var(--text); }
   .engine .cmd .p { color: var(--ember); }
   .engine ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 14px; color: var(--muted); counter-reset: step; }
   .engine ol li { position: relative; padding-left: 32px; }
   .engine ol li::before { counter-increment: step; content: counter(step); position: absolute; left: 0; top: 2px; width: 22px; font-family: var(--mono); font-size: 11.5px; color: var(--ember); border: 1px solid var(--seam-2); border-radius: 3px; text-align: center; line-height: 18px; height: 20px; }
-  .targets { display: grid; gap: 6px; }
-  .target { border: 1px solid var(--seam-2); border-left: 3px solid var(--steel); border-radius: var(--r); background: var(--plate); padding: 10px 14px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .targets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .target { border: 1px solid var(--seam-2); border-left: 3px solid var(--steel); border-radius: var(--r); background: var(--plate); padding: 10px 14px; display: grid; gap: 2px; min-height: 76px; align-content: start; }
   .target b { font-weight: 600; font-size: 15px; }
-  .target code { font-size: 12px; color: var(--muted); }
+  .target code { font-size: 12px; line-height: 1.5; color: var(--muted); }
+  .target b { font-size: 14.5px; }
   .targets-h { margin: 14px 0 6px; }
   .col-h + .targets-h { margin-top: 0; }
 
@@ -1118,7 +1123,7 @@ craftar workspaces — 4 registered
 <span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
     </div>
 
-    <h2 style="margin-top:72px">From layers to files: how sync works.</h2>
+    <h2 class="subsec">From layers to files: how sync works.</h2>
     <p class="prose" style="margin-top:14px">Layers apply weakest first and the strongest wins; stack recipes that share a <code>slot</code> exclude each other, and <code>{{params}}</code> come from the winning layer. <code>craftar explain &lt;file&gt;</code> names the layer behind each output.</p>
 
     <div class="flow">
