@@ -402,9 +402,6 @@
       <li><a href="#failures">Failure modes</a></li>
       <li><a href="#model">Model</a></li>
       <li><a href="#features">Capabilities</a></li>
-      <li><a href="/docs/#guarantees">Invariants</a></li>
-      <li><a href="/docs/#targets">Targets</a></li>
-      <li><a href="/docs/#start">Get started</a></li>
       <li><a href="/docs/">Docs</a></li>
       <li><a href="/changelog/">Changelog</a></li>
     </ul>
@@ -417,7 +414,6 @@
   <!-- ================= HERO ================= -->
   <section class="hero" id="top">
     <div>
-      <div class="eyebrow">Open-source CLI · TypeScript / Node · design notes</div>
       <h1>A build system for AI-coding harnesses.</h1>
       <p class="lede">A <strong>harness</strong> — the rules, agents, commands, skills, hooks and MCP servers that shape coding agents — kept as source in one Git repository, the <strong>Forge</strong>. Craftar composes it per team, writes each tool's own files and records them in a lockfile (<a href="#p1" style="color:var(--steel);text-decoration:none">P1</a>, <a href="#p2" style="color:var(--steel);text-decoration:none">P2</a>).</p>
       <div class="cta">
@@ -523,7 +519,6 @@
 
   <!-- ================= PROBLEM ================= -->
   <section id="problem">
-    <div class="eyebrow">Problem statement</div>
     <h2>Two problems, one root: the harness has no source and no record.</h2>
 
     <div class="pgrid">
@@ -624,7 +619,6 @@
 
   <!-- ================= FAILURE MODES ================= -->
   <section id="failures">
-    <div class="eyebrow">Failure modes</div>
     <h2>What breaks when the harness is duplicated — observed, not hypothetical.</h2>
     <p class="lede" style="margin-top:22px">Eight failures seen in two earlier generators and in hand-synced workspaces — FM-1 to FM-5 from P1, FM-6 to FM-8 from P2. Each becomes a constraint in <a href="/docs/#guarantees" style="color:var(--steel)">Invariants</a>.</p>
 
@@ -647,7 +641,6 @@
 
   <!-- ================= MODEL ================= -->
   <section id="model">
-    <div class="eyebrow">Model</div>
     <h2>Source, resolution, emission.</h2>
     <p class="lede" style="margin-top:22px">Ingredients are source; recipes and profiles compose them; <code>craftar sync</code> resolves them for one workspace, writes each target's files and records them in a lockfile. Generated files are committed, so a team that only uses Kiro never needs Craftar installed.</p>
 
@@ -749,8 +742,7 @@ craftar workspaces — 4 registered
 <span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
     </div>
 
-    <div class="eyebrow" style="margin-top:72px">Layer resolution</div>
-    <h2>From layers to files — how sync works.</h2>
+    <h2 style="margin-top:72px">From layers to files — how sync works.</h2>
     <p class="prose" style="margin-top:14px">Layers apply weakest first and the strongest wins; stack recipes that share a <code>slot</code> exclude each other, and <code>{{params}}</code> come from the winning layer. <code>craftar explain &lt;file&gt;</code> names the layer behind each output.</p>
 
     <div class="flow">
@@ -1283,7 +1275,6 @@ craftar workspaces — 4 registered
 
   <!-- ================= CAPABILITIES ================= -->
   <section id="features">
-    <div class="eyebrow">Capabilities</div>
     <h2>Twelve capabilities.</h2>
     <p class="lede" style="margin-top:22px">Each links to its entry in the <a href="/docs/">documentation</a>: the problem it addresses, every command it adds and how it works. <span class="pill now">working</span> runs today and is tested; <span class="pill mvp">mvp</span> marks the minimum first release (on a target, as for OpenCode in the <a href="/docs/#targets">matrix</a>, it means loaded by the tool but not yet used by a model session).</p>
 

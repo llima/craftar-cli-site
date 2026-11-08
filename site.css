@@ -43,12 +43,6 @@ p { margin: 0; }
 .prose { color: var(--muted); }
 .prose p + p { margin-top: 1em; }
 .prose strong, .lede strong { color: var(--text); font-weight: 600; }
-.eyebrow {
-  font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--ember); display: inline-flex; align-items: center; gap: 10px; margin-bottom: 18px;
-}
-.eyebrow::before { content: ""; width: 18px; height: 1px; background: var(--ember); }
-.eyebrow.steel { color: var(--steel); } .eyebrow.steel::before { background: var(--steel); }
 section { padding-block: 96px; border-top: 1px solid var(--seam); }
 @media (max-width: 720px) { section { padding-block: 64px; } body { font-size: 16px; } }
 
