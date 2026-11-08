@@ -44,6 +44,8 @@
   .segs { display: inline-flex; gap: 2px; padding: 4px; border: 1px solid var(--seam-2); border-radius: 10px; background: var(--plate); }
   .segs button { font: 500 13.5px var(--body); color: var(--muted); background: none; border: 1px solid transparent; border-radius: 7px; padding: 7px 14px; cursor: pointer; }
   .segs button[aria-selected="true"] { color: var(--text); border-color: var(--seam-2); background: var(--ink); }
+  .segs .segic { width: 14px; height: 14px; vertical-align: -2px; margin-right: 7px; }
+  .segs button[data-action="update"] .segic { color: var(--steel); } .segs button[data-action="send"] .segic { color: var(--ember); }
   .segs .pill { margin-left: 6px; font-size: 9.5px; color: var(--warn); border-color: rgba(224,179,90,.4); }
   .screen[hidden] { display: none; }
   /* the Orca window is its own document (srcdoc), so the site's styles never reach the plugin's panel */
@@ -413,7 +415,7 @@
     <p class="lede">A <strong>harness</strong> — the rules, agents, commands, skills, hooks and MCP servers that shape coding agents — kept as source in one Git repository, the <strong>Forge</strong>. Craftar composes it per team, writes each tool's own files and records them in a lockfile (<a href="#p1" style="color:var(--steel);text-decoration:none">P1</a>, <a href="#p2" style="color:var(--steel);text-decoration:none">P2</a>).</p>
     <div class="demo" id="demo">
       <div class="demo-bar">
-        <div class="segs" role="tablist" aria-label="Action"><button role="tab" id="act-update" aria-selected="true" data-action="update">Get an update from the Forge</button><button role="tab" id="act-send" aria-selected="false" data-action="send">Send an edit to the Forge</button></div>
+        <div class="segs" role="tablist" aria-label="Action"><button role="tab" id="act-update" aria-selected="true" data-action="update"><svg class="segic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2.5v9M4 8l4 4 4-4M3 14h10"/></svg>Get an update from the Forge</button><button role="tab" id="act-send" aria-selected="false" data-action="send"><svg class="segic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 13.5v-9M4 8l4-4 4 4M3 2h10"/></svg>Send an edit to the Forge</button></div>
         <div class="segs" role="tablist" aria-label="Where"><button role="tab" id="view-orca" aria-selected="true" data-view="orca">In Orca <span class="pill">not released yet</span></button><button role="tab" id="view-console" aria-selected="false" data-view="console">In the console</button></div>
       </div>
     
