@@ -117,8 +117,6 @@
   .concept code { font-size: 12px; color: var(--steel); }
   .concept p { font-size: 14.5px; color: var(--muted); }
 
-  /* ---------- guarantees ---------- */
-
   /* ---------- capability list ---------- */
   .cap-list { list-style: none; margin: 40px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--seam); border: 1px solid var(--seam); border-radius: 6px; overflow: hidden; }
   @media (max-width: 800px) { .cap-list { grid-template-columns: minmax(0, 1fr); } }
@@ -129,9 +127,6 @@
   .cap-list .ct { font-weight: 600; }
   .cap-list .cp { display: flex; gap: 6px; }
 
-  /* ---------- footer cta ---------- */
-  .final { text-align: left; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: end; }
-  @media (max-width: 800px) { .final { grid-template-columns: 1fr; } }
 
   .pnum { display: flex; gap: 16px; align-items: baseline; margin-top: 56px; }
   .pnum h3 { font-size: clamp(20px, 2.2vw, 26px); letter-spacing: -.03em; }
@@ -440,7 +435,7 @@
         <button class="seg" role="tab" id="tab-console" aria-selected="true" aria-controls="fig-console" data-fig="fig-console">Console</button>
         <button class="seg" role="tab" id="tab-plugin" aria-selected="false" aria-controls="fig-plugin" data-fig="fig-plugin">Plugin <span class="pill">not released yet</span></button>
       </div>
-      <div class="term" id="fig-console" aria-label="Terminal showing craftar sync output">
+      <div class="term" id="fig-console" role="tabpanel" aria-labelledby="tab-console" aria-label="Terminal showing craftar sync output">
         <div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~/work/team-a/platform-workspace</div>
   <pre><span class="p">$</span> craftar sync
   <b>craftar sync — profile team-a · recipes base → backend-clean-arch → frontend-angular → aws-local → pm-azure-devops · targets claude-code, kiro</b>
@@ -454,7 +449,7 @@
     <span class="chg">!</span> .kiro/agents/frontend-reviewer.json  <span class="dim">hand-edited since last sync — `craftar drift show &lt;path&gt;`, then `craftar drift discard` or `craftar drift promote`</span>
   <span class="p">$</span> <span class="cursor" aria-hidden="true"></span></pre>
       </div>
-      <div class="orca-fig" id="fig-plugin" hidden>
+      <div class="orca-fig" id="fig-plugin" role="tabpanel" aria-labelledby="tab-plugin" hidden>
         <div class="orca-pair">
           <figure class="opanel" aria-label="Bring: the Forge moved, the panel lists what comes down, Update and stage writes and stages it">
             <div class="ohead"><svg class="omark" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="14" width="10" height="10" rx="1.5" fill="#E9915A"/><rect x="14" y="14" width="10" height="10" rx="1.5" fill="#7FB4D6"/><rect x="8" y="2" width="10" height="10" rx="1.5" fill="#E7ECF1"/></svg><b>craftar</b><span class="ows">acme-portal</span><span class="obell" aria-hidden="true">2</span></div>
@@ -1289,8 +1284,8 @@ craftar workspaces — 4 registered
   <!-- ================= CAPABILITIES ================= -->
   <section id="features">
     <div class="eyebrow">Capabilities</div>
-    <h2>Twelve capabilities, each tied to the problem it addresses.</h2>
-    <p class="lede" style="margin-top:22px">Each links to its entry in the <a href="/docs/">documentation</a>: the problem it addresses, every command it adds and how it works. <span class="pill now">working</span> runs today and is tested; <span class="pill mvp">mvp</span> marks the minimum first release (on a target, as for OpenCode in the matrix, it means loaded by the tool but not yet used by a model session).</p>
+    <h2>Twelve capabilities.</h2>
+    <p class="lede" style="margin-top:22px">Each links to its entry in the <a href="/docs/">documentation</a>: the problem it addresses, every command it adds and how it works. <span class="pill now">working</span> runs today and is tested; <span class="pill mvp">mvp</span> marks the minimum first release (on a target, as for OpenCode in the <a href="/docs/#targets">matrix</a>, it means loaded by the tool but not yet used by a model session).</p>
 
     <ol class="cap-list">
       <li><a href="/docs/#f1"><span class="cid">F1</span><span class="ct">Forge → workspace sync</span></a><span class="cp"><span class="pill now">working</span><span class="pill mvp">mvp</span></span></li>

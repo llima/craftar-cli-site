@@ -49,7 +49,7 @@
   .matrix-h + .matrix-wrap { margin-top: 12px; }
   .matrix-wrap.wide table { min-width: 1100px; }
   .via { font-size: 12px; color: var(--muted); }
-  .doc-entry h2 { font-size: 22px; margin-bottom: 16px; }
+  .doc-entry h2 { margin-bottom: 16px; }
   .doc-entry .why { color: var(--muted); font-size: 15.5px; margin-bottom: 20px; }
   .doc-entry .why b { color: var(--faint); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; display: block; margin-bottom: 4px; }
   .doc-entry .cmds { margin-bottom: 16px; }
@@ -140,7 +140,7 @@
   <section id="docs">
     <div class="eyebrow">Documentation</div>
     <h1>Documentation</h1>
-    <p class="lede" style="margin-top:22px">Start here, install, set up a Forge — then each capability with the problem it addresses, every command it adds and how it works. The <a href="/#features">home page</a> keeps a short card for each. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code>#&nbsp;planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release (on a target, as for OpenCode in the matrix, it means loaded by the tool but not yet used by a model session).</p>
+    <p class="lede" style="margin-top:22px">Start here, install, set up a Forge — then each capability with the problem it addresses, every command it adds and how it works. The <a href="/#features">home page</a> lists each. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code>#&nbsp;planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release (on a target, as for OpenCode in the matrix, it means loaded by the tool but not yet used by a model session).</p>
 
     <div class="docs">
       <nav class="doc-index" aria-label="Documentation">
@@ -380,6 +380,7 @@
       </table>
     </div>
     <div class="legend"><span class="y">native — written in the tool's own place for that type, as the Forge holds it</span><span class="part">converted — written in another form: frontmatter or a banner added, references rewritten, another container format, or folded into a shared file</span><span class="n">unsupported — not written; sync warns and names the ingredient</span><span><i>through agent-skills</i> / <i>through agents-md</i> / <i>through claude-code</i> — the tool reads that type from another target's file (for hooks, the <code>.claude/settings.json</code> that <code>craftar settings apply</code> writes); sync warns only when that target is off or the ingredient is not aimed at it, and never writes it twice.</span><span>Measured in each tool: Codex reads <code>.codex/agents/</code> only in a trusted project, and <code>.codex/hooks.json</code> only once its hooks were reviewed — an unreviewed hook is skipped silently; Antigravity run headless never applied a <code>glob</code> rule; <code>.github/prompts/</code> and <code>.vscode/mcp.json</code> are VS Code's — the Copilot CLI reads commands from <code>.agents/skills/</code> and MCP servers from <code>.github/mcp.json</code>.</span><span><code>opencode</code> is mvp: OpenCode 2.2.5 loaded its agents, commands, skills and MCP servers through its local service, with no model; it stays mvp until a model session uses those files. It needs OpenCode 2 or later, and its rules come through <code>AGENTS.md</code>.</span><span><code>service</code> is aimed at no AI coder: <code>sync</code> writes it under <code>.craftar/</code> for no target.</span><span><code>craftar targets</code> also prints what each converted cell changes.</span></div>
+          <a class="doc-back" href="/#model">← The model</a>
         </article>
 
         <article class="doc-entry" id="terms">
