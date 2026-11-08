@@ -204,6 +204,68 @@ Unification (diagram): the Forge already holds `rule/deploy`, whose text reads "
 
 One rule, two clients. `forge unify` refuses when another layer, profile or ingredient already uses the key; `forge promote` makes a profile's variant the base.
 
+## Get going (as on https://craftar.dev/docs/ — Start here #start, Install #install, Setup #setup, Forges #forges)
+
+### Start here
+
+craftar keeps one AI-coding harness — rules, agents, commands, skills, hooks and MCP servers — in a Git repository, the Forge, and writes each tool's own files from it into every workspace, recording them in `craftar.lock`. Import first: `craftar import` turns an existing workspace into a Forge and a `craftar.yaml`, and `craftar diff` proves nothing would change. Then add targets and run `craftar sync`. No Forge yet? See Setup.
+
+Terminal (animated on the page; craftar 1.6.0 on a synthetic workspace, the file list shortened — the run wrote 22 files):
+
+```
+$ craftar import --from claude-code --forge ../acme-forge --profile acme --write-config
+Imported ~/work/acme-api → ~/work/acme-forge as profile "acme"
+  10 created, 0 reused, 0 variants, 0 rejected
+  profile profiles/acme/profile.yaml created
+  recipes: base
+$ craftar diff
+no differences
+$ # craftar.yaml: targets: [claude-code, kiro, agents-md, cursor, opencode]
+$ craftar sync
+craftar sync — profile acme · recipes base · targets claude-code, kiro, agents-md, cursor, opencode
+  wrote 22, removed 0 orphan(s), skipped 0
+  + .claude/rules/workflow.md
+  + .cursor/agents/docs-author.md
+  + .kiro/steering/workflow.md
+  + .opencode/agents/docs-author.md
+  + .opencode/opencode.json
+  + AGENTS.md
+```
+
+### Install
+
+Needs Node 22 or later, and git for a Forge in a repository. `npx craftar --version` runs any command through npx; `craftar doctor` lists what is off on the machine and in the workspace, with the fix.
+
+```
+$ npm install -g craftar
+$ craftar --version
+1.6.0
+```
+
+### Setup — a new Forge and its first workspaces (1.7.0 — not released yet)
+
+`craftar setup` creates a Forge — a new Git repository with one commit — and starts the first workspaces on it. It ships in craftar 1.7.0, not released yet; until then, start from an existing Forge with `craftar init --forge <dir> --profile <name>`. `craftar setup` alone, in a terminal, asks where the Forge goes, its first profile, the workspaces and the targets; `--import` brings a workspace's `.claude/` into the new Forge first. Setup only creates: a Forge directory that exists and is not empty is refused, with the `craftar init` command to use it instead. The Forge gets a README, a starter rule, the profile and a `base` recipe, and one commit with no remote; each workspace then gets its `craftar.yaml` and its first sync. The interactive form lists every target, each as working or mvp, and ends with the `craftar setup` line that repeats it.
+
+Terminal (animated on the page; measured on the 1.7.0 branch, llima/craftar-cli#130, before its release; the commit hash differs on every run):
+
+```
+$ craftar setup --forge-dir acme-forge --profile acme --targets claude-code,kiro --workspace acme-portal
+craftar setup — created Forge acme-forge at /work/acme-forge (schema 1)
+  wrote craftar.forge.yaml, README.md, ingredients/rules/project-conventions/ingredient.yaml, ingredients/rules/project-conventions/rule.md, profiles/acme/profile.yaml, recipes/base.yaml
+  git: initial commit 04b6cbb (no remote)
+craftar init — wrote craftar.yaml in /work/acme-portal
+  forge ../acme-forge · profile acme · recipes base · targets claude-code, kiro (from the profile)
+craftar sync — profile acme · recipes base · targets claude-code, kiro
+  wrote 2, removed 0 orphan(s), skipped 0
+  + .claude/rules/project-conventions.md
+  + .kiro/steering/project-conventions.md
+next: edit the Forge (/work/acme-forge), commit, then craftar sync in each workspace
+```
+
+### Forges
+
+A Forge is one Git repository holding every ingredient, recipe and profile. Workspaces point at it by path, or by git URL at a branch, tag or full SHA; it is never a remote of a team repository. Layout: `craftar.forge.yaml` (schema 1 … 18, each level opt-in); `ingredients/<type>/<name>/` (an `ingredient.yaml` plus its files — rules, agents, commands, skills, hooks, mcp, scripts, steering, services); `recipes/` (`base.yaml`, stack recipes with a slot); `profiles/<name>/profile.yaml` (recipes, targets, params, sections). `craftar recipes --forge <dir>` lists the recipes and the profiles that use them, `craftar ingredients --forge <dir>` every ingredient with its type and targets, `craftar forge variants --forge <dir>` where clients differ. A recipe bundles ingredients with parameters; a profile — one per client — picks recipes, targets and values. A second client imported into the same Forge reuses what matches and makes the rest variants, which `forge unify` folds back (see Growing the Forge and F2). A Forge declares the `schema:` it needs, and an older craftar refuses a level it does not know.
+
 ## Capabilities (F1–F12, in full as on https://craftar.dev/docs/ — entry F<n> is #f<n> there; "working" = runs today and is covered by tests; "mvp" = first release; "planned" = designed, not built)
 
 - F1 Forge → workspace sync [working, mvp] (P1, P2): `craftar sync [--dry-run] [--check] [--overwrite-drift]`, `diff [--exit-code]` (what sync would change, an orphan shown as the removal of the whole file, a hand-edited one as a header; with `--exit-code`, exit 1 exactly when `sync --check` would fail), `status` (per file: new, update, unchanged, adopt, drift, collision, orphan, orphan-drift); sync prints what it wrote, removed and skipped, file by file. With a git-URL Forge, `ref` follows a branch or pins a tag or full SHA; sync fetches first and fails when it cannot, so CI never syncs from a stale copy unless it passes `--offline`, which reads the cached copy. `craftar cache prune [--dry-run]` removes the Forge cache entries nothing uses — no registered workspace and not the current one — entries whose first fetch never completed, and trees unused for 14 days; it never touches a workspace, a lock or the registry, and `--dry-run` shows what it would remove. A symbolic link never carries `sync` out of the tree it works on: a Forge file read through a link that leaves the Forge or leads into its `.git`, and a workspace path that leaves through one, refuse the run before anything is written — there is no flag; a link that stays inside works as before. In a git repository, `sync` and `sync --check` warn for each generated file git ignores, naming the ignore rule by file, line and pattern; craftar never edits an ignore file, and `mayBeIgnored` in `craftar.yaml` lists the paths kept out of git on purpose. Planned: `--targets`, `update`.
@@ -265,3 +327,28 @@ The oracle imports a hand-built workspace (Claude Code + Kiro), syncs it and ass
 Trying it: install with `npm install -g craftar` (Node ≥ 22), or prefix any command with `npx`. In an existing Claude Code workspace, `craftar import --from claude-code --forge <dir> --profile <name> --write-config` creates a Forge and a `craftar.yaml`, and `craftar diff` shows what a sync would change — nothing is rewritten until `sync`. From an existing Forge, `craftar init --forge <dir> --profile <name>` starts a workspace. `craftar doctor` says what is off, with the fix.
 
 Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitter per target; rulesync stays a reference for the formats, not a dependency. License: MIT.
+
+## Reference (as on https://craftar.dev/docs/ — Model and terms #terms, Invariants in full #guarantees)
+
+### Model and terms
+
+- Harness: everything that shapes how coding agents behave in a repository — rules, agents, commands, skills, hooks, MCP servers.
+- Forge: one Git repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path or by git URL, with an optional branch, tag or full SHA; a remote Forge is read from a per-machine cache. It is never a Git remote of any team repository.
+- Ingredient: smallest reusable unit — a rule, agent, command, skill, hook, MCP server, script, steering file or local service. A folder with an `ingredient.yaml` declaring type, targets, inclusion mode and globs. A `service` is aimed at no AI coder: `sync` writes it under `.craftar/`. Project templates are not an ingredient: a profile declares them.
+- Recipe: named set of ingredients with parameters. Recipes `extend` others; stack recipes declare a `slot` so two stacks for the same role (e.g. two front-end frameworks) cannot coexist.
+- Profile: one team — its recipes, repositories, template feeds, project-management tool, internal platform, and which AI coders that team uses — and, in a Forge at `schema: 8`, its own ingredients and recipes; parameters and section overrides for the whole stack live here.
+- Workspace: a local folder (one repo or a folder of repos) with a `craftar.yaml` declaring profile, recipe add/remove (edited by `craftar add recipe` / `remove recipe`) and targets, plus a git-ignored `craftar.local.yaml` for per-developer overrides.
+- Target: an AI coder to emit for — eight targets working: `claude-code`, `kiro`, `agents-md`, `cursor`, `copilot`, `agent-skills` (the standard `.agents/skills/` folder), `codex` and `antigravity`; and `opencode`, mvp. Warp, Kimi and other tools read the emitted `AGENTS.md`. Coverage is a table in the CLI — `craftar targets` prints it, per ingredient type: native, converted or unsupported. Sync skips an ingredient aimed at a target that the table marks unsupported, and warns, naming it — a fallback is planned.
+- Lockfile (`craftar.lock`): the Forge's source, requested ref and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile, recipes and targets, and a normalized content hash for every generated file; the lock is rewritten only when its own content changes. The only authority on what Craftar owns in a workspace.
+- Registry (`~/.craftar/registry.json`): every workspace a writing `sync` ran in on this machine, with path, profile, Forge, recipes, targets and last sync. `craftar workspaces` lists them with a status computed on the spot; `forget` and `prune` remove entries, and `CRAFTAR_NO_REGISTRY` turns the registry off. `craftar ui` shows them as a local page on `127.0.0.1`, read-only unless started with `--allow-writes`. `craftar ls` stays the view of one workspace's resolved recipes and ingredients.
+
+### Invariants in full
+
+- Never touch a file not in the lockfile — unknown files are preserved; one at a path the Forge would write is reported as a collision (FM-1).
+- Never hash raw bytes — normalize LF, UTF-8, strip BOM; compare JSON structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output keeps the EOL and never writes a BOM (FM-2).
+- Never leave an orphan on disk — `--check` fails on it and `diff` shows it as the removal of the whole file (a hand-edited one as a header, since sync keeps it) (FM-3).
+- Never require a manual mirror — everything a second target needs is generated (FM-4).
+- Never split a rule from its reviewer — one ingredient, two outputs (FM-5) (planned; today the rule and its reviewer are separate ingredients (rule/<name>, agent/<name>-reviewer) grouped by a stack recipe).
+- Never inline a volatile value — declared once in the profile, injected as params wherever cited (in a schema 4 Forge, inside an MCP server too; at any schema, inside a hook's `registration`, for the keys the hook declares); a parameter an ingredient declares with no default, that a file the plan writes cites and no layer sets, stops `sync`: nothing is written until it has a value (FM-6).
+- Never translate — language is an attribute of the ingredient (FM-7).
+- Never store a secret — an MCP ingredient declares `authEnv`, the environment variables its server needs, names only, never a value (an item shaped like a known token fails the load); with `claude-code`, `sync` writes `.claude/settings.craftar.example.json`, each declared name with an empty value; `craftar settings apply` adds a missing name, empty, to the developer's own untracked `.claude/settings.json`, and never overwrites or prints a value there; `craftar doctor` names the variables a written MCP server declares in `authEnv` or references as `${NAME}` and the environment lacks, never their values; `craftar import` refuses ingredients holding secret-like values, and a `forge:` URL holding credentials is refused; in a schema 4 Forge, a value rendered into an MCP server that is a URL with credentials or a token of a known format fails the plan, and the message names the field, never the value — a check, not a guarantee: a token of an unknown format still passes; a literal token in a hook's `registration` fails the Forge load, and a credential substituted into one fails the plan; a Forge file that is not valid YAML is reported by an error code and a position at most, never by quoting the line; one its schema refuses is reported by key, never by a value it holds (FM-8).

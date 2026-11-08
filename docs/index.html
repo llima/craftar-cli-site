@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Craftar docs — every capability, its commands and how it works</title>
-<meta name="description" content="Each Craftar capability with the problem it addresses, every command it adds and how it works — the full reference behind the summary on craftar.dev.">
+<title>Craftar docs — start, install, set up, and every capability</title>
+<meta name="description" content="Start with Craftar — install, setup and Forges — then each capability with the problem it addresses, every command it adds and how it works.">
 <link rel="canonical" href="https://craftar.dev/docs/">
 <meta name="theme-color" content="#0A0E13">
 
@@ -16,8 +16,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Craftar">
 <meta property="og:url" content="https://craftar.dev/docs/">
-<meta property="og:title" content="Craftar docs — every capability, its commands and how it works">
-<meta property="og:description" content="Each Craftar capability with the problem it addresses, every command it adds and how it works — the full reference behind the summary on craftar.dev.">
+<meta property="og:title" content="Craftar docs — start, install, set up, and every capability">
+<meta property="og:description" content="Start with Craftar — install, setup and Forges — then each capability with the problem it addresses, every command it adds and how it works.">
 <meta property="og:image" content="https://craftar.dev/og.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -25,11 +25,11 @@
 <meta property="og:image:alt" content="Craftar: a build system for AI-coding harnesses. Emits to .claude/, .mcp.json, .kiro/, AGENTS.md, .cursor/, .github/, .agents/, .codex/ and .opencode/.">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Craftar docs — every capability, its commands and how it works">
-<meta name="twitter:description" content="Each Craftar capability with the problem it addresses, every command it adds and how it works — the full reference behind the summary on craftar.dev.">
+<meta name="twitter:title" content="Craftar docs — start, install, set up, and every capability">
+<meta name="twitter:description" content="Start with Craftar — install, setup and Forges — then each capability with the problem it addresses, every command it adds and how it works.">
 <meta name="twitter:image" content="https://craftar.dev/og.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"TechArticle","headline":"Craftar docs — every capability, its commands and how it works","description":"Each Craftar capability with the problem it addresses, every command it adds and how it works — the full reference behind the summary on craftar.dev.","url":"https://craftar.dev/docs/","isPartOf":{"@type":"WebSite","name":"Craftar","url":"https://craftar.dev/"}}
+{"@context":"https://schema.org","@type":"TechArticle","headline":"Craftar docs — start, install, set up, and every capability","description":"Start with Craftar — install, setup and Forges — then each capability with the problem it addresses, every command it adds and how it works.","url":"https://craftar.dev/docs/","isPartOf":{"@type":"WebSite","name":"Craftar","url":"https://craftar.dev/"}}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -54,6 +54,61 @@
   .doc-entry .cmds { margin-bottom: 16px; }
   .doc-entry .mech { font-size: 15px; color: var(--muted); margin-bottom: 16px; }
   .doc-entry .mech::before { content: "mechanism"; display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
+  .doc-entry .id .pill.soon { color: var(--warn); border-color: rgba(224,179,90,.4); }
+  .tt { background: #070A0E; border: 1px solid var(--seam-2); border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
+  .term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--seam); background: var(--plate); font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  .term-bar .dots { display: flex; gap: 6px; margin-right: 6px; }
+  .term-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--seam-2); display: block; }
+  .tt-body { padding: 16px 20px 18px; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: #C9D3DD; overflow-x: auto; }
+  .tt .ln { display: block; white-space: pre; opacity: 0; animation-duration: var(--loop); animation-iteration-count: infinite; }
+  .tt .ty { display: inline-block; vertical-align: bottom; overflow: hidden; white-space: pre; width: 0; animation-duration: var(--loop); animation-iteration-count: infinite; animation-timing-function: steps(40, end); }
+  .tt .p { color: var(--ember); } .tt .add { color: var(--ok); } .tt .c { color: var(--faint); }
+  .tt-cap { font-size: 13px; color: var(--faint); margin-bottom: 20px; }
+  .doc-entry .tree { margin: 0 0 16px; padding: 14px 16px; background: var(--plate); border: 1px solid var(--seam); border-radius: 4px; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: var(--muted); overflow-x: auto; }
+  .terms { margin: 0 0 16px; display: grid; gap: 14px; }
+  .terms dt { font-family: var(--mono); font-weight: 700; font-size: 15px; }
+  .terms dd { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+  .terms dd > code:first-child { display: inline-block; margin-right: 6px; color: var(--faint); }
+  .terms .c { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  @keyframes w-s0 { 0%, 2.50% { width: 0 } 14.90%, 100% { width: 85ch } }
+  @keyframes o-s0 { 0%, 2.50% { opacity: 0 } 2.51%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s1 { 0%, 16.98% { opacity: 0 } 17.38%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s2 { 0%, 17.73% { opacity: 0 } 18.13%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s3 { 0%, 18.48% { opacity: 0 } 18.88%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s4 { 0%, 19.23% { opacity: 0 } 19.63%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-s5 { 0%, 23.31% { width: 0 } 25.81%, 100% { width: 12ch } }
+  @keyframes o-s5 { 0%, 23.31% { opacity: 0 } 23.32%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s6 { 0%, 27.90% { opacity: 0 } 28.30%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-s7 { 0%, 31.98% { width: 0 } 42.62%, 100% { width: 73ch } }
+  @keyframes o-s7 { 0%, 31.98% { opacity: 0 } 31.99%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-s8 { 0%, 44.71% { width: 0 } 47.21%, 100% { width: 12ch } }
+  @keyframes o-s8 { 0%, 44.71% { opacity: 0 } 44.72%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s9 { 0%, 49.29% { opacity: 0 } 49.69%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s10 { 0%, 50.04% { opacity: 0 } 50.44%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s11 { 0%, 50.79% { opacity: 0 } 51.19%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s12 { 0%, 51.54% { opacity: 0 } 51.94%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s13 { 0%, 52.29% { opacity: 0 } 52.69%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s14 { 0%, 53.04% { opacity: 0 } 53.44%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s15 { 0%, 53.79% { opacity: 0 } 54.19%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-s16 { 0%, 54.54% { opacity: 0 } 54.94%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-i0 { 0%, 6.00% { width: 0 } 13.70%, 100% { width: 22ch } }
+  @keyframes o-i0 { 0%, 6.00% { opacity: 0 } 6.01%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-i1 { 0%, 18.70% { width: 0 } 24.70%, 100% { width: 17ch } }
+  @keyframes o-i1 { 0%, 18.70% { opacity: 0 } 18.71%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-i2 { 0%, 29.70% { opacity: 0 } 30.10%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes w-u0 { 0%, 2.50% { width: 0 } 17.38%, 100% { width: 102ch } }
+  @keyframes o-u0 { 0%, 2.50% { opacity: 0 } 2.51%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u1 { 0%, 19.46% { opacity: 0 } 19.86%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u2 { 0%, 20.21% { opacity: 0 } 20.61%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u3 { 0%, 20.96% { opacity: 0 } 21.36%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u4 { 0%, 21.71% { opacity: 0 } 22.11%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u5 { 0%, 22.46% { opacity: 0 } 22.86%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u6 { 0%, 23.21% { opacity: 0 } 23.61%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u7 { 0%, 23.96% { opacity: 0 } 24.36%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u8 { 0%, 24.71% { opacity: 0 } 25.11%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u9 { 0%, 25.46% { opacity: 0 } 25.86%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @keyframes o-u10 { 0%, 26.21% { opacity: 0 } 26.61%, 96% { opacity: 1 } 100% { opacity: 0 } }
+  @media (prefers-reduced-motion: reduce) { .tt .ln { opacity: 1; } .tt .ty { width: var(--n); } }
 </style>
 </head>
 <body>
@@ -86,12 +141,16 @@
 
   <section id="docs">
     <div class="eyebrow">Documentation</div>
-    <h1>Capabilities</h1>
-    <p class="lede" style="margin-top:22px">Each capability with the problem it addresses, every command it adds and how it works. The <a href="/#features">home page</a> keeps a short card for each. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code>#&nbsp;planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+    <h1>Documentation</h1>
+    <p class="lede" style="margin-top:22px">Start here, install, set up a Forge — then each capability with the problem it addresses, every command it adds and how it works. The <a href="/#features">home page</a> keeps a short card for each. <span class="pill now">working</span> marks what runs today and is covered by tests; a <code>#&nbsp;planned</code> comment in a snippet marks a command that is designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
 
     <div class="docs">
-      <nav class="doc-index" aria-label="Capabilities">
+      <nav class="doc-index" aria-label="Documentation">
         <ol>
+          <li><a href="#start">Start here</a></li>
+          <li><a href="#install">Install</a></li>
+          <li><a href="#setup">Setup</a></li>
+          <li><a href="#forges">Forges</a></li>
           <li><a href="#f1">F1 Forge → workspace sync</a></li>
           <li><a href="#f2">F2 Multi-target emission</a></li>
           <li><a href="#f3">F3 Layers and stack slots</a></li>
@@ -104,10 +163,64 @@
           <li><a href="#f10">F10 Registry and dashboard</a></li>
           <li><a href="#f11">F11 Craftar as an MCP server</a></li>
           <li><a href="#f12">F12 Diagnostics</a></li>
+          <li><a href="#terms">Model and terms</a></li>
+          <li><a href="#guarantees">Invariants in full</a></li>
         </ol>
       </nav>
 
       <div class="doc-entries">
+        <article class="doc-entry" id="start">
+          <div class="id">Start here</div>
+          <h2>Start here</h2>
+          <p class="why"><b>what it is</b>craftar keeps one AI-coding harness — rules, agents, commands, skills, hooks and MCP servers — in a Git repository, the Forge, and writes each tool's own files from it into every workspace, recording them in <code>craftar.lock</code>.</p>
+          <div class="tt" role="img" aria-label="~/work/acme-api"><div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~/work/acme-api</div><div class="tt-body" style="--loop:24.0s"><span class="ln" style="animation-name:o-s0"><span class="p">$</span> <span class="ty" style="animation-name:w-s0;--n:85ch">craftar import --from claude-code --forge ../acme-forge --profile acme --write-config</span></span><span class="ln" style="animation-name:o-s1">Imported ~/work/acme-api → ~/work/acme-forge as profile &quot;acme&quot;</span><span class="ln" style="animation-name:o-s2">  10 created, 0 reused, 0 variants, 0 rejected</span><span class="ln" style="animation-name:o-s3">  profile profiles/acme/profile.yaml created</span><span class="ln" style="animation-name:o-s4">  recipes: base</span><span class="ln" style="animation-name:o-s5"><span class="p">$</span> <span class="ty" style="animation-name:w-s5;--n:12ch">craftar diff</span></span><span class="ln" style="animation-name:o-s6">no differences</span><span class="ln" style="animation-name:o-s7"><span class="p">$</span> <span class="ty" style="animation-name:w-s7;--n:73ch"># craftar.yaml: targets: [claude-code, kiro, agents-md, cursor, opencode]</span></span><span class="ln" style="animation-name:o-s8"><span class="p">$</span> <span class="ty" style="animation-name:w-s8;--n:12ch">craftar sync</span></span><span class="ln" style="animation-name:o-s9">craftar sync — profile acme · recipes base · targets claude-code, kiro, agents-md, cursor, opencode</span><span class="ln" style="animation-name:o-s10">  wrote 22, removed 0 orphan(s), skipped 0</span><span class="ln add" style="animation-name:o-s11">  + .claude/rules/workflow.md</span><span class="ln add" style="animation-name:o-s12">  + .cursor/agents/docs-author.md</span><span class="ln add" style="animation-name:o-s13">  + .kiro/steering/workflow.md</span><span class="ln add" style="animation-name:o-s14">  + .opencode/agents/docs-author.md</span><span class="ln add" style="animation-name:o-s15">  + .opencode/opencode.json</span><span class="ln add" style="animation-name:o-s16">  + AGENTS.md</span></div></div>
+          <p class="tt-cap">craftar 1.6.0 on a synthetic workspace: import an existing <code>.claude/</code>, see that nothing would change, add targets and sync. The file list is shortened; the run wrote 22 files.</p>
+          <p class="mech">Import first: <code>craftar import</code> turns an existing workspace into a Forge and a <code>craftar.yaml</code>, and <code>craftar diff</code> proves nothing would change. Then add targets and run <code>craftar sync</code>. No Forge yet? See <a href="#setup">Setup</a>.</p>
+        </article>
+
+        <article class="doc-entry" id="install">
+          <div class="id">Install</div>
+          <h2>Install</h2>
+          <p class="why"><b>needs</b>Node 22 or later, and git for a Forge in a repository.</p>
+          <div class="tt" role="img" aria-label="~"><div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>~</div><div class="tt-body" style="--loop:10.0s"><span class="ln" style="animation-name:o-i0"><span class="p">$</span> <span class="ty" style="animation-name:w-i0;--n:22ch">npm install -g craftar</span></span><span class="ln" style="animation-name:o-i1"><span class="p">$</span> <span class="ty" style="animation-name:w-i1;--n:17ch">craftar --version</span></span><span class="ln" style="animation-name:o-i2">1.6.0</span></div></div>
+          <div class="cmds">
+            <code><span class="p">$</span> npx craftar --version <span class="c"># or run any command through npx</span></code>
+            <code><span class="p">$</span> craftar doctor <span class="c"># what is off on the machine and in the workspace, with the fix</span></code>
+          </div>
+        </article>
+
+        <article class="doc-entry" id="setup">
+          <div class="id">Setup <span class="pill soon">1.7.0 — not released yet</span></div>
+          <h2>Setup — a new Forge and its first workspaces</h2>
+          <p class="why"><b>no Forge yet</b><code>craftar setup</code> creates a Forge — a new Git repository with one commit — and starts the first workspaces on it. It ships in craftar 1.7.0, not released yet; until then, start from an existing Forge with <code>craftar init --forge &lt;dir&gt; --profile &lt;name&gt;</code>.</p>
+          <div class="tt" role="img" aria-label="/work"><div class="term-bar"><span class="dots"><i></i><i></i><i></i></span>/work</div><div class="tt-body" style="--loop:24.0s"><span class="ln" style="animation-name:o-u0"><span class="p">$</span> <span class="ty" style="animation-name:w-u0;--n:102ch">craftar setup --forge-dir acme-forge --profile acme --targets claude-code,kiro --workspace acme-portal</span></span><span class="ln" style="animation-name:o-u1">craftar setup — created Forge acme-forge at /work/acme-forge (schema 1)</span><span class="ln" style="animation-name:o-u2">  wrote craftar.forge.yaml, README.md, ingredients/rules/project-conventions/ingredient.yaml, ingredients/rules/project-conventions/rule.md, profiles/acme/profile.yaml, recipes/base.yaml</span><span class="ln" style="animation-name:o-u3">  git: initial commit 04b6cbb (no remote)</span><span class="ln" style="animation-name:o-u4">craftar init — wrote craftar.yaml in /work/acme-portal</span><span class="ln" style="animation-name:o-u5">  forge ../acme-forge · profile acme · recipes base · targets claude-code, kiro (from the profile)</span><span class="ln" style="animation-name:o-u6">craftar sync — profile acme · recipes base · targets claude-code, kiro</span><span class="ln" style="animation-name:o-u7">  wrote 2, removed 0 orphan(s), skipped 0</span><span class="ln add" style="animation-name:o-u8">  + .claude/rules/project-conventions.md</span><span class="ln add" style="animation-name:o-u9">  + .kiro/steering/project-conventions.md</span><span class="ln" style="animation-name:o-u10">next: edit the Forge (/work/acme-forge), commit, then craftar sync in each workspace</span></div></div>
+          <p class="tt-cap">Measured on the 1.7.0 branch (llima/craftar-cli#130), before its release; the commit hash differs on every run.</p>
+          <div class="cmds">
+            <code><span class="p">$</span> craftar setup <span class="c"># in a terminal: asks where the Forge goes, its first profile, the workspaces and the targets</span></code>
+            <code><span class="p">$</span> craftar setup --forge-dir api-forge --profile acme-api --workspace acme-api --import <span class="c"># bring a workspace's .claude/ into the new Forge first</span></code>
+          </div>
+          <p class="mech">Setup only creates: a Forge directory that exists and is not empty is refused, with the <code>craftar init</code> command to use it instead. The Forge gets a README, a starter rule, the profile and a <code>base</code> recipe, and one commit with no remote; each workspace then gets its <code>craftar.yaml</code> and its first sync. The interactive form lists every target, each as working or mvp, and ends with the <code>craftar setup</code> line that repeats it.</p>
+        </article>
+
+        <article class="doc-entry" id="forges">
+          <div class="id">Forges</div>
+          <h2>Forges</h2>
+          <p class="why"><b>the source</b>A Forge is one Git repository holding every ingredient, recipe and profile. Workspaces point at it by path, or by git URL at a branch, tag or full SHA; it is never a remote of a team repository.</p>
+          <pre class="tree">acme-forge/
+├── craftar.forge.yaml        schema: 1 … 18, each level opt-in
+├── ingredients/
+│   ├── rules/&lt;name&gt;/         ingredient.yaml + rule.md
+│   ├── agents/ · commands/ · skills/ · hooks/ · mcp/ · scripts/ · steering/ · services/
+├── recipes/                  base.yaml, stack recipes with a slot
+└── profiles/&lt;name&gt;/          profile.yaml — recipes, targets, params, sections</pre>
+          <div class="cmds">
+            <code><span class="p">$</span> craftar recipes --forge &lt;dir&gt; <span class="c"># the Forge's recipes and the profiles that use them</span></code>
+            <code><span class="p">$</span> craftar ingredients --forge &lt;dir&gt; <span class="c"># every ingredient, its type and targets</span></code>
+            <code><span class="p">$</span> craftar forge variants --forge &lt;dir&gt; <span class="c"># where clients differ, nearest first</span></code>
+          </div>
+          <p class="mech">An ingredient is a folder with an <code>ingredient.yaml</code>; a recipe bundles ingredients with parameters; a profile — one per client — picks recipes, targets and values. A second client imported into the same Forge reuses what matches and makes the rest variants, which <code>forge unify</code> folds back (see <a href="/#unify">Growing the Forge</a> and <a href="#f2">F2</a>). A Forge declares the <code>schema:</code> it needs, and an older craftar refuses a level it does not know.</p>
+        </article>
+
         <article class="doc-entry" id="f1">
           <div class="id">F1 <span class="pill now">working</span><span class="pill mvp">mvp</span></div>
           <h2>Forge → workspace sync</h2>
@@ -242,6 +355,39 @@
           <div class="cmds"><code><span class="p">$</span> craftar doctor <span class="c">[--fetch] [--strict] [--json] # one line per finding, each with its fix</span></code><code><span class="p">$</span> craftar docs validate <span class="c">[path] [--fetch] [--strict] [--json] # the workspace's Markdown: links, leaked tool-call tags, encoding, the profile's docs: block</span></code></div>
           <p class="mech">Checks this machine — Node ≥ 22, <code>git</code>, <code>~/.craftar</code>, the registry, the Forge cache — and, inside a workspace, its configuration and Forge, the plan's warnings, declared parameters with no value (an <code>error</code> when a file the plan writes cites one, a <code>warn</code> when nothing does), the variables a written MCP server declares in <code>authEnv</code> or references as <code>${NAME}</code> and the environment lacks (names only, never values), the lock, <code>status</code> and registration, and — in a workspace with a local service — Docker with its Compose plugin and the variables a service fragment needs that nothing sets (names only), and — when the profile declares templates — the <code>templates</code> block and, for a <code>dotnet-new</code> entry, the .NET SDK — and the planned <code>AGENTS.md</code> against its byte budget — and, under <code>agents-md.primary</code>, a <code>CLAUDE.md</code>, <code>CLAUDE.local.md</code> or <code>.claude/CLAUDE.md</code> — at the root or in a directory above it — that keeps Claude Code from reading <code>AGENTS.md</code> and the Kiro agents' hand-written <code>resources</code> — and, when the plan writes a hook's registration, a planned handler that is in no settings file Claude Code reads (at most a <code>warn</code>, so <code>--strict</code> exits 1 until <code>craftar settings apply</code> runs or the block is copied) — and, when <code>claude-code</code> writes a skill as one file, that Claude Code (measured with <code>2.1.310</code>) does not list it (a <code>warn</code> per skill, with the fix, so <code>--strict</code> exits 1; the file is still written) — and, in a git repository, a generated file git ignores (<code>generated-ignored</code>, a <code>warn</code>, unless the path is listed under <code>mayBeIgnored</code>) — and a hook <code>craftar git-hooks</code> wrote (<code>git-hooks</code>) — and a path that leaves the workspace through a symbolic link (<code>workspace-links</code>, an <code>error</code>). Each finding is one line — <code>ok</code>, <code>warn</code> or <code>error</code> — with the command that fixes it. It only reports: nothing is written to a workspace, a lock or the registry, and a remote Forge is read from the cache unless <code>--fetch</code> is given. It exits 1 on an <code>error</code>, or on a <code>warn</code> under <code>--strict</code>; <code>--json</code> is a contract for tooling. <code>craftar docs validate</code> checks a workspace's Markdown under <code>docs/</code>, <code>.claude/</code> and at its root — links that resolve inside the workspace, tool-call tags leaked outside code, files that are not UTF-8 text and, where the profile declares a <code>docs:</code> block, its categories, required frontmatter, dated file names and <code>related:</code> entries — one line per finding, naming a file, a line and a column, never a line of the file; it writes nothing and reads without the network unless <code>--fetch</code>, which concerns the Forge only.</p>
           <a class="doc-back" href="/#features">← All capabilities</a>
+        </article>
+
+        <article class="doc-entry" id="terms">
+          <div class="id">Reference</div>
+          <h2>Model and terms</h2>
+          <dl class="terms">
+            <dt>Forge</dt><dd><code>forge/ · one Git repo</code> Repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path or by git URL, with an optional branch, tag or full SHA; a remote Forge is read from a per-machine cache.</dd>
+            <dt>Ingredient</dt><dd><code>ingredients/rules/frontend-angular/</code> Smallest reusable unit: a rule, agent, command, skill, hook, MCP server, script, steering file or local service. A folder with an <code>ingredient.yaml</code> declaring type, targets, inclusion mode and globs. A <code>service</code> is aimed at no AI coder: <code>sync</code> writes it under <code>.craftar/</code>. Project templates are not an ingredient: a profile declares them.</dd>
+            <dt>Recipe</dt><dd><code>recipes/frontend-angular.yaml</code> Named set of ingredients with parameters. Recipes <code>extend</code> others; stack recipes declare a <code>slot</code> so two front-end stacks cannot coexist.</dd>
+            <dt>Profile</dt><dd><code>profiles/team-a/profile.yaml</code> One team: recipes, repositories, template feeds, PM tool, internal platform, and which AI coders that team uses — and, in a Forge at <code>schema: 8</code>, its own ingredients and recipes. Parameters and section overrides for the whole stack live here.</dd>
+            <dt>Workspace</dt><dd><code>craftar.yaml</code> Local folder — one repo or a folder of repos — declaring profile, recipe add/remove (edited by <code>craftar add recipe</code> / <code>remove recipe</code>) and targets, plus a git-ignored <code>craftar.local.yaml</code> for per-developer overrides.</dd>
+            <dt>Target</dt><dd><code>claude-code · kiro · agents-md · cursor · copilot · agent-skills · codex · antigravity · opencode</code> An AI coder to emit for. Eight targets working — <code>claude-code</code>, <code>kiro</code>, <code>agents-md</code>, <code>cursor</code>, <code>copilot</code>, <code>agent-skills</code> (the standard <code>.agents/skills/</code> folder), <code>codex</code> and <code>antigravity</code> — and <code>opencode</code>, <span class="pill">mvp</span>. Warp, Kimi and other tools read the emitted <code>AGENTS.md</code>. Coverage is a table in the CLI — <code>craftar targets</code> prints it, per ingredient type: native, converted or unsupported. Sync skips an ingredient aimed at a target that the table marks unsupported, and warns, naming it — a fallback is planned.</dd>
+            <dt>Lockfile</dt><dd><code>craftar.lock</code> The Forge's source, requested ref and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile, recipes and targets, and a normalized content hash for every generated file; the lock is rewritten only when its own content changes. The only authority on what Craftar owns in a workspace.</dd>
+            <dt>Registry</dt><dd><code>~/.craftar/registry.json</code> Every workspace a writing <code>sync</code> ran in on this machine: path, profile, Forge, recipes, targets, last sync. <code>craftar workspaces</code> lists them with a status computed on the spot; <code>forget</code> and <code>prune</code> remove entries, and <code>CRAFTAR_NO_REGISTRY</code> turns the registry off. <code>craftar ui</code> shows them as a local page on <code>127.0.0.1</code>, read-only unless started with <code>--allow-writes</code>. <code>craftar ls</code> stays the view of one workspace's resolved recipes and ingredients.</dd>
+          </dl>
+          <a class="doc-back" href="/#model">← The model</a>
+        </article>
+
+        <article class="doc-entry" id="guarantees">
+          <div class="id">Reference</div>
+          <h2>Invariants in full</h2>
+          <p class="why"><b>derived from the failure modes</b>The constraints Craftar is built against, in every command and every emitter. The one marked <span class="pill">planned</span> is a design commitment, not yet enforced by the code.</p>
+          <dl class="terms">
+            <dt>Never touch a file not in the lockfile</dt><dd>The lock is the complete list of managed outputs. Unknown files inside <code>.claude/</code> or <code>.kiro/</code> are preserved and never removed; one at a path the Forge would write is reported by <code>status</code> as a collision and never touched. Regeneration is per file. <span class="c">← FM-1</span></dd>
+            <dt>Never hash raw bytes</dt><dd>Content hashes are computed after normalization: LF line endings, UTF-8, BOM stripped; JSON compared structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output keeps the EOL and never writes a BOM. <span class="c">← FM-2</span></dd>
+            <dt>Never leave an orphan on disk</dt><dd>An output whose ingredient left the resolved set is removed on the next sync and named in the summary, in every target. <code>--check</code> fails on orphans, and <code>diff</code> shows an orphan as the removal of the whole file (a hand-edited one as a header, since sync keeps it). <span class="c">← FM-3</span></dd>
+            <dt>Never require a manual mirror</dt><dd>Everything a second target needs — steering, agent JSON, command copies — is emitted from the same ingredient. If two files must say the same thing, both are generated. <span class="c">← FM-4</span></dd>
+            <dt>Never split a rule from its reviewer <span class="pill">planned</span></dt><dd>An architecture rule and the reviewer agent for that architecture are meant to be one ingredient with two outputs, so they cannot disagree. Planned: today the rule and its reviewer are separate ingredients (<code>rule/&lt;name&gt;</code>, <code>agent/&lt;name&gt;-reviewer</code>) grouped by a stack recipe. <span class="c">← FM-5</span></dd>
+            <dt>Never inline a volatile value</dt><dd>Model pins, MCP versions, ports and organisation names are declared once in the profile and injected as <code>{{params}}</code> wherever cited (in a schema 4 Forge, inside an MCP server too; at any schema, inside a hook's <code>registration</code>, for the keys the hook declares). A parameter an ingredient declares with no default, that a file the plan writes cites and no layer sets, stops <code>sync</code>: nothing is written until it has a value. <span class="c">← FM-6</span></dd>
+            <dt>Never translate</dt><dd>Language is an attribute of the ingredient. The Forge may hold rules in one language and docs in another; Craftar emits text as written. <span class="c">← FM-7</span></dd>
+            <dt>Never store a secret</dt><dd>An MCP ingredient declares <code>authEnv</code> — the environment variables its server needs, names only, never a value; an item shaped like a known token fails the load. With <code>claude-code</code>, <code>sync</code> writes <code>.claude/settings.craftar.example.json</code>, each declared name with an empty value; <code>craftar settings apply</code> adds a missing name, empty, to the developer's own untracked <code>.claude/settings.json</code>, and never overwrites or prints a value there. <code>craftar doctor</code> names the variables a written MCP server declares in <code>authEnv</code> or references as <code>${NAME}</code> and the environment lacks, never their values; <code>craftar import</code> refuses ingredients holding secret-like values, and a <code>forge:</code> URL holding credentials is refused. In a schema 4 Forge, a value rendered into an MCP server that is a URL with credentials or a token of a known format fails the plan, and the message names the field, never the value — a check, not a guarantee: a token of an unknown format still passes. A literal token in a hook's <code>registration</code> fails the Forge load, and a credential substituted into one fails the plan. A Forge file that is not valid YAML is reported by an error code and a position at most, never by quoting the line; one its schema refuses is reported by key, never by a value it holds. <span class="c">← FM-8</span></dd>
+          </dl>
+          <a class="doc-back" href="/#invariants">← Invariants</a>
         </article>
       </div>
     </div>
