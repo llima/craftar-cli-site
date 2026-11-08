@@ -293,7 +293,7 @@ $ craftar --version
 
 Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitter per target; rulesync stays a reference for the formats, not a dependency. License: MIT.
 
-craftar for Orca, the Orca plugin, released as 0.1.0: https://github.com/llima/craftar-orca#install. Its README says how to install it and what approving it grants.
+craftar for Orca, the Orca plugin, released as 0.1.0 (https://github.com/llima/craftar-orca#install); its README says how to install it and what approving it grants.
 
 ### Setup: a new Forge and its first workspaces (since 1.7.0)
 
