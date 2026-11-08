@@ -7,14 +7,16 @@ This file is the plain-text companion of the Craftar site — the home page (ind
 ## Terminology
 
 - Harness: everything that shapes how coding agents behave in a repository — rules, agents, commands, skills, hooks, MCP servers.
-- Forge: one Git repository holding every ingredient, recipe and profile. Versioned; workspaces point at it by local path or by git URL, with an optional branch, tag or full SHA; a remote Forge is read from a per-machine cache. It is never a Git remote of any team repository.
-- Ingredient: smallest reusable unit — a rule, agent, command, skill, hook, MCP server, script, steering file or local service. A folder with an `ingredient.yaml` declaring type, targets, inclusion mode and globs. A `service` is aimed at no AI coder: `sync` writes it under `.craftar/`. Project templates are not an ingredient: a profile declares them.
-- Recipe: named set of ingredients with parameters. Recipes `extend` others; stack recipes declare a `slot` so two stacks for the same role (e.g. two front-end frameworks) cannot coexist.
-- Profile: one team — its recipes, repositories, template feeds, project-management tool, internal platform, and which AI coders that team uses — and, in a Forge at `schema: 8`, its own ingredients and recipes; parameters and section overrides for the whole stack live here.
-- Workspace: a local folder (one repo or a folder of repos) with a `craftar.yaml` declaring profile, recipe add/remove (edited by `craftar add recipe` / `remove recipe`) and targets, plus a git-ignored `craftar.local.yaml` for per-developer overrides.
-- Target: an AI coder to emit for — eight targets, all working: `claude-code`, `kiro`, `agents-md`, `cursor`, `copilot`, `agent-skills` (the standard `.agents/skills/` folder), `codex` and `antigravity`. Warp, Kimi and other tools read the emitted `AGENTS.md`. Coverage is a table in the CLI — `craftar targets` prints it, per ingredient type: native, converted or unsupported. Sync skips an ingredient aimed at a target that the table marks unsupported, and warns, naming it — a fallback is planned.
-- Lockfile (`craftar.lock`): the Forge's source, requested ref and commit (null when the Forge is not a git repository or has no commits yet), the resolved profile, recipes and targets, and a normalized content hash for every generated file; the lock is rewritten only when its own content changes. The only authority on what Craftar owns in a workspace.
-- Registry (`~/.craftar/registry.json`): every workspace a writing `sync` ran in on this machine, with path, profile, Forge, recipes, targets and last sync. `craftar workspaces` lists them with a status computed on the spot; `forget` and `prune` remove entries, and `CRAFTAR_NO_REGISTRY` turns the registry off. `craftar ui` shows them as a local page on `127.0.0.1`, read-only unless started with `--allow-writes`. `craftar ls` stays the view of one workspace's resolved recipes and ingredients.
+- Forge: Git repository holding every ingredient, recipe and profile; read by path, or by git URL at a ref. It is never a Git remote of any team repository.
+- Ingredient: smallest reusable unit — a rule, agent, command, skill, hook, MCP server, script, steering file or local service.
+- Recipe: named set of ingredients with parameters; stack recipes declare a `slot`.
+- Profile: one team — its recipes, targets, parameters and sections.
+- Workspace: a folder with `craftar.yaml` — profile, recipe changes, targets — and a git-ignored `craftar.local.yaml` per developer.
+- Target: an AI coder to emit for; the capability matrix (Targets and capability coverage, below) lists what each one gets.
+- Lockfile (`craftar.lock`): the Forge's source, ref and commit and a normalized hash per generated file — the authority on what Craftar owns.
+- Registry (`~/.craftar/registry.json`): every workspace synced on this machine; `craftar workspaces` and `craftar ui` show them.
+
+The full definitions are in the documentation (https://craftar.dev/docs/).
 
 ## Problem statement
 
@@ -22,7 +24,7 @@ Two problems, one root: the harness has no source and no record.
 
 ### P1 — One harness, T teams, K AI coders, A agents each, maintained by hand
 
-A harness is a roster of agents (a reviewer per architecture, a docs author, an executor) plus the rules they are bound to, workflow commands, hooks and MCP servers. Across T teams it exists as T copies in K formats (`.claude/`, `.kiro/`, `AGENTS.md`, `.cursor/`), each holding the same A agents. A change costs T × K manual edits, with no record of what was generated from what.
+The same agents, rules, commands, hooks and MCP servers live as T copies in K formats (`.claude/`, `.kiro/`, `AGENTS.md`, `.cursor/`). A change costs T × K manual edits, with no record of what came from what.
 
 Requires: one source; emission per target; a record per file.
 
@@ -39,7 +41,7 @@ State today (diagram): a single harness — about 12 rules, 7 agents, 9 commands
 
 ### P2 — One developer, many workspaces, separate remotes
 
-One machine, one workspace per team. Each workspace groups that team's repositories cloned from that team's own Git host; no repository is common to all of them. The harness in each workspace was copied in by hand at a different time. Nothing on the machine records which version each workspace carries, or whether a file in `.claude/` is still the copy or has been edited in place.
+One workspace per team, each on that team's Git host, its harness copied in by hand. Nothing records which version each one carries, or whether a file was edited in place.
 
 Requires: a channel that is no team repository's remote; a lock per workspace; a registry.
 
@@ -47,35 +49,35 @@ State today (diagram): one developer machine holds four workspaces, `workspace-1
 
 ## Failure modes (observed in earlier generators and hand-synchronised workspaces)
 
-- FM-1 Regeneration deletes hand-written agents and rules. Cause: the generator treats the whole `.claude/` folder as its output.
-- FM-2 Every file reports as hand-edited on every run; the team runs permanently on `--force`. Cause: drift guard hashes raw bytes while Git rewrites LF→CRLF on Windows checkout.
-- FM-3 A deleted rule keeps loading into sessions. Cause: the generator only writes and never removes outputs of ingredients that left the set.
-- FM-4 Second-target mirrors (steering, agent JSON, commands) diverge from their source. Cause: only rules were generated; the rest was kept as manual mirrors.
-- FM-5 An architecture rule and its reviewer agent contradict each other. Cause: two files stating the same constraints, edited independently.
-- FM-6 A model pin or MCP version breaks in several places at once. Cause: volatile values inlined in multiple files instead of declared once.
-- FM-7 A workspace-wide language policy contradicted by many files. Cause: language treated as a property of the workspace instead of each ingredient.
-- FM-8 Real tokens in a generated settings file. Cause: generated settings carried values instead of environment-variable references.
+Eight failures seen in two earlier generators and in hand-synced workspaces — FM-1 to FM-5 from P1, FM-6 to FM-8 from P2. Each becomes a constraint in Invariants.
 
-FM-1 to FM-5 stem from P1; FM-6 to FM-8 from maintaining P2 by hand.
+- FM-1 Regeneration deletes hand-written agents and rules. Cause: the generator owned the whole `.claude/` folder.
+- FM-2 Every file reads as hand-edited; the team lives on `--force`. Cause: raw-byte hashes; a Windows checkout rewrites LF→CRLF.
+- FM-3 A deleted rule keeps loading into sessions. Cause: the generator only wrote, never removed.
+- FM-4 Kiro mirrors drift 4–52 lines from their source. Cause: only rules were generated; the rest were hand mirrors.
+- FM-5 A rule and its reviewer agent contradict each other. Cause: two files stating the same constraints, edited apart.
+- FM-6 A model pin or MCP version breaks in three places at once. Cause: volatile values inlined instead of declared once.
+- FM-7 "Everything in English" contradicted by 18 files. Cause: language treated as the workspace's, not the ingredient's.
+- FM-8 Real package-feed tokens in a staged `settings.json`. Cause: settings carried values instead of variable references.
 
 ## Model: source, resolution, emission
 
-Craftar borrows the shape of a build system. Ingredients are source; recipes and profiles compose them; `craftar sync` resolves the composition for one workspace and emits target-specific outputs, recording every output in the lockfile. Generated files are committed to the workspace, so a team that only uses one AI coder never needs Craftar installed.
+Ingredients are source; recipes and profiles compose them; `craftar sync` resolves them for one workspace, writes each target's files and records them in a lockfile. Generated files are committed, so a team that only uses Kiro never needs Craftar installed.
 
-Layer resolution, weakest to strongest: `base` recipe → stack recipes → team profile → `craftar.yaml` (workspace, committed) → `craftar.local.yaml` (one developer, git-ignored). Same-named ingredients resolve to the strongest layer; stack recipes sharing a `slot` are mutually exclusive; `{{params}}` are substituted from the winning layer. `craftar explain <file>` prints the layer that decided each output.
+Layer resolution, weakest to strongest: `base` recipe → stack recipes → team profile → `craftar.yaml` (workspace, committed) → `craftar.local.yaml` (one developer, git-ignored). The strongest layer wins; stack recipes that share a `slot` exclude each other, and `{{params}}` come from the winning layer. `craftar explain <file>` names the layer behind each output.
 
 Pipeline of `craftar sync`:
-1. Read `craftar.yaml`; load the Forge (a local path, or a git URL at a branch, tag or full SHA, fetched into a per-machine cache).
+1. Read `craftar.yaml`; load the Forge — a path, or a git URL at a ref, cached per machine.
 2. Resolve layers, exclusive slots and params into the final ingredient set.
-3. Emit the open standards: `AGENTS.md` — the always-on rules, then each scoped rule listed at the file a target writes for it, or embedded in full when none does — Agent Skills (`.agents/skills/<name>/SKILL.md`, written by the `agent-skills` target) and `mcp.json` through the target emitters.
-4. Emit tool-specific formats (inclusion modes, subagents, hooks) through Craftar's own emitters — one per target — and post-processors; rulesync stays a reference for the formats, not a dependency.
-5. Diff against `craftar.lock`; classify each file as new / update / unchanged / adopt / drift / collision / orphan; write, remove orphans, refresh the lock.
+3. Emit the open standards — `AGENTS.md`, Agent Skills, `mcp.json` — through the target emitters.
+4. Emit each tool's own format through one Craftar emitter per target.
+5. Diff against `craftar.lock`; classify each file (new · update · unchanged · adopt · drift · collision · orphan); write, remove orphans, refresh the lock.
 
-Targets in their native format, generated and committed — all eight working: `claude-code` → `.claude/` and `.mcp.json`; `kiro` → `.kiro/steering` and `.kiro/agents/*.json`; `agents-md` → a root `AGENTS.md`, read by Codex, Cursor, Copilot, Antigravity, Warp and Kimi; `cursor` → `.cursor/rules/*.mdc`, `.cursor/agents/` and `.cursor/mcp.json`; `copilot` → `.github/instructions`, `.github/agents` and `.github/mcp.json`, plus `.github/prompts` and `.vscode/mcp.json` for VS Code; `agent-skills` → `.agents/skills/`, read by Cursor, Copilot, Codex and Antigravity; `codex` → `.codex/agents/*.toml` and `.codex/hooks.json`, its rules through `AGENTS.md`; `antigravity` → `.agents/rules`, `.agents/agents`, `.agents/mcp_config.json` and `.agents/hooks.json`. Composed files carry a `GENERATED` banner — Kiro steering's is configurable, `AGENTS.md`'s is fixed — while Claude Code text files are emitted verbatim, which is what lets an existing workspace be adopted byte for byte. What Craftar owns is recorded in `craftar.lock`, not in a header; a `generated by craftar from forge@sha` marker on every target is planned.
+Composed files carry a `GENERATED` banner; Claude Code files are written verbatim, so an existing workspace is adopted byte for byte. What Craftar owns is recorded in `craftar.lock`. Every target's paths are in the capability matrix (Targets and capability coverage, below).
 
 P1 resolved (diagram): the Forge is one Git repository containing ingredients (rules, agents, commands, skills, hooks, MCP servers, scripts, steering files), recipes (`base`, `backend-*`, `frontend-*`, `aws-local`, `pm-*`) and one profile per team. Running `craftar sync` in a workspace loads the Forge (by path, or by git URL at a ref), resolves layers, emits files for each of the workspace's targets and writes `craftar.lock`. Team A emits to `.claude/` with 7 agents; team B swaps the frontend recipe and has three workspaces, one target each — `.claude/`, `.kiro/` and `AGENTS.md`, which carries the rules only; team C emits `.kiro/` and pins the Forge at tag `v2.3`, and its lock is up to date; team D sets its targets to agents-md in its local file, so Cursor reads the emitted `AGENTS.md`, which carries the rules only, and has one drifted file. Every edge is generated and recorded in the lock.
 
-P1 resolved — solid edges are generated and recorded in each workspace's lockfile; `status` reads the lock to report drift per workspace and, with a remote Forge, names the Forge commit next to the lock's when it has moved.
+P1 resolved — solid edges are generated and recorded in each workspace's lockfile; `status` reads it to report drift per workspace.
 
 ```mermaid
 graph LR
@@ -95,7 +97,7 @@ P2 resolved (diagram): same developer machine and same four workspaces as the pr
 
 ## In practice — Forge → Workspace by stack
 
-The layer resolution above is the logical flow — layers resolving into targets. This is the physical mapping: how a real Forge for a given stack becomes actual files in the workspace. Select a stack, then a target to see what `craftar sync` writes today. Every stack lists Claude Code, Kiro and AGENTS.md, and a Five more targets tab: Cursor, Copilot, Agent Skills, Codex and Antigravity writing into one workspace. All eight are working. The capability matrix (Targets and capability coverage, below) lists every path. In each workspace, `craftar.yaml` is the input the workspace owns and `craftar.lock` is generated.
+Above, the logical flow; below, how a real Forge for one stack becomes files — pick a stack, then a target, to see what `craftar sync` writes. Every stack lists Claude Code, Kiro and AGENTS.md, and a Five more targets tab: Cursor, Copilot, Agent Skills, Codex and Antigravity in one workspace. All eight are working; the capability matrix (Targets and capability coverage, below) lists every path. In each workspace, `craftar.yaml` is the input the workspace owns and `craftar.lock` is generated.
 
 ### dotnet-enterprise — .NET backend teams following Clean Architecture
 
@@ -119,7 +121,7 @@ Workspace output (Kiro target):
 
 Workspace output (AGENTS.md target):
 - AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
-- One file: the emitter composes the rules only. The four agents and the command have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
+- One file: the rules only. Everything else has no AGENTS.md form, so sync skips it and warns, naming each ingredient.
 
 Workspace output (five more targets: cursor, copilot, agent-skills, codex, antigravity, in one workspace):
 - .cursor/rules/: *.mdc; .cursor/agents/: *.md (Cursor)
@@ -127,7 +129,7 @@ Workspace output (five more targets: cursor, copilot, agent-skills, codex, antig
 - .codex/agents/: *.toml (Codex)
 - .agents/rules/: *.md; .agents/agents/: *.md (Antigravity)
 - .agents/skills/create-api-endpoint/SKILL.md (Agent Skills: the command, as a skill)
-- The command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Copilot puts the always-on rules in copilot-instructions.md and each scoped rule in instructions/. Codex takes the agents only — sync warns — and reads its rules from AGENTS.md: add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning.
+- Commands become skills under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read. Codex takes the agents only and reads its rules from AGENTS.md; sync warns where Cursor and Antigravity drop an agent's `tools` and Codex its `model` and `tools`.
 
 ### node-fullstack — Node.js teams using TypeScript
 
@@ -150,7 +152,7 @@ Workspace output (Kiro target):
 
 Workspace output (AGENTS.md target):
 - AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
-- One file: the emitter composes the rules only. The four agents, the command and the npm-audit MCP have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
+- One file: the rules only. Everything else has no AGENTS.md form, so sync skips it and warns, naming each ingredient.
 
 Workspace output (five more targets: cursor, copilot, agent-skills, codex, antigravity, in one workspace):
 - .cursor/rules/: *.mdc; .cursor/agents/: *.md; .cursor/mcp.json (npm-audit MCP) (Cursor)
@@ -158,7 +160,7 @@ Workspace output (five more targets: cursor, copilot, agent-skills, codex, antig
 - .codex/agents/: *.toml (Codex)
 - .agents/rules/: *.md; .agents/agents/: *.md; .agents/mcp_config.json (npm-audit MCP) (Antigravity)
 - .agents/skills/create-express-route/SKILL.md (Agent Skills: the command, as a skill)
-- The command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for it. Copilot puts the always-on rules in copilot-instructions.md and each scoped rule in instructions/. Codex takes the agents only — sync warns — and reads its rules from AGENTS.md: add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning. Copilot writes the npm-audit server twice — .github/mcp.json for the Copilot CLI and .vscode/mcp.json for VS Code. Codex keeps its MCP servers in .codex/config.toml, which craftar does not write: sync warns, and the npm-audit server is configured there by hand.
+- Commands become skills under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read. Codex takes the agents only and reads its rules from AGENTS.md; sync warns where Cursor and Antigravity drop an agent's `tools` and Codex its `model` and `tools`.
 
 ### iac-multicloud — Platform teams managing infrastructure as code
 
@@ -180,7 +182,7 @@ Workspace output (Kiro target):
 
 Workspace output (AGENTS.md target):
 - AGENTS.md (always-on rules concatenated, then the scoped rules embedded in full — no other target writes them here)
-- One file: the emitter composes the rules only. The four agents and the two commands have no AGENTS.md expression; the emitter skips them rather than inventing a format, and sync warns once per skipped type, naming each one.
+- One file: the rules only. Everything else has no AGENTS.md form, so sync skips it and warns, naming each ingredient.
 
 Workspace output (five more targets: cursor, copilot, agent-skills, codex, antigravity, in one workspace):
 - .cursor/rules/: *.mdc; .cursor/agents/: *.md (Cursor)
@@ -188,19 +190,19 @@ Workspace output (five more targets: cursor, copilot, agent-skills, codex, antig
 - .codex/agents/: *.toml (Codex)
 - .agents/rules/: *.md; .agents/agents/: *.md (Antigravity)
 - .agents/skills/create-aws-stack/SKILL.md, .agents/skills/create-helm-chart/SKILL.md (Agent Skills: each command, as a skill)
-- Each command becomes a skill only a person invokes, under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read — so Copilot writes no prompt file for them. Copilot puts the always-on rules in copilot-instructions.md and each scoped rule in instructions/. Codex takes the agents only — sync warns — and reads its rules from AGENTS.md: add the agents-md target, and each always-on rule with the default targets is then left to AGENTS.md instead of .cursor/rules/, copilot-instructions.md and .agents/rules/. Cursor and Antigravity drop an agent's tools, and Codex writes neither model nor tools, each with a warning.
+- Commands become skills under .agents/skills/, which Cursor, Copilot, Codex and Antigravity read. Codex takes the agents only and reads its rules from AGENTS.md; sync warns where Cursor and Antigravity drop an agent's `tools` and Codex its `model` and `tools`.
 
 ### What syncs where
 
-Craftar writes the AI coder's own files — `.claude/` plus `.mcp.json` for Claude Code, `.kiro/` for Kiro, `.cursor/` for Cursor, `.github/instructions/`, `.github/agents/`, `.github/prompts/`, `.github/copilot-instructions.md`, `.github/mcp.json` and `.vscode/mcp.json` for Copilot, `.codex/agents/` and `.codex/hooks.json` for Codex, `.agents/rules/`, `.agents/agents/`, `.agents/mcp_config.json` and `.agents/hooks.json` for Antigravity, and the standard `.agents/skills/` folder — and a root `AGENTS.md` for the tools that read the open standard: Codex, Cursor, Copilot, Antigravity, Warp and Kimi consume that file; Craftar writes no tool-agnostic output such as `docs/`. For a workspace whose recipes bring a `service` ingredient, `sync` also writes `.craftar/` — `.craftar/compose.yaml`, `.craftar/.gitattributes` and `.craftar/services/<name>/…` — for no target. Client-owned folders like `src/` or `infra/` are never touched — only paths recorded in `craftar.lock` are ever written or removed. Outside a workspace and a Forge, Craftar writes on its own only under `~/.craftar` (by default): the Forge cache and the registry.
+Craftar writes only each AI coder's own files — every path is in the capability matrix — and a root `AGENTS.md`, read by Codex, Cursor, Copilot, Antigravity, Warp and Kimi; plus `.craftar/` when the recipes bring a local service. Folders like `src/` or `infra/` are never touched: only paths recorded in `craftar.lock` are written or removed. Outside the workspace and the Forge it writes only under `~/.craftar`: the Forge cache and the registry.
 
 ### Growing the Forge — a second client, one base
 
-Importing a second client into an existing Forge keeps every ingredient that already matches and turns the ones that differ into variants named after the profile, so both workspaces still reproduce byte for byte. The `forge` commands then close the gap: `forge variants` lists them nearest first, `forge diff` shows each hunk with a suggested class, and `forge unify` resolves one — keeping the base or the variant, turning the differing value into a parameter the profile carries, or turning a differing block into a section whose content the profile carries. Before and after it writes, `forge unify` plans every workspace registered on this machine that reads the Forge and prints which of each one's files the unification changes; with `--prune-recipes` it also deletes a recipe the unification left identical to its sibling and repoints the profiles that name it — only when every one of those workspaces plans the same files. `craftar forge impact` lists the same workspaces with what each one's next `sync` would do against the Forge as it stands.
+A second client imported into the Forge reuses every ingredient that matches; the ones that differ become variants named after the profile, so both workspaces still reproduce byte for byte. `forge variants` lists them, `forge diff` classifies each hunk, and `forge unify` resolves one — keep a side, move a differing value into the profile as a parameter, or a block as a section — after planning every registered workspace that reads the Forge.
 
 Unification (diagram): the Forge already holds `rule/deploy`, whose text reads "use globex-api here". Importing a second client, `acme`, whose copy reads "use acme-api here", keeps the base and adds a variant, `rule/deploy--acme`, that emits under the original name. `craftar forge diff rule/deploy` shows one hunk, `globex-api` against `acme-api`, and suggests the class `value`. `craftar forge unify rule/deploy --profile acme --plan plan.yaml`, with that hunk set to `take: param` and the key `deploy.api`, rewrites the base to "use {{deploy.api}} here", declares `globex-api` as the key's default in the base's `ingredient.yaml`, writes `deploy.api: acme-api` into `profiles/acme/profile.yaml` and removes the variant. Every path it overwrites or deletes must be held by git. Re-importing `acme` afterwards compares its file with the base as sync renders it for `acme`, finds them equal and reuses the base: no variant, no change to the profile.
 
-One rule, two clients. `forge unify` never merges `ingredient.yaml` and refuses when another layer, profile or ingredient already uses the key. Sections ship too — markers placed by hand (each client's content inferred by import) or extracted from a variant by `forge unify` with `take: section`; `forge promote` ships as well — a profile's variant becomes the base, and every other profile that resolved the old base keeps it as a variant of its own. The interactive walk is planned.
+One rule, two clients. `forge unify` refuses when another layer, profile or ingredient already uses the key; `forge promote` makes a profile's variant the base.
 
 ## Capabilities (F1–F12, in full as on https://craftar.dev/docs/ — entry F<n> is #f<n> there; "working" = runs today and is covered by tests; "mvp" = first release; "planned" = designed, not built)
 
@@ -219,18 +221,20 @@ One rule, two clients. `forge unify` never merges `ingredient.yaml` and refuses 
 
 ## Invariants (each derived from a failure mode; these are the constraints Craftar is built against — the one marked (planned) is a design commitment, not yet enforced by the code)
 
-- Never touch a file not in the lockfile — unknown files are preserved; one at a path the Forge would write is reported as a collision (FM-1).
-- Never hash raw bytes — normalize LF, UTF-8, strip BOM; compare JSON structurally. Claude Code and AGENTS.md outputs keep the EOL and BOM of the file they replace; Kiro output keeps the EOL and never writes a BOM (FM-2).
-- Never leave an orphan on disk — `--check` fails on it and `diff` shows it as the removal of the whole file (a hand-edited one as a header, since sync keeps it) (FM-3).
-- Never require a manual mirror — everything a second target needs is generated (FM-4).
-- Never split a rule from its reviewer — one ingredient, two outputs (FM-5) (planned; today the rule and its reviewer are separate ingredients (rule/<name>, agent/<name>-reviewer) grouped by a stack recipe).
-- Never inline a volatile value — declared once in the profile, injected as params wherever cited (in a schema 4 Forge, inside an MCP server too; at any schema, inside a hook's `registration`, for the keys the hook declares); a parameter an ingredient declares with no default, that a file the plan writes cites and no layer sets, stops `sync`: nothing is written until it has a value (FM-6).
-- Never translate — language is an attribute of the ingredient (FM-7).
-- Never store a secret — an MCP ingredient declares `authEnv`, the environment variables its server needs, names only, never a value (an item shaped like a known token fails the load); with `claude-code`, `sync` writes `.claude/settings.craftar.example.json`, each declared name with an empty value; `craftar settings apply` adds a missing name, empty, to the developer's own untracked `.claude/settings.json`, and never overwrites or prints a value there; `craftar doctor` names the variables a written MCP server declares in `authEnv` or references as `${NAME}` and the environment lacks, never their values; `craftar import` refuses ingredients holding secret-like values, and a `forge:` URL holding credentials is refused; in a schema 4 Forge, a value rendered into an MCP server that is a URL with credentials or a token of a known format fails the plan, and the message names the field, never the value — a check, not a guarantee: a token of an unknown format still passes; a literal token in a hook's `registration` fails the Forge load, and a credential substituted into one fails the plan; a Forge file that is not valid YAML is reported by an error code and a position at most, never by quoting the line; one its schema refuses is reported by key, never by a value it holds (FM-8).
+What Craftar holds in every command and emitter; the one marked (planned) is a commitment, not yet enforced.
+
+- Never touch a file not in the lockfile — the lock lists every managed output; any other file is preserved, and one at a planned path is a collision, never touched (FM-1).
+- Never hash raw bytes — hashes are taken after normalization (LF, UTF-8, no BOM, JSON compared structurally), so a CRLF checkout is not drift (FM-2).
+- Never leave an orphan on disk — an output whose ingredient left the set is removed on the next sync and named; `--check` fails on it (FM-3).
+- Never require a manual mirror — everything a second target needs is emitted from the same ingredient (FM-4).
+- Never split a rule from its reviewer (planned) — meant to be one ingredient with two outputs; today they are two ingredients grouped by a stack recipe (FM-5).
+- Never inline a volatile value — model pins, versions, ports and names are declared once as `{{params}}`; a declared one with no value stops `sync` (FM-6).
+- Never translate — language belongs to the ingredient; text is emitted as written (FM-7).
+- Never store a secret — credentials are named, never stored: `authEnv` lists variable names, `import` refuses secret-like values, and a credential rendered into a file fails the plan without being printed (FM-8).
 
 ## Targets and capability coverage
 
-`craftar targets` prints the capability matrix from the CLI's own table; `sync` decides from the same table which ingredients a target does not write, and a test fails when a cell and its emitter disagree. Nothing is dropped silently: an ingredient aimed at a target that cannot express it is skipped with a warning that names it; a fallback is planned. Three words: native — written in the tool's own place for that type, as the Forge holds it; converted — written in another form (frontmatter or a banner added, references rewritten, another container format, or folded into a shared file); unsupported — not written, sync warns and names the ingredient. The five targets after the first three were validated on 2026-11-07 by opening each tool from its CLI on a synthetic workspace synced by craftar and asking it for what only those files hold.
+`craftar targets` prints the capability matrix from the CLI's own table, and `sync` skips by it — with a warning that names the ingredient, never silently. Three words: native — written in the tool's own place for that type, as the Forge holds it; converted — written in another form (frontmatter or a banner added, references rewritten, another container format, or folded into a shared file); unsupported — not written, sync warns and names the ingredient. The targets after the first three were validated on 2026-11-07 by opening each tool on a workspace craftar synced.
 
 Working — claude-code, kiro, agents-md, cursor, copilot, agent-skills, codex, antigravity:
 
@@ -246,7 +250,7 @@ Working — claude-code, kiro, agents-md, cursor, copilot, agent-skills, codex, 
 | hook | native (`.claude/hooks/<file>` and `.claude/settings.craftar.example.json`) | unsupported | unsupported | unsupported (through claude-code) | unsupported (through claude-code) | unsupported | converted (`.codex/hooks.json`) | converted (`.agents/hooks.json`) |
 | service | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported | unsupported |
 
-"through agent-skills" / "through agents-md" / "through claude-code" — the tool reads that type from another target's file (for hooks, the `.claude/settings.json` that `craftar settings apply` writes); sync warns only when that target is not among the workspace's targets or the ingredient is not aimed at it. What a tool already reads there is not written twice: with `agents-md` on, an always-on rule with the default `targets` is left to `AGENTS.md` by Cursor, Copilot and Antigravity; with `agent-skills` on, such a command is left to `.agents/skills/` by Copilot.
+"through agent-skills" / "through agents-md" / "through claude-code" — the tool reads that type from another target's file (for hooks, the `.claude/settings.json` that `craftar settings apply` writes); sync warns only when that target is off or the ingredient is not aimed at it, and never writes it twice.
 
 Measured in each tool: Codex reads `.codex/agents/` only in a trusted project, and `.codex/hooks.json` only once its hooks were reviewed — an unreviewed hook is skipped silently; Antigravity run headless never applied a `glob` rule; `.github/prompts/` and `.vscode/mcp.json` are VS Code's — the Copilot CLI reads commands from `.agents/skills/` and MCP servers from `.github/mcp.json`.
 
@@ -254,8 +258,8 @@ Measured in each tool: Codex reads `.codex/agents/` only in a trusted project, a
 
 ## Get started
 
-Craftar has to reproduce what teams already have. The oracle imports a hand-built workspace (Claude Code + Kiro), syncs it, and asserts byte equality of every generated file; a second sync must be a no-op; a Forge edit must reach both targets; a manual edit must surface as drift and survive; a removed ingredient must disappear; an unmanaged file must be untouched.
+The oracle imports a hand-built workspace (Claude Code + Kiro), syncs it and asserts every generated file byte for byte — then that a second sync is a no-op, a hand edit survives as drift and a removed ingredient disappears.
 
-Trying it: install with `npm install -g craftar` (Node ≥ 22), or prefix any command with `npx`. Then, inside an existing Claude Code workspace, run `craftar import --from claude-code --forge <dir> --profile <name> --write-config` to obtain a Forge and a `craftar.yaml`, and `craftar diff` to see what a sync would change. Nothing in `.claude/` or `.kiro/` is rewritten until `sync`. Import a second workspace into the same Forge under another profile, and `craftar forge variants --forge <dir>` lists where the two differ. To start an empty workspace from a Forge instead, run `craftar init --forge <dir> --profile <name>`: it writes `craftar.yaml` and runs the first `sync` — or, in a terminal, run `craftar init` alone and answer its questions. When something fails, `craftar doctor` lists what is off on the machine and in the workspace, each finding with the command that fixes it.
+Trying it: install with `npm install -g craftar` (Node ≥ 22), or prefix any command with `npx`. In an existing Claude Code workspace, `craftar import --from claude-code --forge <dir> --profile <name> --write-config` creates a Forge and a `craftar.yaml`, and `craftar diff` shows what a sync would change — nothing is rewritten until `sync`. From an existing Forge, `craftar init --forge <dir> --profile <name>` starts a workspace. `craftar doctor` says what is off, with the fix.
 
-Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitters for Claude Code, Kiro, AGENTS.md, Cursor, Copilot, Agent Skills, Codex and Antigravity; rulesync stays a reference for the formats, not a dependency. License: MIT.
+Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitter per target; rulesync stays a reference for the formats, not a dependency. License: MIT.
