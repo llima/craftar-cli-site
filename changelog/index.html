@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Craftar changelog — every release since 1.0.0</title>
-<meta name="description" content="What each Craftar release since 1.0.0 changed — new targets, generated-byte changes and what a workspace sees — with the 0.x history linked.">
+<title>Craftar changelog: every release since 1.0.0</title>
+<meta name="description" content="What each Craftar release since 1.0.0 changed (new targets, generated-byte changes and what a workspace sees), with the 0.x history linked.">
 <link rel="canonical" href="https://craftar.dev/changelog/">
 <meta name="theme-color" content="#0A0E13">
 
@@ -16,8 +16,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Craftar">
 <meta property="og:url" content="https://craftar.dev/changelog/">
-<meta property="og:title" content="Craftar changelog — every release since 1.0.0">
-<meta property="og:description" content="What each Craftar release since 1.0.0 changed — new targets, generated-byte changes and what a workspace sees — with the 0.x history linked.">
+<meta property="og:title" content="Craftar changelog: every release since 1.0.0">
+<meta property="og:description" content="What each Craftar release since 1.0.0 changed (new targets, generated-byte changes and what a workspace sees), with the 0.x history linked.">
 <meta property="og:image" content="https://craftar.dev/og.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
@@ -25,11 +25,11 @@
 <meta property="og:image:alt" content="Craftar: a build system for AI-coding harnesses. Emits to .claude/, .mcp.json, .kiro/, AGENTS.md, .cursor/, .github/, .agents/, .codex/ and .opencode/.">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Craftar changelog — every release since 1.0.0">
-<meta name="twitter:description" content="What each Craftar release since 1.0.0 changed — new targets, generated-byte changes and what a workspace sees — with the 0.x history linked.">
+<meta name="twitter:title" content="Craftar changelog: every release since 1.0.0">
+<meta name="twitter:description" content="What each Craftar release since 1.0.0 changed (new targets, generated-byte changes and what a workspace sees), with the 0.x history linked.">
 <meta name="twitter:image" content="https://craftar.dev/og.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"TechArticle","headline":"Craftar changelog — every release since 1.0.0","description":"What each Craftar release since 1.0.0 changed — new targets, generated-byte changes and what a workspace sees — with the 0.x history linked.","url":"https://craftar.dev/changelog/","isPartOf":{"@type":"WebSite","name":"Craftar","url":"https://craftar.dev/"}}
+{"@context":"https://schema.org","@type":"TechArticle","headline":"Craftar changelog: every release since 1.0.0","description":"What each Craftar release since 1.0.0 changed (new targets, generated-byte changes and what a workspace sees), with the 0.x history linked.","url":"https://craftar.dev/changelog/","isPartOf":{"@type":"WebSite","name":"Craftar","url":"https://craftar.dev/"}}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -96,10 +96,10 @@
       <div class="doc-entries">
         <article class="doc-entry" id="v1-8-0">
           <div class="id"><time datetime="2026-11-08">Nov 8, 2026</time></div>
-          <h2>1.8.0 — Quieter AGENTS.md, a local recipe repointed by promote</h2>
+          <h2>1.8.0: Quieter AGENTS.md, a local recipe repointed by promote</h2>
           <ul class="changes">
-            <li>The <code>agents-md</code> "no AGENTS.md equivalent — skipped" warning is no longer printed for an ingredient another target of the workspace writes; it still names every ingredient no other target writes. <code>doctor --strict</code> can now exit 0 where that warning was its only <code>warn</code>.</li>
-            <li><code>craftar drift promote</code>: a new variant whose base a recipe in the profile's own folder cites no longer refuses — when the profile resolves that recipe, it is repointed to the variant behind the same git gate and proof.</li>
+            <li>The <code>agents-md</code> "no AGENTS.md equivalent: skipped" warning is no longer printed for an ingredient another target of the workspace writes; it still names every ingredient no other target writes. <code>doctor --strict</code> can now exit 0 where that warning was its only <code>warn</code>.</li>
+            <li><code>craftar drift promote</code>: a new variant whose base a recipe in the profile's own folder cites no longer refuses, when the profile resolves that recipe, it is repointed to the variant behind the same git gate and proof.</li>
             <li><code>opencode</code>: a remote MCP server whose <code>headers</code> is not an object is dropped with a warning naming the server. <code>craftar setup</code>: a new Forge's README advises keeping the Forge out of a workspace's git repository.</li>
           </ul>
           <a class="doc-back" href="https://github.com/llima/craftar-cli/releases/tag/v1.8.0" rel="noopener">Release v1.8.0 on GitHub →</a>
@@ -107,7 +107,7 @@
 
         <article class="doc-entry" id="v1-7-0">
           <div class="id"><time datetime="2026-11-08">Nov 8, 2026</time></div>
-          <h2>1.7.0 — craftar setup, a Forge from scratch</h2>
+          <h2>1.7.0: craftar setup, a Forge from scratch</h2>
           <ul class="changes">
             <li>A new command, <code>craftar setup</code>: creates a Forge from scratch (or by importing a workspace's <code>.claude/</code>), makes it a git repository with one initial commit, and starts workspaces on it. It is the one craftar command that commits, only in the directory it creates or finds empty, and it never pushes. See <a href="/docs/#setup">Setup</a>.</li>
             <li><code>craftar</code> with no arguments, in a terminal, on a machine with no registered workspace, ends its help with <code>new here? run craftar setup</code>; the interactive <code>craftar init</code> suggests it when a Forge answer names no Forge.</li>
@@ -118,7 +118,7 @@
 
         <article class="doc-entry" id="v1-6-0">
           <div class="id"><time datetime="2026-11-08">Nov 8, 2026</time></div>
-          <h2>1.6.0 — The opencode target, mvp</h2>
+          <h2>1.6.0: The opencode target, mvp</h2>
           <ul class="changes">
             <li>A new target, <code>opencode</code> (OpenCode 2 or later): agents to <code>.opencode/agents/&lt;name&gt;.md</code> with permissions derived from their tools, commands to <code>.opencode/commands/&lt;name&gt;.md</code>, MCP servers to <code>.opencode/opencode.json</code>; rules reach OpenCode through <code>agents-md</code>.</li>
             <li>A Forge file that names <code>opencode</code> needs <code>schema: 18</code>; <code>craftar.lock</code> is written at schema 7 when it names it.</li>
@@ -129,7 +129,7 @@
 
         <article class="doc-entry" id="v1-5-0">
           <div class="id"><time datetime="2026-11-07">Nov 7, 2026</time></div>
-          <h2>1.5.0 — Five targets validated in each tool</h2>
+          <h2>1.5.0: Five targets validated in each tool</h2>
           <ul class="changes">
             <li><code>cursor</code>, <code>copilot</code>, <code>agent-skills</code>, <code>codex</code> and <code>antigravity</code> were checked by opening each tool from its CLI on a synthetic workspace; the README says what was validated, per target.</li>
             <li><strong>Generated bytes:</strong> <code>copilot</code> also writes <code>.github/mcp.json</code> for the Copilot CLI; <code>claude-code</code> leaves out an empty <code>tools</code> line in an agent.</li>
@@ -139,9 +139,9 @@
 
         <article class="doc-entry" id="v1-4-0">
           <div class="id"><time datetime="2026-11-07">Nov 7, 2026</time></div>
-          <h2>1.4.0 — A target removed</h2>
+          <h2>1.4.0: A target removed</h2>
           <ul class="changes">
-            <li>One target is removed — the declared exception in the compatibility promise: its CLI no longer accepts Google login for individuals. Its name is refused in <code>targets</code>.</li>
+            <li>One target is removed: the declared exception in the compatibility promise: its CLI no longer accepts Google login for individuals. Its name is refused in <code>targets</code>.</li>
             <li>In a workspace that used it, the files the lock recorded for it are orphans: <code>sync</code> removes them, and keeps a hand-edited one as <code>orphan-drift</code>. <code>antigravity</code> covers the same use.</li>
           </ul>
           <a class="doc-back" href="https://github.com/llima/craftar-cli/releases/tag/v1.4.0" rel="noopener">Release v1.4.0 on GitHub →</a>
@@ -149,7 +149,7 @@
 
         <article class="doc-entry" id="v1-3-1">
           <div class="id"><time datetime="2026-11-07">Nov 7, 2026</time></div>
-          <h2>1.3.1 — Documentation only</h2>
+          <h2>1.3.1: Documentation only</h2>
           <ul class="changes">
             <li>README and Claude Code plugin README corrections; no generated byte, lock or exit code changes.</li>
           </ul>
@@ -158,7 +158,7 @@
 
         <article class="doc-entry" id="v1-3-0">
           <div class="id"><time datetime="2026-11-07">Nov 7, 2026</time></div>
-          <h2>1.3.0 — Hooks for codex and antigravity</h2>
+          <h2>1.3.0: Hooks for codex and antigravity</h2>
           <ul class="changes">
             <li><strong>Generated bytes:</strong> a hook ingredient with a <code>registration</code> is written for Codex to <code>.codex/hooks.json</code> and for Antigravity to <code>.agents/hooks.json</code>.</li>
             <li><code>cursor</code> and <code>copilot</code> run the hooks <code>.claude/settings.json</code> holds, so no file of theirs is written.</li>
@@ -169,7 +169,7 @@
 
         <article class="doc-entry" id="v1-2-0">
           <div class="id"><time datetime="2026-11-07">Nov 7, 2026</time></div>
-          <h2>1.2.0 — The codex and antigravity targets</h2>
+          <h2>1.2.0: The codex and antigravity targets</h2>
           <ul class="changes">
             <li><code>codex</code>: agents to <code>.codex/agents/&lt;name&gt;.toml</code>; rules through <code>agents-md</code>, commands and skills through <code>agent-skills</code>.</li>
             <li><code>antigravity</code>: rules to <code>.agents/rules/</code>, agents to <code>.agents/agents/</code>, MCP servers to <code>.agents/mcp_config.json</code>.</li>
@@ -180,7 +180,7 @@
 
         <article class="doc-entry" id="v1-1-0">
           <div class="id"><time datetime="2026-11-06">Nov 6, 2026</time></div>
-          <h2>1.1.0 — The cursor, copilot and agent-skills targets</h2>
+          <h2>1.1.0: The cursor, copilot and agent-skills targets</h2>
           <ul class="changes">
             <li><code>cursor</code> (<code>.cursor/rules/</code>, <code>.cursor/agents/</code>, <code>.cursor/mcp.json</code>), <code>copilot</code> (<code>.github/instructions/</code>, <code>.github/copilot-instructions.md</code>, <code>.github/agents/</code>, <code>.github/prompts/</code>, <code>.vscode/mcp.json</code>) and <code>agent-skills</code> (<code>.agents/skills/</code>).</li>
             <li>What a tool already reads in another target's file is not written twice.</li>
@@ -191,7 +191,7 @@
 
         <article class="doc-entry" id="v1-0-0">
           <div class="id"><time datetime="2026-11-06">Nov 6, 2026</time></div>
-          <h2>1.0.0 — The compatibility promise</h2>
+          <h2>1.0.0: The compatibility promise</h2>
           <ul class="changes">
             <li>Nothing changes in what craftar writes. From here on, breaking a command, a flag, an exit code, a <code>--json</code> shape, the loading of a Forge schema or the reading of the lock needs a major version, and a change to generated bytes comes in a minor.</li>
           </ul>
@@ -204,7 +204,7 @@
   </section>
 
   <footer>
-    <span>Craftar — open-source workspace harness manager. TypeScript / Node · MIT.</span>
+    <span>Craftar: open-source workspace harness manager. TypeScript / Node · MIT.</span>
     <span><a href="#changelog">Top</a> · <a href="/#model">Model</a> · <a href="https://github.com/llima/craftar-cli" rel="noopener">github</a></span>
   </footer>
 </div>
