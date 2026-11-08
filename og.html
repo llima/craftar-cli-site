@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=IBM+Plex+Sans:wght@400&display=swap">
 <style>
   :root {
-    --ink: #0A0E13; --plate: #11171F; --seam: #1C2733; --grid: #131A22;
+    --ink: #0A0E13; --plate: #11171F; --seam: #1C2733;
     --text: #E7ECF1; --muted: #8A98A8; --ember: #E9915A;
     --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
     --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
@@ -18,10 +18,6 @@
   .card {
     position: relative; width: 1200px; height: 630px; overflow: hidden; box-sizing: border-box;
     padding: 72px 72px 0; color: var(--text); background-color: var(--ink);
-    background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size: 60px 60px; background-position: -1px -1px;
   }
   .brand { display: flex; align-items: center; gap: 22px; font-family: var(--mono); font-weight: 800; font-size: 36px; letter-spacing: -.01em; }
   .brand svg { width: 44px; height: 44px; }
@@ -56,6 +52,7 @@
       <span class="chip">.github/</span>
       <span class="chip">.agents/</span>
       <span class="chip">.codex/</span>
+      <span class="chip">.opencode/</span>
     </div>
   </div>
 </div>
