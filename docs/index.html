@@ -40,6 +40,7 @@
   @media (max-width: 520px) { .doc-index ol { grid-template-columns: minmax(0, 1fr); } }
   .doc-entries { gap: 48px; }
   .doc-entry .id { display: flex; gap: 10px; align-items: center; }
+  .pill.soon { color: var(--warn); border-color: rgba(224,179,90,.4); }
   .doc-index ol + ol { border-top: 1px solid var(--seam); margin-top: 12px; padding-top: 12px; }
   .doc-entry.wide { max-width: none; }
   /* capability matrix (#targets) */
@@ -54,6 +55,7 @@
   .doc-entry .why { color: var(--muted); font-size: 15.5px; margin-bottom: 20px; }
   .doc-entry .why b { color: var(--faint); font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; display: block; margin-bottom: 4px; }
   .doc-entry .cmds { margin-bottom: 16px; }
+  .doc-entry .aside { font-size: 15px; color: var(--muted); margin-bottom: 12px; }
   .doc-entry .mech { font-size: 15px; color: var(--muted); margin-bottom: 16px; }
   .doc-entry .mech::before { content: "mechanism"; display: block; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; }
   .tt { background: #070A0E; border: 1px solid var(--seam-2); border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
@@ -188,7 +190,8 @@
             <code><span class="p">$</span> npx craftar --version <span class="c"># or run any command through npx</span></code>
             <code><span class="p">$</span> craftar doctor <span class="c"># what is off on the machine and in the workspace, with the fix</span></code>
           </div>
-          <p class="mech">Stack: TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitter per target; rulesync stays a reference for the formats, not a dependency.</p>
+          <p class="aside">Stack: TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitter per target; rulesync stays a reference for the formats, not a dependency.</p>
+          <p class="aside">craftar for Orca, the Orca plugin: <a href="https://github.com/llima/craftar-orca" rel="noopener">Get the Orca plugin →</a> <span class="pill soon">not released yet</span> — its README says what approving it grants.</p>
         </article>
 
         <article class="doc-entry" id="setup">
