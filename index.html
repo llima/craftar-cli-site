@@ -51,9 +51,6 @@
 
   /* terminal */
   .term { background: #070A0E; border: 1px solid var(--seam-2); border-radius: 6px; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(233,145,90,.06); }
-  .term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--seam); background: var(--plate); font-family: var(--mono); font-size: 12px; color: var(--faint); }
-  .term-bar .dots { display: flex; gap: 6px; margin-right: 6px; }
-  .term-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--seam-2); display: block; }
   .term pre { margin: 0; padding: 18px 20px 20px; font-size: 12.5px; line-height: 1.65; overflow-x: auto; color: #C9D3DD; white-space: pre; }
   .term .p { color: var(--ember); } .term .c { color: var(--faint); }
   .term .add { color: var(--ok); } .term .chg { color: var(--warn); } .term .del { color: #D98A8A; }
@@ -808,7 +805,8 @@ craftar workspaces — 4 registered
                 <div class="osteps"><span class="on">1 dry run</span><span class="cur">2 write</span><span>3 done</span></div>
                 <div class="oask e"><b>Send .claude/rules/acme-style.md to the Forge?</b><dl><dt>outcome</dt><dd>variant</dd><dt>becomes</dt><dd>rule/acme-style--acme-services</dd><dt>forge</dt><dd>acme-forge (on this machine)</dd></dl></div>
                 <div class="olbl">craftar would write in the Forge <span>3</span></div>
-                <div class="oline"><span>ingredients/rules/acme-style--acme-services/…</span><i>created</i></div>
+                <div class="oline"><span>…/acme-style--acme-services/ingredient.yaml</span><i>created</i></div>
+<div class="oline"><span>…/acme-style--acme-services/rule.md</span><i>created</i></div>
                 <div class="oline"><span>recipes/local-stack.yaml</span><i>edited</i></div>
                 <div class="olbl">after it</div>
                 <div class="oline"><span>this workspace's next sync</span><i>unchanged 6</i></div>
@@ -818,7 +816,8 @@ craftar workspaces — 4 registered
                 <div class="osteps"><span class="on">1 dry run</span><span class="on">2 write</span><span class="on">3 done</span></div>
                 <div class="odone">✓ Written to the Forge's working tree. .claude/rules/acme-style.md is now rule/acme-style--acme-services. Nothing was committed.</div>
                 <div class="olbl">written in the Forge <span>3</span></div>
-                <div class="oline"><span>ingredients/rules/acme-style--acme-services/…</span><i>created</i></div>
+                <div class="oline"><span>…/acme-style--acme-services/ingredient.yaml</span><i>created</i></div>
+<div class="oline"><span>…/acme-style--acme-services/rule.md</span><i>created</i></div>
                 <div class="oline"><span>recipes/local-stack.yaml</span><i>edited</i></div>
               </div>
             </div>
@@ -1093,7 +1092,7 @@ craftar workspaces — 4 registered
 ├── <span class="dir client">src/</span>                        <span class="comment">← client code</span>
 ├── craftar.yaml                <span class="comment">← workspace input</span>
 └── <span class="gen">craftar.lock</span>                <span class="comment">← generated</span></pre>
-              <p class="stack-cap">Five more targets in one workspace (<code>targets: [cursor, copilot, agent-skills, codex, antigravity]</code>). Commands become skills under <code>.agents/skills/</code>, which Cursor, Copilot, Codex and Antigravity read. Codex takes the agents only and reads its rules from <code>AGENTS.md</code>; sync warns where Cursor and Antigravity drop an agent's <code>tools</code> and Codex its <code>model</code> and <code>tools</code>.</p>
+              <p class="stack-cap">Five more targets in one workspace (<code>targets: [cursor, copilot, agent-skills, codex, antigravity]</code>). Commands become skills under <code>.agents/skills/</code>, which Cursor, Copilot, Codex and Antigravity read. Codex takes the agents only and reads its rules from <code>AGENTS.md</code>; sync warns where Cursor and Antigravity drop an agent's <code>tools</code> and Codex its <code>model</code> and <code>tools</code>. Copilot writes the npm-audit server twice, for the Copilot CLI and for VS Code; Codex writes no MCP file, so sync warns and the server goes in <code>.codex/config.toml</code> by hand.</p>
             </div>
 
             <div class="sync-legend">
@@ -1310,7 +1309,7 @@ craftar workspaces — 4 registered
   <section id="features">
     <div class="eyebrow">Capabilities</div>
     <h2>Twelve capabilities, each tied to the problem it addresses.</h2>
-    <p class="lede" style="margin-top:22px">Each card links to its entry in the <a href="/docs/">documentation</a>. <span class="pill now">working</span> runs today and is tested; a <code>#&nbsp;planned</code> comment marks a command designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release.</p>
+    <p class="lede" style="margin-top:22px">Each card links to its entry in the <a href="/docs/">documentation</a>. <span class="pill now">working</span> runs today and is tested; a <code>#&nbsp;planned</code> comment marks a command designed, not built; <span class="pill mvp">mvp</span> marks the minimum first release (on a target, as for OpenCode in the matrix, it means loaded by the tool but not yet used by a model session).</p>
 
     <div class="features">
 
