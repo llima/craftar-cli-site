@@ -287,7 +287,7 @@ Needs Node 22 or later, and git for a Forge in a repository. `npx craftar --vers
 ```
 $ npm install -g craftar
 $ craftar --version
-1.7.0
+1.8.0
 ```
 
 Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitter per target; rulesync stays a reference for the formats, not a dependency. License: MIT.
@@ -383,6 +383,12 @@ Measured in each tool: Codex reads `.codex/agents/` only in a trusted project, a
 - Never store a secret — an MCP ingredient declares `authEnv`, the environment variables its server needs, names only, never a value (an item shaped like a known token fails the load); with `claude-code`, `sync` writes `.claude/settings.craftar.example.json`, each declared name with an empty value; `craftar settings apply` adds a missing name, empty, to the developer's own untracked `.claude/settings.json`, and never overwrites or prints a value there; `craftar doctor` names the variables a written MCP server declares in `authEnv` or references as `${NAME}` and the environment lacks, never their values; `craftar import` refuses ingredients holding secret-like values, and a `forge:` URL holding credentials is refused; in a schema 4 Forge, a value rendered into an MCP server that is a URL with credentials or a token of a known format fails the plan, and the message names the field, never the value — a check, not a guarantee: a token of an unknown format still passes; a literal token in a hook's `registration` fails the Forge load, and a credential substituted into one fails the plan; a Forge file that is not valid YAML is reported by an error code and a position at most, never by quoting the line; one its schema refuses is reported by key, never by a value it holds (FM-8).
 
 ## Changelog (as on https://craftar.dev/changelog/ — every release since 1.0.0, newest first; a summary of the README's Upgrading, or for 1.3.1, which has no section there, of its GitHub Release)
+
+### 1.8.0 — Quieter AGENTS.md, a local recipe repointed by promote (2026-11-08)
+
+- The `agents-md` "no AGENTS.md equivalent — skipped" warning is no longer printed for an ingredient another target of the workspace writes; it still names every ingredient no other target writes. `doctor --strict` can now exit 0 where that warning was its only `warn`.
+- `craftar drift promote`: a new variant whose base a recipe in the profile's own folder cites no longer refuses — when the profile resolves that recipe, it is repointed to the variant behind the same git gate and proof.
+- `opencode`: a remote MCP server whose `headers` is not an object is dropped with a warning naming the server. `craftar setup`: a new Forge's README advises keeping the Forge out of a workspace's git repository.
 
 ### 1.7.0 — craftar setup, a Forge from scratch (2026-11-08)
 

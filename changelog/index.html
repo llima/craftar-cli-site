@@ -80,6 +80,7 @@
     <div class="docs">
       <nav class="doc-index" aria-label="Releases">
         <ol>
+          <li><a href="#v1-8-0">1.8.0</a></li>
           <li><a href="#v1-7-0">1.7.0</a></li>
           <li><a href="#v1-6-0">1.6.0</a></li>
           <li><a href="#v1-5-0">1.5.0</a></li>
@@ -93,6 +94,17 @@
       </nav>
 
       <div class="doc-entries">
+        <article class="doc-entry" id="v1-8-0">
+          <div class="id"><time datetime="2026-11-08">Nov 8, 2026</time></div>
+          <h2>1.8.0 — Quieter AGENTS.md, a local recipe repointed by promote</h2>
+          <ul class="changes">
+            <li>The <code>agents-md</code> "no AGENTS.md equivalent — skipped" warning is no longer printed for an ingredient another target of the workspace writes; it still names every ingredient no other target writes. <code>doctor --strict</code> can now exit 0 where that warning was its only <code>warn</code>.</li>
+            <li><code>craftar drift promote</code>: a new variant whose base a recipe in the profile's own folder cites no longer refuses — when the profile resolves that recipe, it is repointed to the variant behind the same git gate and proof.</li>
+            <li><code>opencode</code>: a remote MCP server whose <code>headers</code> is not an object is dropped with a warning naming the server. <code>craftar setup</code>: a new Forge's README advises keeping the Forge out of a workspace's git repository.</li>
+          </ul>
+          <a class="doc-back" href="https://github.com/llima/craftar-cli/releases/tag/v1.8.0" rel="noopener">Release v1.8.0 on GitHub →</a>
+        </article>
+
         <article class="doc-entry" id="v1-7-0">
           <div class="id"><time datetime="2026-11-08">Nov 8, 2026</time></div>
           <h2>1.7.0 — craftar setup, a Forge from scratch</h2>
