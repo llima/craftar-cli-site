@@ -191,7 +191,7 @@
             <code><span class="p">$</span> craftar doctor <span class="c"># what is off on the machine and in the workspace, with the fix</span></code>
           </div>
           <p class="aside">Stack: TypeScript / Node CLI (<code>commander</code>, <code>zod</code>, <code>yaml</code>) with its own emitter per target; rulesync stays a reference for the formats, not a dependency.</p>
-          <p class="aside">craftar for Orca, the Orca plugin: <a href="https://github.com/llima/craftar-orca" rel="noopener">Get the Orca plugin →</a> <span class="pill soon">not released yet</span>, its README says what approving it grants.</p>
+          <p class="aside">craftar for Orca, the Orca plugin: <a href="https://github.com/llima/craftar-orca" rel="noopener">Get the Orca plugin →</a> <span class="pill soon">not released yet</span>. Its README says what approving it grants.</p>
         </article>
 
         <article class="doc-entry" id="setup">
@@ -217,7 +217,7 @@
 │   ├── rules/&lt;name&gt;/         ingredient.yaml + rule.md
 │   └── agents/ · commands/ · skills/ · hooks/ · mcp/ · scripts/ · steering/ · services/
 ├── recipes/                  base.yaml, stack recipes with a slot
-└── profiles/&lt;name&gt;/          profile.yaml — recipes, targets, params, sections</pre>
+└── profiles/&lt;name&gt;/          profile.yaml: recipes, targets, params, sections</pre>
           <div class="cmds">
             <code><span class="p">$</span> craftar recipes --forge &lt;dir&gt; <span class="c"># the Forge's recipes and the profiles that use them</span></code>
             <code><span class="p">$</span> craftar ingredients --forge &lt;dir&gt; <span class="c"># every ingredient, its type and targets</span></code>
@@ -280,7 +280,7 @@
             <code><span class="p">$</span> craftar init --forge ../forge --profile team-a --targets claude-code,kiro <span class="c"># writes craftar.yaml, then runs the first sync</span></code>
             <code><span class="p">$</span> craftar init <span class="c">#&nbsp;in a terminal: asks for the Forge, the profile, then the recipes and targets; confirms once</span></code>
             <code><span class="p">$</span> craftar init --forge ../forge --new-profile team-e --like team-a <span class="c"># writes profiles/team-e/profile.yaml (not committed), then the workspace</span></code>
-            <code><span class="p">$</span> craftar repos · craftar repos clone <span class="c"># the profile's repositories, present or missing — then clone the missing ones</span></code>
+            <code><span class="p">$</span> craftar repos · craftar repos clone <span class="c"># the profile's repositories, present or missing, then clone the missing ones</span></code>
           </div>
           <p class="mech">Writes <code>craftar.yaml</code> (the Forge, the profile, and the recipe and target choices, given as flags or as answers) only once the workspace resolves and plans, then runs the first <code>sync</code>, which registers the workspace. Files already on disk are adopted when they equal the plan and otherwise left as they are and reported; an existing <code>craftar.yaml</code> is never edited. In a terminal, <code>craftar init</code> asks for a <code>--forge</code> or a <code>--profile</code> it was not given, the Forge last synced on this machine offered, the profile from the Forge's list, then the recipes and targets to keep or adjust, confirms once before anything is written, and ends by printing the same run as flags, for CI; off a terminal a missing flag is refused. When a declared parameter a file the plan writes cites has no value, <code>craftar.yaml</code> is still written and the first <code>sync</code> is not run. With <code style="white-space:nowrap">--clone</code> it then clones each repository the profile's <code>repos</code> lists into the workspace: <code>git clone</code> over <code>https</code> or <code>ssh</code> only, with the <code>git</code> found on <code>PATH</code>, never over a file <code>sync</code> writes, into the Forge or out of the workspace; when <code>init</code> asks for what the flags do not give, it lists the URLs first and asks, the default no. A clone is recorded nowhere, and <code>sync</code> never updates or removes it. <code>craftar repos</code> lists those repositories in an existing workspace (<code>present</code>, <code>missing</code> or <code>blocked</code>, with their URLs) and <code>craftar repos clone</code> clones the missing ones. With <code><span style="white-space:nowrap">--new-profile</span> &lt;name&gt;</code> (optionally <code>--like &lt;profile&gt;</code>), <code>init</code> first writes one new file in a Forge directory, <code>profiles/&lt;name&gt;/profile.yaml</code> (the recipes and targets chosen, nothing else of the template) behind a git gate and never committed, then starts the workspace on it; in a terminal the profile list offers <code>0) a new profile</code>.</p>
           <a class="doc-back" href="/#features">← All capabilities</a>
