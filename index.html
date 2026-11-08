@@ -168,6 +168,61 @@
   .seg[aria-selected="true"] { background: var(--plate-2); border-color: var(--seam-2); color: var(--ember); }
   .stage-hint { margin-left: auto; font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
   .stage-hint a { color: var(--steel); text-decoration: none; }
+
+  /* sync stage: Layers → files | In Orca (craftar for Orca, not released yet) */
+  .sync-stage { margin-top: 28px; }
+  .sync-stage > .flow, .sync-stage > .orca-fig { padding: 20px; }
+  .sync-stage > [hidden] { display: none; }
+  .sync-stage .seg .pill { margin-left: 6px; color: var(--warn); border-color: rgba(224,179,90,.4); font-size: 9.5px; }
+  .orca-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 360px)); justify-content: center; gap: 28px; }
+  .opanel { margin: 0; background: var(--plate); border: 1px solid var(--seam-2); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; font-size: 12px; }
+  .opanel figcaption { border-top: 1px solid var(--seam); padding: 10px 14px; font-size: 12.5px; color: var(--muted); }
+  .ohead { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--seam); font-family: var(--mono); font-size: 13px; }
+  .omark { width: 15px; height: 15px; display: block; }
+  .ows { color: var(--faint); font-size: 12px; }
+  .obell { margin-left: auto; font-size: 10px; min-width: 16px; height: 16px; border-radius: 8px; background: var(--warn); color: var(--ink); display: inline-grid; place-items: center; }
+  .ostates { display: grid; grid-template-columns: minmax(0, 1fr); padding: 12px; min-height: 430px; }
+  .ost { grid-area: 1 / 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; opacity: 0; animation: 15s infinite; }
+  .ost.s1 { animation-name: ost1; } .ost.s2 { animation-name: ost2; } .ost.s3 { animation-name: ost3; }
+  @keyframes ost1 { 0%, 30% { opacity: 1; visibility: visible } 33%, 97% { opacity: 0; visibility: hidden } 100% { opacity: 1; visibility: visible } }
+  @keyframes ost2 { 0%, 30% { opacity: 0; visibility: hidden } 33%, 63% { opacity: 1; visibility: visible } 66%, 100% { opacity: 0; visibility: hidden } }
+  @keyframes ost3 { 0%, 63% { opacity: 0; visibility: hidden } 66%, 97% { opacity: 1; visibility: visible } 100% { opacity: 0; visibility: hidden } }
+  .press1 { animation: opress1 15s infinite; } .press2 { animation: opress2 15s infinite; }
+  @keyframes opress1 { 0%, 24% { box-shadow: none; transform: none } 26%, 30% { box-shadow: 0 0 0 2px var(--text); transform: scale(.97) } 32%, 100% { box-shadow: none; transform: none } }
+  @keyframes opress2 { 0%, 56% { box-shadow: none; transform: none } 58%, 62% { box-shadow: 0 0 0 2px var(--text); transform: scale(.97) } 64%, 100% { box-shadow: none; transform: none } }
+  .ocard { position: relative; border: 1px solid var(--seam); border-radius: 4px; padding: 8px 10px; font-family: var(--mono); display: grid; gap: 2px; }
+  .ocard.f { border-color: rgba(233,145,90,.55); } .ocard.w { border-color: var(--seam-2); }
+  .ek { color: var(--ember); } .sk { color: var(--steel); }
+  .om { color: var(--faint); font-family: var(--mono); font-size: 11px; }
+  .oloc { position: absolute; right: 10px; top: 8px; font-size: 11px; color: var(--ok); }
+  .osync { align-self: center; border: 1px solid var(--seam); border-radius: 4px; padding: 6px 12px; font-family: var(--mono); display: grid; text-align: center; }
+  .osurf { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .osurf > div { border: 1px solid var(--seam); border-radius: 4px; padding: 6px 8px; display: grid; gap: 1px; font-family: var(--mono); min-width: 0; }
+  .osurf span { font-size: 11px; }
+  .d-dr { color: #D98A8A; } .d-out { color: var(--warn); } .d-ok { color: var(--ok); }
+  .olbl { margin-top: 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); }
+  .olbl span { color: var(--text); margin-left: 4px; }
+  .orow, .oline { display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: 11.5px; min-width: 0; }
+  .orow { border: 1px solid var(--seam); border-radius: 4px; padding: 6px 8px; }
+  .orow span, .oline span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .orow i, .oline i { font-style: normal; color: var(--faint); white-space: nowrap; }
+  .ofoot { margin-top: auto; padding-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .ofoot small { width: 100%; text-align: center; color: var(--faint); font-family: var(--mono); font-size: 10.5px; }
+  .obtn { flex: 1; text-align: center; border-radius: 4px; padding: 7px 8px; font-weight: 600; font-size: 12px; white-space: nowrap; }
+  .obtn.bring { background: var(--steel); color: var(--ink); } .obtn.send { background: var(--ember); color: var(--ink); }
+  .obtn.ghost { flex: 0 0 auto; border: 1px solid var(--seam-2); color: var(--text); } .obtn.wide { flex: 1; }
+  .oask { border: 1px solid var(--steel); border-radius: 4px; padding: 10px 12px; display: grid; gap: 4px; }
+  .oask.e { border-color: var(--ember); }
+  .oask b { font-size: 13px; } .oask > span { color: var(--muted); font-size: 12px; }
+  .oask dl { margin: 6px 0 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; font-family: var(--mono); font-size: 11.5px; }
+  .oask dt { color: var(--faint); } .oask dd { margin: 0; overflow-wrap: anywhere; }
+  .odone { border: 1px solid rgba(123,196,138,.5); border-radius: 4px; padding: 10px 12px; color: var(--ok); font-size: 12.5px; }
+  .osteps { display: flex; gap: 6px; font-family: var(--mono); font-size: 11px; }
+  .osteps span { border: 1px solid var(--seam-2); border-radius: 10px; padding: 1px 8px; color: var(--faint); }
+  .osteps .on { color: var(--ok); border-color: rgba(123,196,138,.5); } .osteps .cur { color: var(--ember); border-color: rgba(233,145,90,.55); }
+  @media (max-width: 860px) { .orca-pair { grid-template-columns: minmax(0, 1fr); } .ostates { min-height: 0; } }
+  @media (max-width: 520px) { .sync-stage > .flow, .sync-stage > .orca-fig { padding: 12px; } }
+  @media (prefers-reduced-motion: reduce) { .ost.s1, .ost.s2 { opacity: 0; visibility: hidden; } .ost.s3 { opacity: 1; visibility: visible; } }
   .fig { padding: 20px 20px 16px; }
   .fig .diagram { margin-top: 0; }
   .fig-inner.narrow { max-width: 640px; margin-inline: auto; }
@@ -647,55 +702,129 @@ craftar workspaces — 4 registered
     <h2>From layers to files — how sync works.</h2>
     <p class="prose" style="margin-top:14px">Layers apply weakest first and the strongest wins; stack recipes that share a <code>slot</code> exclude each other, and <code>{{params}}</code> come from the winning layer. <code>craftar explain &lt;file&gt;</code> names the layer behind each output.</p>
 
-    <div class="flow">
-      <div>
-        <div class="col-h"><span>Layers, weakest → strongest</span><span class="tag">source</span></div>
-        <div class="stack">
-          <div class="layer"><b>base</b><span>recipe · every workspace</span></div>
-          <div class="layer"><b>stack recipes</b><span>backend-clean-arch · frontend-angular</span></div>
-          <div class="layer"><b>team profile</b><span>profiles/team-a</span></div>
-          <div class="layer"><b>craftar.yaml</b><span>this workspace · committed</span></div>
-          <div class="layer"><b>craftar.local.yaml</b><span>one developer · git-ignored</span></div>
-        </div>
-        <p class="stack-cap">All layers are versioned in the Forge except the last two, which live in the workspace.</p>
+    <div class="stage sync-stage">
+      <div class="stage-bar" role="tablist" aria-label="Sync diagrams">
+        <button class="seg" role="tab" id="tab-flow" aria-selected="true" aria-controls="fig-flow" data-fig="fig-flow">Layers → files</button>
+        <button class="seg" role="tab" id="tab-orca" aria-selected="false" aria-controls="fig-orca" data-fig="fig-orca">In Orca <span class="pill">not released yet</span></button>
+        <span class="stage-hint">the same sync, driven from the craftar panel in Orca</span>
       </div>
+      <div class="flow" id="fig-flow">
+        <div>
+          <div class="col-h"><span>Layers, weakest → strongest</span><span class="tag">source</span></div>
+          <div class="stack">
+            <div class="layer"><b>base</b><span>recipe · every workspace</span></div>
+            <div class="layer"><b>stack recipes</b><span>backend-clean-arch · frontend-angular</span></div>
+            <div class="layer"><b>team profile</b><span>profiles/team-a</span></div>
+            <div class="layer"><b>craftar.yaml</b><span>this workspace · committed</span></div>
+            <div class="layer"><b>craftar.local.yaml</b><span>one developer · git-ignored</span></div>
+          </div>
+          <p class="stack-cap">All layers are versioned in the Forge except the last two, which live in the workspace.</p>
+        </div>
 
-      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h36M30 2l6 6-6 6"/></svg>resolve</div>
+        <div class="arrow" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h36M30 2l6 6-6 6"/></svg>resolve</div>
 
-      <div>
-        <div class="col-h"><span>Pipeline</span><span class="tag">craftar sync</span></div>
-        <div class="engine">
-          <div class="cmd"><span class="p">$</span> craftar sync</div>
-          <ol>
-            <li>Read <code>craftar.yaml</code>; load the Forge — a path, or a git URL at a ref, cached per machine.</li>
-            <li>Resolve layers, exclusive slots and params into the final ingredient set.</li>
-            <li>Emit the open standards — <code>AGENTS.md</code>, Agent Skills, <code>mcp.json</code> — through the target emitters.</li>
-            <li>Emit each tool's own format through one Craftar emitter per target.</li>
-            <li>Diff against <code>craftar.lock</code>; classify each file (new · update · unchanged · adopt · drift · collision · orphan); write, remove orphans, refresh the lock.</li>
-          </ol>
+        <div>
+          <div class="col-h"><span>Pipeline</span><span class="tag">craftar sync</span></div>
+          <div class="engine">
+            <div class="cmd"><span class="p">$</span> craftar sync</div>
+            <ol>
+              <li>Read <code>craftar.yaml</code>; load the Forge — a path, or a git URL at a ref, cached per machine.</li>
+              <li>Resolve layers, exclusive slots and params into the final ingredient set.</li>
+              <li>Emit the open standards — <code>AGENTS.md</code>, Agent Skills, <code>mcp.json</code> — through the target emitters.</li>
+              <li>Emit each tool's own format through one Craftar emitter per target.</li>
+              <li>Diff against <code>craftar.lock</code>; classify each file (new · update · unchanged · adopt · drift · collision · orphan); write, remove orphans, refresh the lock.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="arrow" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h36M30 2l6 6-6 6"/></svg>emit</div>
+
+        <div>
+          <div class="col-h"><span>Targets, native format</span><span class="tag steel">generated · committed</span></div>
+          <div class="targets-h"><span class="pill now">working</span></div>
+          <div class="targets">
+            <div class="target"><b>Claude Code</b><code>.claude/ · .mcp.json</code></div>
+            <div class="target"><b>Kiro</b><code>.kiro/steering · agents/*.json</code></div>
+            <div class="target"><b>AGENTS.md</b><code>root · read by Codex, Cursor, Copilot, Antigravity, OpenCode, Warp, Kimi</code></div>
+            <div class="target"><b>Cursor</b><code>.cursor/rules/*.mdc · agents/ · mcp.json</code></div>
+            <div class="target"><b>Copilot</b><code>.github/instructions · agents · mcp.json · prompts and .vscode/mcp.json for VS Code</code></div>
+            <div class="target"><b>Agent Skills</b><code>.agents/skills/ · read by Cursor, Copilot, Codex, Antigravity, OpenCode</code></div>
+            <div class="target"><b>Codex</b><code>.codex/agents/*.toml · hooks.json · rules through AGENTS.md</code></div>
+            <div class="target"><b>Antigravity</b><code>.agents/rules · agents · mcp_config.json · hooks.json</code></div>
+          </div>
+          <div class="targets-h"><span class="pill">mvp</span></div>
+          <div class="targets">
+            <div class="target"><b>OpenCode</b><code>.opencode/agents · commands · opencode.json · rules through AGENTS.md</code></div>
+          </div>
+          <p class="stack-cap">Composed files carry a <code>GENERATED</code> banner; Claude Code files are written verbatim, so an existing workspace is adopted byte for byte. What Craftar owns is recorded in <code>craftar.lock</code>.</p>
         </div>
       </div>
-
-      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M0 8h36M30 2l6 6-6 6"/></svg>emit</div>
-
-      <div>
-        <div class="col-h"><span>Targets, native format</span><span class="tag steel">generated · committed</span></div>
-        <div class="targets-h"><span class="pill now">working</span></div>
-        <div class="targets">
-          <div class="target"><b>Claude Code</b><code>.claude/ · .mcp.json</code></div>
-          <div class="target"><b>Kiro</b><code>.kiro/steering · agents/*.json</code></div>
-          <div class="target"><b>AGENTS.md</b><code>root · read by Codex, Cursor, Copilot, Antigravity, OpenCode, Warp, Kimi</code></div>
-          <div class="target"><b>Cursor</b><code>.cursor/rules/*.mdc · agents/ · mcp.json</code></div>
-          <div class="target"><b>Copilot</b><code>.github/instructions · agents · mcp.json · prompts and .vscode/mcp.json for VS Code</code></div>
-          <div class="target"><b>Agent Skills</b><code>.agents/skills/ · read by Cursor, Copilot, Codex, Antigravity, OpenCode</code></div>
-          <div class="target"><b>Codex</b><code>.codex/agents/*.toml · hooks.json · rules through AGENTS.md</code></div>
-          <div class="target"><b>Antigravity</b><code>.agents/rules · agents · mcp_config.json · hooks.json</code></div>
+      <div class="orca-fig" id="fig-orca" hidden>
+        <div class="orca-pair">
+          <figure class="opanel" aria-label="Bring: the Forge moved, the panel lists what comes down, Update and stage writes and stages it">
+            <div class="ohead"><svg class="omark" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="14" width="10" height="10" rx="1.5" fill="#E9915A"/><rect x="14" y="14" width="10" height="10" rx="1.5" fill="#7FB4D6"/><rect x="8" y="2" width="10" height="10" rx="1.5" fill="#E7ECF1"/></svg><b>craftar</b><span class="ows">acme-portal</span><span class="obell" aria-hidden="true">2</span></div>
+            <div class="ostates">
+              <div class="ost s1">
+                <div class="ocard f"><div><b class="ek">forge</b> <b>acme-forge</b></div><span class="om">main @ c759dd7 · moved 3 files</span><span class="oloc">local</span></div>
+                <div class="osync"><b>craftar sync</b><span class="om">reads the Forge · emits per surface</span></div>
+                <div class="osurf"><div><b>claude-code</b><span class="d-dr">drift</span><span class="om">1 new, 1 edited</span></div><div><b>kiro</b><span class="d-out">outdated</span><span class="om">2 to update</span></div><div><b>agents-md</b><span class="d-ok">up to date</span><span class="om">1 file</span></div></div>
+                <div class="ocard w"><div><b class="sk">workspace</b> <b>acme-portal</b></div><span class="om">profile acme-services · lock forge@5b0d3f1</span></div>
+                <div class="olbl">from the Forge <span>3</span></div>
+                <div class="orow"><span>↓ .kiro/steering/acme-style.md</span><i>update</i></div>
+                <div class="orow"><span>↓ .kiro/agents/reviewer.json</span><i>update</i></div>
+                <div class="orow"><span>↓ .claude/rules/release.md</span><i>new</i></div>
+                <div class="ofoot"><span class="obtn bring press1">↓ Bring 3 from the Forge</span><span class="obtn send">↑ Send 1 to the Forge</span></div>
+              </div>
+              <div class="ost s2">
+                <div class="oask"><b>Bring 3 files from the Forge?</b><span>craftar writes them, then they are added to your commit (staged, not committed). Hand edits are kept.</span></div>
+                <div class="olbl">written and staged <span>3</span></div>
+                <div class="oline"><span>.kiro/steering/acme-style.md</span><i>update</i></div>
+                <div class="oline"><span>.kiro/agents/reviewer.json</span><i>update</i></div>
+                <div class="oline"><span>.claude/rules/release.md</span><i>new</i></div>
+                <div class="oline"><span>craftar.lock</span><i>staged too</i></div>
+                <div class="olbl">kept as you edited it <span>1</span></div>
+                <div class="oline"><span>.claude/rules/acme-style.md</span><i class="sk">drift · kept</i></div>
+                <div class="ofoot"><span class="obtn ghost">Cancel</span><span class="obtn bring wide press2">↓ Update and stage</span><small>never --overwrite-drift · never a commit</small></div>
+              </div>
+              <div class="ost s3">
+                <div class="odone">✓ 3 files written and added to your commit, with craftar.lock</div>
+                <div class="osurf"><div><b>claude-code</b><span class="d-dr">drift</span><span class="om">1 edited, kept</span></div><div><b>kiro</b><span class="d-ok">up to date</span><span class="om">staged</span></div><div><b>agents-md</b><span class="d-ok">up to date</span><span class="om">1 file</span></div></div>
+                <div class="olbl">edited here <span>1</span></div>
+                <div class="orow"><span>↑ .claude/rules/acme-style.md</span><i>can be sent</i></div>
+              </div>
+            </div>
+            <figcaption>Bring — the Forge moved; one click writes and stages exactly those files.</figcaption>
+          </figure>
+          <figure class="opanel" aria-label="Send: a file edited here goes through a dry run, then Write to the Forge writes the Forge's working tree, never a commit">
+            <div class="ohead"><svg class="omark" viewBox="0 0 26 26" aria-hidden="true"><rect x="2" y="14" width="10" height="10" rx="1.5" fill="#E9915A"/><rect x="14" y="14" width="10" height="10" rx="1.5" fill="#7FB4D6"/><rect x="8" y="2" width="10" height="10" rx="1.5" fill="#E7ECF1"/></svg><b>craftar</b><span class="ows">acme-portal</span></div>
+            <div class="ostates">
+              <div class="ost s1">
+                <div class="olbl">edited here <span>1</span></div>
+                <div class="orow"><span>↑ .claude/rules/acme-style.md</span><i>can be sent</i></div>
+                <div class="ofoot"><span class="obtn bring">↓ Bring 3 from the Forge</span><span class="obtn send press1">↑ Send 1 to the Forge</span><small>send: dry run first · never a commit</small></div>
+              </div>
+              <div class="ost s2">
+                <div class="osteps"><span class="on">1 dry run</span><span class="cur">2 write</span><span>3 done</span></div>
+                <div class="oask e"><b>Send .claude/rules/acme-style.md to the Forge?</b><dl><dt>outcome</dt><dd>variant</dd><dt>becomes</dt><dd>rule/acme-style--acme-services</dd><dt>forge</dt><dd>acme-forge (on this machine)</dd></dl></div>
+                <div class="olbl">craftar would write in the Forge <span>3</span></div>
+                <div class="oline"><span>ingredients/rules/acme-style--acme-services/…</span><i>created</i></div>
+                <div class="oline"><span>recipes/local-stack.yaml</span><i>edited</i></div>
+                <div class="olbl">after it</div>
+                <div class="oline"><span>this workspace's next sync</span><i>unchanged 6</i></div>
+                <div class="ofoot"><span class="obtn ghost">Cancel</span><span class="obtn send wide press2">↑ Write to the Forge</span><small>writes the Forge's working tree · nothing is committed, pushed or opened as a PR</small></div>
+              </div>
+              <div class="ost s3">
+                <div class="osteps"><span class="on">1 dry run</span><span class="on">2 write</span><span class="on">3 done</span></div>
+                <div class="odone">✓ Written to the Forge's working tree. .claude/rules/acme-style.md is now rule/acme-style--acme-services. Nothing was committed.</div>
+                <div class="olbl">written in the Forge <span>3</span></div>
+                <div class="oline"><span>ingredients/rules/acme-style--acme-services/…</span><i>created</i></div>
+                <div class="oline"><span>recipes/local-stack.yaml</span><i>edited</i></div>
+              </div>
+            </div>
+            <figcaption>Send — a hand edit goes back to the Forge: dry run first, then Write to the Forge.</figcaption>
+          </figure>
         </div>
-        <div class="targets-h"><span class="pill">mvp</span></div>
-        <div class="targets">
-          <div class="target"><b>OpenCode</b><code>.opencode/agents · commands · opencode.json · rules through AGENTS.md</code></div>
-        </div>
-        <p class="stack-cap">Composed files carry a <code>GENERATED</code> banner; Claude Code files are written verbatim, so an existing workspace is adopted byte for byte. What Craftar owns is recorded in <code>craftar.lock</code>.</p>
+        <p class="stack-cap">craftar for Orca — <span class="pill">not released yet</span>. An Orca panel that drives the person's own <code>craftar</code>: <code>sync</code> through <code>craftar mcp --allow-writes</code> and its consent, never <code style="white-space:nowrap">--overwrite-drift</code>, and <code>drift promote</code> for a send. It stages exact paths and never commits. Synthetic <code>acme</code> data.</p>
       </div>
     </div>
 
@@ -1415,13 +1544,15 @@ craftar workspaces — 4 registered
 <script>
   (function () {
     // Problem diagrams tabs
-    var tabs = document.querySelectorAll('.stage .seg');
-    tabs.forEach(function (t) {
-      t.addEventListener('click', function () {
-        tabs.forEach(function (o) {
-          var on = o === t;
-          o.setAttribute('aria-selected', on ? 'true' : 'false');
-          document.getElementById(o.dataset.fig).hidden = !on;
+    document.querySelectorAll('.stage').forEach(function (stage) {
+      var tabs = stage.querySelectorAll('.seg');
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () {
+          tabs.forEach(function (o) {
+            var on = o === t;
+            o.setAttribute('aria-selected', on ? 'true' : 'false');
+            document.getElementById(o.dataset.fig).hidden = !on;
+          });
         });
       });
     });
