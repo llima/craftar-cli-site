@@ -387,6 +387,11 @@ Measured in each tool: Codex reads `.codex/agents/` only in a trusted project, a
 
 ## Changelog (as on https://craftar.dev/changelog/, every release since 1.0.0, newest first; a summary of the README's Upgrading, or for 1.3.1, which has no section there, of its GitHub Release)
 
+### 1.9.0: A newer Forge tag in status (2026-11-08)
+
+- `status --json` gains `forge.newerTag`, always present and last in `forge`: the remote Forge's highest `vX.Y.Z` tag above a workspace `ref` that is itself a `vX.Y.Z` tag, else `null`. The `status` tool of `craftar mcp` and `craftar ui`'s workspace answer carry it too.
+- The text of `status` gains one line when there is such a tag. No byte `sync` writes, no lock, no exit code and no network call changes: the tags come from the fetch `status` already makes, or from the cached copy.
+
 ### 1.8.0: Quieter AGENTS.md, a local recipe repointed by promote (2026-11-08)
 
 - The `agents-md` "no AGENTS.md equivalent — skipped" warning is no longer printed for an ingredient another target of the workspace writes; it still names every ingredient no other target writes. `doctor --strict` can now exit 0 where that warning was its only `warn`.

@@ -80,6 +80,7 @@
     <div class="docs">
       <nav class="doc-index" aria-label="Releases">
         <ol>
+          <li><a href="#v1-9-0">1.9.0</a></li>
           <li><a href="#v1-8-0">1.8.0</a></li>
           <li><a href="#v1-7-0">1.7.0</a></li>
           <li><a href="#v1-6-0">1.6.0</a></li>
@@ -94,6 +95,16 @@
       </nav>
 
       <div class="doc-entries">
+        <article class="doc-entry" id="v1-9-0">
+          <div class="id"><time datetime="2026-11-08">Nov 8, 2026</time></div>
+          <h2>1.9.0: A newer Forge tag in status</h2>
+          <ul class="changes">
+            <li><code>status --json</code> gains <code>forge.newerTag</code>, always present and last in <code>forge</code>: the remote Forge's highest <code>vX.Y.Z</code> tag above a workspace <code>ref</code> that is itself a <code>vX.Y.Z</code> tag, else <code>null</code>. The <code>status</code> tool of <code>craftar mcp</code> and <code>craftar ui</code>'s workspace answer carry it too.</li>
+            <li>The text of <code>status</code> gains one line when there is such a tag. No byte <code>sync</code> writes, no lock, no exit code and no network call changes: the tags come from the fetch <code>status</code> already makes, or from the cached copy.</li>
+          </ul>
+          <a class="doc-back" href="https://github.com/llima/craftar-cli/releases/tag/v1.9.0" rel="noopener">Release v1.9.0 on GitHub →</a>
+        </article>
+
         <article class="doc-entry" id="v1-8-0">
           <div class="id"><time datetime="2026-11-08">Nov 8, 2026</time></div>
           <h2>1.8.0: Quieter AGENTS.md, a local recipe repointed by promote</h2>
