@@ -8,11 +8,11 @@ This file is the plain-text companion of the Craftar site, the home page (index.
 
 A build system for AI-coding harnesses. A harness (the rules, agents, commands, skills, hooks and MCP servers that shape coding agents) kept as source in one Git repository, the Forge; Craftar composes it per team, writes each tool's own files and records them in a lockfile.
 
-Below the title, a demo with two menus: the action (Get an update from the Forge, Send an edit to the Forge) and where it runs (In Orca, not released yet; In the console), and four animated screens, synthetic `acme` data:
+Below the title, a demo with two menus: the action (Get an update from the Forge, Send an edit to the Forge) and where it runs (In Orca; In the console), and four animated screens, synthetic `acme` data:
 
 - In Orca, get an update: an Orca-style window, the workspace list (acme: acme-portal, acme-api), Source Control, and the craftar for Orca panel docked on the right, drawn by the plugin's own code (build 51f2036) on synthetic data. The panel shows the Forge (`forge`, default branch @ b83f2d6, ../forge, on this machine), craftar sync with "2 coming down from the Forge" (commit 7c41e0a → b83f2d6), the surfaces (agents-md up to date, claude-code and kiro outdated, 1 to update each), the workspace (acme-portal, profile acme-portal, lock forge@7c41e0a), From the Forge (`workflow.md` in `.claude/rules/` and `.kiro/steering/`) and the footer button "Bring 2 from the Forge" (bring: writes and stages · send: dry run first · never a commit). Bring opens "Update 2 files and add them to your commit?" (written and staged: the two files and craftar.lock) with "Update and stage" (never --overwrite-drift · never a commit); then the panel reads in sync, with the last update's written and staged files, and Source Control lists the three staged paths.
 - In Orca, send an edit: a line is typed into `.claude/rules/commit-conventions.md`; the panel shows "1 can go up to the Forge" (edited here by hand · kept on every sync), claude-code in drift, Edited here with an orange Send, and "Send 1 to the Forge"; the dry run asks "Send .claude/rules/commit-conventions.md to the Forge?" (outcome variant, becomes rule/commit-conventions--acme-portal, profile acme-portal; craftar would write the variant's two files and recipes/acme-portal-base.yaml; this workspace's next sync unchanged 9; other workspaces on this Forge none; no warnings) with "Write to the Forge" (writes the Forge's working tree · nothing is committed, pushed or opened as a PR); then "Written to the Forge's working tree: nothing was committed", and "Back to the workspace".
-- Under the window: craftar (the CLI and this plugin) is built with Orca (https://onorca.dev), which is why the example runs in it. Get the Orca plugin: https://github.com/llima/craftar-orca (not released yet).
+- Under the window: craftar (the CLI and this plugin) is built with Orca (https://onorca.dev), which is why the example runs in it. Get the Orca plugin: https://github.com/llima/craftar-orca#install
 - In the console, get an update (craftar 1.7.0; the comment line stands for the Forge commit):
 
 ```
@@ -293,7 +293,7 @@ $ craftar --version
 
 Stack: TypeScript/Node CLI (commander, zod, yaml) with its own emitter per target; rulesync stays a reference for the formats, not a dependency. License: MIT.
 
-craftar for Orca, the Orca plugin: https://github.com/llima/craftar-orca (not released yet). Its README says what approving it grants.
+craftar for Orca, the Orca plugin, released as 0.1.0 (https://github.com/llima/craftar-orca#install); its README says how to install it and what approving it grants.
 
 ### Setup: a new Forge and its first workspaces (since 1.7.0)
 
@@ -386,6 +386,11 @@ Measured in each tool: Codex reads `.codex/agents/` only in a trusted project, a
 - Never store a secret: an MCP ingredient declares `authEnv`, the environment variables its server needs, names only, never a value (an item shaped like a known token fails the load); with `claude-code`, `sync` writes `.claude/settings.craftar.example.json`, each declared name with an empty value; `craftar settings apply` adds a missing name, empty, to the developer's own untracked `.claude/settings.json`, and never overwrites or prints a value there; `craftar doctor` names the variables a written MCP server declares in `authEnv` or references as `${NAME}` and the environment lacks, never their values; `craftar import` refuses ingredients holding secret-like values, and a `forge:` URL holding credentials is refused; in a schema 4 Forge, a value rendered into an MCP server that is a URL with credentials or a token of a known format fails the plan, and the message names the field, never the value: a check, not a guarantee: a token of an unknown format still passes; a literal token in a hook's `registration` fails the Forge load, and a credential substituted into one fails the plan; a Forge file that is not valid YAML is reported by an error code and a position at most, never by quoting the line; one its schema refuses is reported by key, never by a value it holds (FM-8).
 
 ## Changelog (as on https://craftar.dev/changelog/, every release since 1.0.0, newest first; a summary of the README's Upgrading, or for 1.3.1, which has no section there, of its GitHub Release)
+
+### 1.9.0: A newer Forge tag in status (2026-11-08)
+
+- `status --json` gains `forge.newerTag`, always present and last in `forge`: the remote Forge's highest `vX.Y.Z` tag above a workspace `ref` that is itself a `vX.Y.Z` tag, else `null`. The `status` tool of `craftar mcp` and `craftar ui`'s workspace answer carry it too.
+- The text of `status` gains one line when there is such a tag. No byte `sync` writes, no lock, no exit code and no network call changes: the tags come from the fetch `status` already makes, or from the cached copy.
 
 ### 1.8.0: Quieter AGENTS.md, a local recipe repointed by promote (2026-11-08)
 
